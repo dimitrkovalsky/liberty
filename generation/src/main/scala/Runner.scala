@@ -6,6 +6,6 @@ object Runner {
         val data: DataType = collections
             .ListType(collections.MapType(primitives.IntegerType, collections.SetType(primitives.StringType)))
 
-
+        println(data)
     }
 }
