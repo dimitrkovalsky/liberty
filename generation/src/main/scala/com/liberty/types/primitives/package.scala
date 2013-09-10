@@ -16,6 +16,10 @@ package object primitives {
         def getDefaultValue: String = "0"
     }
 
+    case object BooleanType extends PrimitiveType("Boolean"){
+        def getDefaultValue: String = "false"
+    }
+
     case object CharType extends PrimitiveType("Char"){
         def getDefaultValue: String = "\'\'"
     }

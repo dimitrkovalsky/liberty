@@ -13,48 +13,59 @@ trait Expression
 trait Operation extends Expression {
     def execute(): Option[String]
 
-    def execute(operation: Operation): Option[String]
-
-    protected[operations] def returnResult(): Option[String]
-
     override def toString: String = execute() match {
         case Some(res: String) => res
         case _ => "// Empty operation"
     }
 }
 
-case class Variable(name: String) extends Expression
+case class Variable(name: String) extends Expression {
+    override def toString: String = name
+}
 
-case class Number(num: Double) extends Expression
+case class NoneExpressiion extends Expression
 
 case class UnaryOperation(operator: String, arg: Expression) extends Expression
 
 case class BinaryOp(operator: String, left: Expression, right: Expression) extends Expression
 
-case class FunctionInvokeOperation(functionName: String, var params: List[String] = Nil) extends Operation {
-    def execute(): Option[String] = {
+// TODO: creation variables without expressions like :<<< List<Integer> list; >>>
+case class FunctionInvokeOperation(functionName: String, var params: List[Expression] = Nil,
+                                   result: Variable = Variable("")) extends Operation {
+    override def execute(): Option[String] = {
         val invokeParams = params match {
             case x :: xs => params.mkString(", ")
             case _ => ""
         }
-        Some(s"$functionName($invokeParams)")
-    }
-
-    protected[operations] override def returnResult(): Option[String] = execute()
-
-    def execute(operation: Operation): Option[String] = {
-        operation.execute() match {
-            case Some(res: String) => this.params = List(res); execute()
-            case _ => None
+        result match {
+            case Variable("") => Some(s"$functionName($invokeParams)")
+            case v: Variable => Some(s"${v.name} = $functionName($invokeParams)")
         }
+
     }
 }
 
-class ConstructorInvokeOperation(typeToConstruct: ConstructedType, parameters: List[String] = Nil)
+case class VariableDeclarationOperation(v: Variable, dataType: DataType, expr: Expression = new NoneExpressiion)
+    extends Operation {
+    override def execute(): Option[String] = {
+        val rightPart = expr match {
+            case e: NoneExpressiion => ""
+            case variable: Variable => " = " + variable.toString
+            case op: Operation => op.execute() match {
+                case Some(s: String) => " = " + s
+                case None => return None
+            }
+        }
+        Some(s"${dataType.toString} ${v.name}$rightPart")
+    }
+}
+
+class ConstructorInvokeOperation(typeToConstruct: ConstructedType, parameters: List[Expression] = Nil)
     extends FunctionInvokeOperation(typeToConstruct.getConstructor(), parameters)
 
 // TODO : Validate variable name
-case class CreationOperation(dataType: DataType, variableName: String = "", var params: List[String] = Nil)
+case class CreationOperation(dataType: DataType, variableName: Variable = Variable(""),
+                             var params: List[Expression] = Nil)
     extends Operation {
     // TODO: realize creation of primitives with params
     def createFromDataType(dataType: DataType): String = dataType match {
@@ -62,34 +73,28 @@ case class CreationOperation(dataType: DataType, variableName: String = "", var 
         case prim: primitives.PrimitiveType => prim.getDefaultValue
     }
 
-    def execute(): Option[String] = {
+    override def execute(): Option[String] = {
         val construct = createFromDataType(dataType)
         variableName match {
-            case "" => Some(construct)
-            case _ => Some(s"${dataType.toString} $variableName = $construct;")
+            case Variable("") => Some(construct)
+            case _ => Some(s"${dataType.toString} $variableName = $construct")
         }
 
-    }
-
-    protected[operations] override def returnResult(): Option[String] = execute()
-
-    def execute(operation: Operation): Option[String] = {
-        operation.execute() match {
-            case Some(res: String) => this.params = List(res); execute()
-            case _ => None
-        }
     }
 }
 
-case class ReturnOperation(operation: Operation) extends Operation {
-    def execute(): Option[String] = operation.returnResult() match {
-        case Some(invokeResult: String) => Some(s"return $invokeResult;")
-        case _ => None
+case class ReturnOperation(expression: Expression) extends Operation {
+    override def execute(): Option[String] = {
+        val result = expression match {
+            case v: Variable => Some(v.toString)
+            case op: Operation => op.execute()
+        }
+
+        result match {
+            case Some(res: String) => Some(s"return $res;")
+            case _ => None
+        }
     }
-
-    protected[operations] override def returnResult(): Option[String] = execute()
-
-    def execute(operation: Operation): Option[String] = ???
 }
 
 

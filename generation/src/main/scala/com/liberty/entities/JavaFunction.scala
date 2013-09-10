@@ -2,6 +2,7 @@ package com.liberty.entities
 
 import com.liberty.types.DataType
 import com.liberty.{patterns, types}
+import com.liberty.operations.Variable
 
 /**
  * User: Dimitr
@@ -11,7 +12,7 @@ import com.liberty.{patterns, types}
 // TODO: add throws support
 class JavaFunction {
     var name = ""
-    var output: DataType = new types.Undefined
+    var output: DataType = new types.UndefinedType
     var input: List[FunctionParameter] = Nil
     var body: FunctionBody = new FunctionBody()
 
@@ -35,6 +36,6 @@ class JavaFunction {
 
 }
 
-case class FunctionParameter(var paramName: String = "", var paramType: DataType) {
-    override def toString: String = paramType.toString + " " + paramName
+case class FunctionParameter(paramName: Variable, var paramType: DataType) {
+    override def toString: String = paramType.toString + " " + paramName.toString
 }

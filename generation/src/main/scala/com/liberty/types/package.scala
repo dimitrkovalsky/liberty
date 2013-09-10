@@ -20,9 +20,9 @@ package object types {
         def getConstructor(): String
     }
 
-    case class Undefined extends DataType("")
+    case class UndefinedType extends DataType("")
 
-    case class Void extends DataType("void")
+    case class VoidType extends DataType("void")
 
     case class ObjectType(classType: String) extends DataType(classType) with ConstructedType {
         def getConstructor(): String = classType
