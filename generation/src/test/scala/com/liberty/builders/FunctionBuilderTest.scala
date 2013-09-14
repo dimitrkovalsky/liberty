@@ -20,7 +20,7 @@ import com.liberty.entities.FunctionParameter
 
 class FunctionBuilderTest {
 
-    @Test def emptyFunctionTest() {
+    @Test def emptyFunction() {
         val builder = new FunctionBuilder
         builder.setName("create")
         builder.setOutputType(new types.VoidType)
@@ -34,7 +34,7 @@ class FunctionBuilderTest {
 
     }
 
-    @Test def withBodyTest() {
+    @Test def withBody() {
         val builder = new FunctionBuilder
         builder.setName("filter")
         builder.setOutputType(ListType(StringType))
@@ -69,7 +69,26 @@ class FunctionBuilderTest {
         val function = builder.getFunction
 
         val resultString = "String invoke(List<String> list){\n\tBoolean result;\n\tresult = validate(new ArrayList(), list);\n\treturn split(list, result);\n}"
-        println(function.toString)
+       // println(function.toString)
+        Assert.assertEquals(resultString, function.toString)
+    }
+
+    @Test def throwFunction() {
+        val builder = new FunctionBuilder
+        builder.setName("invoke")
+        builder.setOutputType(StringType)
+        val input = Variable("list")
+        builder.addParam(FunctionParameter(input, ListType(StringType)))
+        val result = Variable("result")
+        builder.addOperation(VariableDeclarationOperation(result, BooleanType))
+        builder.addOperation(
+            FunctionInvokeOperation("validate", List(CreationOperation(ArrayListType(StringType)), input), result))
+        builder.addOperation(ReturnOperation(FunctionInvokeOperation("split", List(input, result))))
+        builder.addThrow("Exception")
+        val function = builder.getFunction
+
+        val resultString = "String invoke(List<String> list) throws Exception {\n\tBoolean result;\n\tresult = validate(new ArrayList(), list);\n\treturn split(list, result);\n}"
+       // println(function.toString)
         Assert.assertEquals(resultString, function.toString)
     }
 }

@@ -1,6 +1,6 @@
 package com.liberty.builders
 
-import com.liberty.entities.{FunctionParameter, JavaFunction}
+import com.liberty.entities.{FunctionSignature, FunctionParameter, JavaFunction}
 import com.liberty.types
 import com.liberty.operations.Operation
 
@@ -13,15 +13,19 @@ import com.liberty.operations.Operation
 class FunctionBuilder {
     private val function = new JavaFunction
 
-    def setName(name: String) = function.name = name
+    def setName(name: String) = function.signature.name = name
 
-    def setOutputType(dataType: types.DataType) = function.output = dataType
+    def setOutputType(dataType: types.DataType) = function.signature.output = dataType
 
-    def addParam(param: FunctionParameter) = function.addParameter(param)
+    def addParam(param: FunctionParameter) = function.signature.addParameter(param)
 
     def addParams(params: FunctionParameter*) = {
         for (param <- params)
-            function.addParameter(param)
+            function.signature.addParameter(param)
+    }
+
+    def addThrow(thr:String){
+        function.signature.addThrow(thr)
     }
 
     def getFunction = function
