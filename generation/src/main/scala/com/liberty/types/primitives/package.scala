@@ -9,39 +9,39 @@ package com.liberty.types
 package object primitives {
 
     abstract class PrimitiveType(dataType: String) extends DataType(dataType) {
-        def getDefaultValue: String
+
     }
 
-    case object ByteType extends PrimitiveType("Byte"){
-        def getDefaultValue: String = "0"
+    case object ByteType extends PrimitiveType("Byte") {
+        override def getDefaultValue: String = "0"
     }
 
-    case object BooleanType extends PrimitiveType("Boolean"){
-        def getDefaultValue: String = "false"
+    case object BooleanType extends PrimitiveType("Boolean") {
+        override def getDefaultValue: String = "false"
     }
 
-    case object CharType extends PrimitiveType("Char"){
-        def getDefaultValue: String = "\'\'"
+    case object CharType extends PrimitiveType("Char") {
+        override def getDefaultValue: String = "\'\'"
     }
 
-    case object StringType extends PrimitiveType("String"){
-        def getDefaultValue: String = "\"\""
+    case object StringType extends PrimitiveType("String") {
+        override def getDefaultValue: String = "\"\""
     }
 
-    case object IntegerType extends PrimitiveType("Integer"){
-        def getDefaultValue: String = "0"
+    case object IntegerType extends PrimitiveType("Integer") {
+        override def getDefaultValue: String = "0"
     }
 
-    case object LongType extends PrimitiveType("Long"){
-        def getDefaultValue: String = "0"
+    case object LongType extends PrimitiveType("Long") {
+        override def getDefaultValue: String = "0"
     }
 
-    case object FloatType extends PrimitiveType("Float"){
-        def getDefaultValue: String = "0f"
+    case object FloatType extends PrimitiveType("Float") {
+        override def getDefaultValue: String = "0f"
     }
 
-    case object DoubleType extends PrimitiveType("Double"){
-        def getDefaultValue: String = "0.0"
+    case object DoubleType extends PrimitiveType("Double") {
+        override def getDefaultValue: String = "0.0"
     }
 
 }

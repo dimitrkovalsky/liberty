@@ -13,6 +13,8 @@ import com.liberty.types.collections.CollectionType
 package object types {
 
     abstract class DataType(dataType: String) {
+        def getDefaultValue: String = "null"
+
         override def toString: String = dataType
     }
 

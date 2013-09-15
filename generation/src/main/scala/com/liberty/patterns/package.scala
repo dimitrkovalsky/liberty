@@ -11,14 +11,14 @@ package object patterns {
         s"$signature{\n\t$body\n}"
     }
 
-    def JavaFunctionSignaturePattern(output: String, functionName: String, parameters: String,
+    def JavaFunctionSignaturePattern(modifier: String, output: String, functionName: String, parameters: String,
                                      functionThrows: List[String]): String = {
         val thr = functionThrows match {
             case Nil => ""
             case x :: xs => " throws " + functionThrows.mkString(", ") + " "
         }
-
-        s"$output $functionName($parameters)$thr"
+        val mod = if (modifier.isEmpty) modifier else modifier + " "
+        s"$mod$output $functionName($parameters)$thr"
     }
 
     def JavaFunctionInterfacePattern(signature: String): String = { signature.trim + ";" }
@@ -29,5 +29,16 @@ package object patterns {
 
     def JavaMarkerInterfacePattern(name: String): String = {
         s"interface $name {}"
+    }
+
+    def JavaClassPattern(name: String, fields: String, functions: String): String = {
+        if (fields.isEmpty && functions.isEmpty)
+            return s"class $name {}"
+        if (fields.isEmpty)
+            return s"class $name {\n$functions\n}"
+        if (functions.isEmpty)
+            return s"class $name {\n\t$fields\n}"
+
+        s"class $name {\n\t$fields\n\n$functions\n}"
     }
 }

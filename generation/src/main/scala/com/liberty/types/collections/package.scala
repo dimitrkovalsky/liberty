@@ -9,6 +9,7 @@ package com.liberty.types
 package object collections {
 
     abstract class CollectionType(collectionName: String) extends DataType("") {
+        override def getDefaultValue: String = "null"
     }
 
     abstract class ListCollection(collectionName: String, collectionType: DataType)
@@ -28,7 +29,6 @@ package object collections {
 
     case class ListType(collectionType: DataType) extends ListCollection("List", collectionType)
 
-    // TODO: Complete code
     case class ArrayListType(collectionType: DataType) extends ListCollection("ArrayList", collectionType) with ConstructedType{
         def getConstructor(): String = "ArrayList"
     }

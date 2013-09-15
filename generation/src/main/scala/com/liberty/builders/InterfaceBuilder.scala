@@ -7,6 +7,7 @@ import com.liberty.entities.{FunctionSignature, JavaInterface}
  * Date: 14.09.13
  * Time: 11:50
  */
+// TODO: Add inheritance support
 class InterfaceBuilder {
     private val javaInterface = new JavaInterface
 

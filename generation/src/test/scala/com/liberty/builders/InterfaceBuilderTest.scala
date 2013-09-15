@@ -25,13 +25,13 @@ class InterfaceBuilderTest {
         val builder = new InterfaceBuilder
         builder.setName("TestInterface")
         builder.addFunctionSignature(new FunctionSignature("test"))
-        builder.addFunctionSignature(FunctionSignature("validate", BooleanType))
-        builder.addFunctionSignature(FunctionSignature("validate", BooleanType,
+        builder.addFunctionSignature(new FunctionSignature("validate", BooleanType))
+        builder.addFunctionSignature(new FunctionSignature("validate", BooleanType,
             List(FunctionParameter(Variable("names"), collections.ListType(StringType)))))
-        builder.addFunctionSignature(FunctionSignature("validate", BooleanType,
+        builder.addFunctionSignature(new FunctionSignature("validate", BooleanType,
             List(FunctionParameter(Variable("costs"), collections.ArrayListType(IntegerType))),
             List("CostException", "ValidationException")))
-        builder.addFunctionSignature(FunctionSignature("getData", collections.ListType(StringType)))
+        builder.addFunctionSignature(new FunctionSignature("getData", collections.ListType(StringType)))
         val interface = builder.getInterface
         val expect = "interface TestInterface {\n\tvoid test();\n\tBoolean validate();\n\tBoolean validate(List<String> names);\n\tBoolean validate(ArrayList<Integer> costs) throws CostException, ValidationException;\n\tList<String> getData();\n}"
         //println(interface)

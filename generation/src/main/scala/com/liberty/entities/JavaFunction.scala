@@ -10,7 +10,7 @@ import com.liberty.operations.Variable
  * Time: 12:42
  */
 // TODO: add access modifiers support
-class JavaFunction {
+class JavaFunction extends ClassPart {
     val signature: FunctionSignature = new FunctionSignature
 
     var body: FunctionBody = new FunctionBody()
@@ -20,15 +20,25 @@ class JavaFunction {
         patterns.JavaFunctionPattern(signature.toString, body.toString)
     }
 
-
+    override def toClassPart(shift: String = "\t"): String = {
+        toString.split("\n").map(shift + _).mkString("\n")
+    }
 }
 
 case class FunctionParameter(paramName: Variable, var paramType: DataType) {
     override def toString: String = paramType.toString + " " + paramName.toString
 }
 
-case class FunctionSignature(var name: String, var output: DataType, var input: List[FunctionParameter] = Nil,
-                             var functionThrows: List[String] = Nil) {
+case class FunctionSignature(var name: String, var output: DataType, var modifier: Modifier = DefaultModifier,
+                             var input: List[FunctionParameter] = Nil, var functionThrows: List[String] = Nil) {
+    def this(name: String, output: DataType, input: List[FunctionParameter], functionThrows: List[String]) = this(name,
+        output, DefaultModifier, input, functionThrows)
+
+    def this(name: String, output: DataType, input: List[FunctionParameter]) = this(name, output, DefaultModifier,
+        input)
+
+    def this(name: String, output: DataType) = this(name, output, Nil, Nil)
+
     def this(name: String) = this(name, new types.UndefinedType)
 
     def this() = this("")
@@ -52,13 +62,13 @@ case class FunctionSignature(var name: String, var output: DataType, var input: 
 
     private implicit def dataTypeToString(dataType: DataType): String = {
         dataType match {
-            case t:UndefinedType => "void"
+            case t: UndefinedType => "void"
             case _ => dataType.toString
         }
     }
 
     override def toString: String = {
-        patterns.JavaFunctionSignaturePattern(output, name, input.mkString(", "), functionThrows)
+        patterns.JavaFunctionSignaturePattern(modifier.toString, output, name, input.mkString(", "), functionThrows)
     }
 }
 
