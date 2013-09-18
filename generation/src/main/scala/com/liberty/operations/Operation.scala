@@ -79,7 +79,6 @@ case class CreationOperation(dataType: DataType, variableName: Variable = Variab
             case Variable("") => Some(construct)
             case _ => Some(s"${dataType.toString} $variableName = $construct")
         }
-
     }
 }
 
