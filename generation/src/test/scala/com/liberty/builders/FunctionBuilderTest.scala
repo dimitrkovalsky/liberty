@@ -82,6 +82,7 @@ class FunctionBuilderTest {
         builder.setOutputType(StringType)
         val input = Variable("list")
         builder.addParam(FunctionParameter(input, ListType(StringType)))
+
         val result = Variable("result")
         builder.addOperation(VariableDeclarationOperation(result, BooleanType))
         builder.addOperation(

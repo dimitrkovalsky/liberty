@@ -40,8 +40,8 @@ case class FunctionInvokeOperation(functionName: String, var params: List[Expres
         result match {
             case Variable("") => Some(s"$functionName($invokeParams)")
             case v: Variable => Some(s"${v.name} = $functionName($invokeParams)")
+            case _ => None
         }
-
     }
 }
 
