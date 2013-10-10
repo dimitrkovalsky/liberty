@@ -2,6 +2,7 @@ package com.liberty.entities
 
 import com.liberty.types.DataType
 import com.liberty.patterns
+import com.liberty.traits.Annotatable
 
 /**
  * User: Dimitr
@@ -11,7 +12,7 @@ import com.liberty.patterns
 // TODO: Add support function and field changing and removing
 // TODO: Add constructor support
 // TODO: Add method generation
-class JavaClass {
+class JavaClass extends Annotatable {
     var name: String = ""
     var functions: List[JavaFunction] = Nil
     var fields: List[JavaField] = Nil
@@ -34,7 +35,7 @@ class JavaClass {
             case list: List[String] => list.mkString("\n\n")
         }
 
-        patterns.JavaClassPattern(name, fieldsString, functionsString)
+        patterns.JavaClassPattern(annotationToString(inline = false), name, fieldsString, functionsString)
     }
 }
 
@@ -43,14 +44,24 @@ trait ClassPart {
 }
 
 case class JavaField(name: String, dataType: DataType, var modifier: Modifier = DefaultModifier, var value: String = "")
-    extends ClassPart {
+    extends ClassPart with Annotatable {
+
+    def apply(annotation: JavaAnnotation): JavaField = {
+        addAnnotation(annotation)
+        this
+    }
 
     if (value.isEmpty)
         value = dataType.getDefaultValue
 
-    override def toString: String = s"${
-        if (modifier.toString.isEmpty) "" else modifier.toString + " "
-    }${dataType.toString} $name = $value"
+
+    override def toString: String = {
+        s"${
+            annotationToPostShiftedString("\t")
+        }${
+            if (modifier.toString.isEmpty) "" else modifier.toString + " "
+        }${dataType.toString} $name = $value"
+    }
 
     override def toClassPart(shift: String = "\t"): String = toString
 }

@@ -23,7 +23,11 @@ case class Variable(name: String) extends Expression {
     override def toString: String = name
 }
 
-case class NoneExpressiion extends Expression
+case class Value(value: String) extends Expression {
+    override def toString: String = value
+}
+
+case class NoneExpression() extends Expression
 
 case class UnaryOperation(operator: String, arg: Expression) extends Expression
 
@@ -45,18 +49,20 @@ case class FunctionInvokeOperation(functionName: String, var params: List[Expres
     }
 }
 
-case class VariableDeclarationOperation(v: Variable, dataType: DataType, expr: Expression = new NoneExpressiion)
+case class VariableDeclarationOperation(v: Variable, dataType: DataType, expr: Expression = new NoneExpression)
     extends Operation {
     override def execute(): Option[String] = {
         val rightPart = expr match {
-            case e: NoneExpressiion => ""
+            case e: NoneExpression => ""
             case variable: Variable => " = " + variable.toString
             case op: Operation => op.execute() match {
                 case Some(s: String) => " = " + s
                 case None => return None
             }
         }
-        Some(s"${dataType.toString} ${v.name}$rightPart")
+        Some(s"${dataType.toString} ${
+            v.name
+        }$rightPart")
     }
 }
 
@@ -86,6 +92,7 @@ case class ReturnOperation(expression: Expression) extends Operation {
     override def execute(): Option[String] = {
         val result = expression match {
             case v: Variable => Some(v.toString)
+            case v: Value => Some(v.toString)
             case op: Operation => op.execute()
         }
 

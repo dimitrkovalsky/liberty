@@ -3,6 +3,7 @@ package com.liberty.entities
 import com.liberty.types.{UndefinedType, DataType}
 import com.liberty.{patterns, types}
 import com.liberty.operations.Variable
+import com.liberty.traits.Annotatable
 
 /**
  * User: Dimitr
@@ -10,7 +11,7 @@ import com.liberty.operations.Variable
  * Time: 12:42
  */
 // TODO: add access modifiers support
-class JavaFunction extends ClassPart {
+class JavaFunction extends ClassPart with Annotatable {
     val signature: FunctionSignature = new FunctionSignature
 
     var body: FunctionBody = new FunctionBody()
@@ -21,7 +22,7 @@ class JavaFunction extends ClassPart {
     }
 
     override def toClassPart(shift: String = "\t"): String = {
-        toString.split("\n").map(shift + _).mkString("\n")
+        annotationToShiftedString(shift) + toString.split("\n").map(shift + _).mkString("\n")
     }
 }
 

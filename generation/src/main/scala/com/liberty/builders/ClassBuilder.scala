@@ -1,6 +1,6 @@
 package com.liberty.builders
 
-import com.liberty.entities.{JavaField, JavaClass, JavaFunction}
+import com.liberty.entities.{JavaAnnotation, JavaField, JavaClass, JavaFunction}
 
 /**
  * User: Dimitr
@@ -20,6 +20,10 @@ class ClassBuilder {
 
     def addField(field: JavaField) {
         javaClass.addField(field)
+    }
+
+    def addAnnotation(annotation:JavaAnnotation){
+        javaClass.addAnnotation(annotation)
     }
 
     def getJavaClass: JavaClass = javaClass

@@ -31,7 +31,7 @@ package object patterns {
         s"interface $name {}"
     }
 
-    def JavaClassPattern(name: String, fields: String, functions: String): String = {
+    def JavaClassPattern(annotations:String, name: String, fields: String, functions: String): String = {
         if (fields.isEmpty && functions.isEmpty)
             return s"class $name {}"
         if (fields.isEmpty)
@@ -39,6 +39,6 @@ package object patterns {
         if (functions.isEmpty)
             return s"class $name {\n\t$fields\n}"
 
-        s"class $name {\n\t$fields\n\n$functions\n}"
+        s"${annotations}class $name {\n\t$fields\n\n$functions\n}"
     }
 }

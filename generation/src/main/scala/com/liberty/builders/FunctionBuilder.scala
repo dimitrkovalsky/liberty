@@ -1,8 +1,10 @@
 package com.liberty.builders
 
-import com.liberty.entities.{FunctionSignature, FunctionParameter, JavaFunction}
+import com.liberty.entities._
 import com.liberty.types
 import com.liberty.operations.Operation
+import com.liberty.entities.JavaAnnotation
+import com.liberty.entities.FunctionParameter
 
 /**
  * User: Dimitr
@@ -24,11 +26,19 @@ class FunctionBuilder {
             function.signature.addParameter(param)
     }
 
-    def addThrow(thr:String){
+    def addThrow(thr: String) {
         function.signature.addThrow(thr)
+    }
+
+    def addAnnotation(annotation: JavaAnnotation) {
+        function.addAnnotation(annotation)
+    }
+
+    def addModifier(modifier: Modifier) {
+        function.signature.modifier = modifier
     }
 
     def getFunction = function
 
-    def addOperation(operation:Operation) = function.body.addOperation(operation)
+    def addOperation(operation: Operation) = function.body.addOperation(operation)
 }

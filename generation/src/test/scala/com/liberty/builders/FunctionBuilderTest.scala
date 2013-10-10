@@ -6,7 +6,7 @@ import com.liberty.types.primitives._
 import com.liberty.operations._
 import com.liberty.types.collections.MapType
 import com.liberty.types.collections.ListType
-import com.liberty.entities.{JavaFunction, FunctionParameter}
+import com.liberty.entities.{PublicModifier, JavaAnnotation, JavaFunction, FunctionParameter}
 import com.liberty.types.collections._
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.VoidType
 import com.liberty.operations.FunctionInvokeOperation
@@ -91,7 +91,7 @@ class FunctionBuilderTest {
         builder.getFunction
     }
 
-    def createFilterFunction:JavaFunction = {
+    def createFilterFunction: JavaFunction = {
         val builder = new FunctionBuilder
         builder.setName("filter")
         builder.setOutputType(ListType(StringType))
@@ -101,6 +101,16 @@ class FunctionBuilderTest {
         builder.addOperation(CreationOperation(ArrayListType(StringType), result))
         builder.addOperation(FunctionInvokeOperation("validate", List(result)))
         builder.addOperation(ReturnOperation(FunctionInvokeOperation("split", List(paramName, result))))
+        builder.getFunction
+    }
+
+    def createToStringFunction: JavaFunction = {
+        val builder = new FunctionBuilder
+        builder.setName("toString")
+        builder.setOutputType(StringType)
+        builder.addAnnotation(JavaAnnotation("Override"))
+        builder.addOperation(ReturnOperation(Value("\"toString invoked\"")))
+        builder.addModifier(PublicModifier)
         builder.getFunction
     }
 }
