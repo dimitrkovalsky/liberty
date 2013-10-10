@@ -5,6 +5,7 @@ import com.liberty.entities.{FunctionParameter, FunctionSignature}
 import com.liberty.types.{collections, primitives}
 import com.liberty.types.primitives.{IntegerType, BooleanType, StringType}
 import com.liberty.operations.Variable
+import com.liberty.traits.JavaPackage
 
 /**
  * User: Dimitr
@@ -18,6 +19,16 @@ class InterfaceBuilderTest {
         val interface = builder.getInterface
         val expect = "interface Marker {}"
         //println(interface)
+        Assert.assertEquals(expect, interface.toString)
+    }
+
+    @Test def withPackageInterface() {
+        val builder = new InterfaceBuilder
+        builder.setName("Marker")
+        builder.addPackage(JavaPackage("my.test.program"))
+        val interface = builder.getInterface
+        val expect = "package my.test.program;\n\ninterface Marker {}"
+        println(interface)
         Assert.assertEquals(expect, interface.toString)
     }
 

@@ -3,6 +3,7 @@ package com.liberty
 
 import com.liberty.types.primitives.PrimitiveType
 import com.liberty.types.collections.CollectionType
+import com.liberty.traits.Importable
 
 
 /**
@@ -12,7 +13,7 @@ import com.liberty.types.collections.CollectionType
  */
 package object types {
 
-    abstract class DataType(dataType: String) {
+    abstract class DataType(dataType: String) extends Importable {
         def getDefaultValue: String = "null"
 
         override def toString: String = dataType

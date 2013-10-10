@@ -1,5 +1,7 @@
 package com.liberty
 
+import com.liberty.traits.JavaPackage
+
 /**
  * User: Dimitr
  * Date: 05.09.13
@@ -11,8 +13,7 @@ package object patterns {
         s"$signature{\n\t$body\n}"
     }
 
-    def JavaFunctionSignaturePattern(modifier: String, output: String, functionName: String, parameters: String,
-                                     functionThrows: List[String]): String = {
+    def JavaFunctionSignaturePattern(modifier: String, output: String, functionName: String, parameters: String, functionThrows: List[String]): String = {
         val thr = functionThrows match {
             case Nil => ""
             case x :: xs => " throws " + functionThrows.mkString(", ") + " "
@@ -23,15 +24,16 @@ package object patterns {
 
     def JavaFunctionInterfacePattern(signature: String): String = { signature.trim + ";" }
 
-    def JavaInterfacePattern(name: String, signatures: String): String = {
-        s"interface $name {\n\t$signatures\n}"
+    def JavaInterfacePattern(jPackage: String, name: String, signatures: String): String = {
+        s"${if (jPackage.isEmpty) "" else jPackage + "\n\n"}interface $name {\n\t$signatures\n}"
     }
 
-    def JavaMarkerInterfacePattern(name: String): String = {
-        s"interface $name {}"
+    def JavaMarkerInterfacePattern(jPackage: String, name: String): String = {
+
+        s"${if (jPackage.isEmpty) "" else jPackage + "\n\n"}interface $name {}"
     }
 
-    def JavaClassPattern(annotations:String, name: String, fields: String, functions: String): String = {
+    def JavaClassPattern(annotations: String, name: String, fields: String, functions: String): String = {
         if (fields.isEmpty && functions.isEmpty)
             return s"class $name {}"
         if (fields.isEmpty)

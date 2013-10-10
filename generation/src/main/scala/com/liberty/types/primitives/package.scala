@@ -1,5 +1,7 @@
 package com.liberty.types
 
+import com.liberty.traits.JavaPackage
+
 
 /**
  * User: Dimitr
@@ -9,7 +11,7 @@ package com.liberty.types
 package object primitives {
 
     abstract class PrimitiveType(dataType: String) extends DataType(dataType) {
-
+          javaPackage = JavaPackage("java.util.lang")
     }
 
     case object ByteType extends PrimitiveType("Byte") {

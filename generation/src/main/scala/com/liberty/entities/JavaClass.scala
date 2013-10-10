@@ -2,7 +2,7 @@ package com.liberty.entities
 
 import com.liberty.types.DataType
 import com.liberty.patterns
-import com.liberty.traits.Annotatable
+import com.liberty.traits.{NoPackage, JavaPackage, Importable, Annotatable}
 
 /**
  * User: Dimitr
@@ -11,8 +11,8 @@ import com.liberty.traits.Annotatable
  */
 // TODO: Add support function and field changing and removing
 // TODO: Add constructor support
-// TODO: Add method generation
-class JavaClass extends Annotatable {
+class JavaClass(jPackage:JavaPackage = new NoPackage) extends Annotatable with Importable{
+    this.javaPackage = jPackage
     var name: String = ""
     var functions: List[JavaFunction] = Nil
     var fields: List[JavaField] = Nil

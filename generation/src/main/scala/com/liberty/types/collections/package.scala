@@ -1,5 +1,7 @@
 package com.liberty.types
 
+import com.liberty.traits.JavaPackage
+
 
 /**
  * User: Dimitr
@@ -9,6 +11,7 @@ package com.liberty.types
 package object collections {
 
     abstract class CollectionType(collectionName: String) extends DataType("") {
+        javaPackage = JavaPackage("java.util")
         override def getDefaultValue: String = "null"
     }
 

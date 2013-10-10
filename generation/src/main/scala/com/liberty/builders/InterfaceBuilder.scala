@@ -1,6 +1,7 @@
 package com.liberty.builders
 
 import com.liberty.entities.{FunctionSignature, JavaInterface}
+import com.liberty.traits.JavaPackage
 
 /**
  * User: Dimitr
@@ -17,6 +18,10 @@ class InterfaceBuilder {
 
     def addFunctionSignature(signature: FunctionSignature) {
         javaInterface.addSignature(signature)
+    }
+
+    def addPackage(jPackage: JavaPackage) {
+        javaInterface.javaPackage = jPackage;
     }
 
     def getInterface = javaInterface
