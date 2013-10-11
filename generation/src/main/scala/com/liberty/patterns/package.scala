@@ -13,7 +13,8 @@ package object patterns {
         s"$signature{\n\t$body\n}"
     }
 
-    def JavaFunctionSignaturePattern(modifier: String, output: String, functionName: String, parameters: String, functionThrows: List[String]): String = {
+    def JavaFunctionSignaturePattern(modifier: String, output: String, functionName: String, parameters: String,
+                                     functionThrows: List[String]): String = {
         val thr = functionThrows match {
             case Nil => ""
             case x :: xs => " throws " + functionThrows.mkString(", ") + " "
@@ -33,7 +34,8 @@ package object patterns {
         s"${if (jPackage.isEmpty) "" else jPackage + "\n\n"}interface $name {}"
     }
 
-    def JavaClassPattern(annotations: String, name: String, fields: String, functions: String): String = {
+    def JavaClassPattern(jPackage: String, imports: String, annotations: String, name: String, fields: String,
+                         functions: String): String = {
         if (fields.isEmpty && functions.isEmpty)
             return s"class $name {}"
         if (fields.isEmpty)
@@ -41,6 +43,16 @@ package object patterns {
         if (functions.isEmpty)
             return s"class $name {\n\t$fields\n}"
 
-        s"${annotations}class $name {\n\t$fields\n\n$functions\n}"
+        s"${
+            if (jPackage.isEmpty) ""
+            else {
+                jPackage + "\n\n"
+            }
+        }${
+            if (imports.isEmpty) ""
+            else {
+                imports + "\n\n"
+            }
+        }${annotations}class $name {\n\t$fields\n\n$functions\n}"
     }
 }

@@ -10,22 +10,22 @@ trait Importable {
     var javaPackage: JavaPackage = new NoPackage()
 
     def getImports: String = javaPackage match {
-        case p:NoPackage => ""
+        case p: NoPackage => ""
         case _ => javaPackage.toString
     }
 
-    def getPackageString =   javaPackage match {
-        case p:NoPackage => ""
+    def getPackageString = javaPackage match {
+        case p: NoPackage => ""
         case _ => s"package ${javaPackage.name};"
     }
 }
 
 
-case class JavaPackage(name: String) {
-    override def toString: String = {
-        s"import $name;"
+case class JavaPackage(name: String, packageClass: String) {
+    def getImport: String = {
+        s"import $name.$packageClass;"
     }
 }
 
-class NoPackage() extends JavaPackage("") {
+class NoPackage() extends JavaPackage("", "") {
 }

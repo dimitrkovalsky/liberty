@@ -4,6 +4,7 @@ import org.junit.{Assert, Test}
 import com.liberty.entities.{JavaAnnotation, ProtectedModifier, PrivateModifier, JavaField}
 import com.liberty.types.primitives
 import com.liberty.types.primitives._
+import com.liberty.traits.JavaPackage
 
 /**
  * User: Dimitr
@@ -77,9 +78,9 @@ class ClassBuilderTest {
 
         val clazz = builder.getJavaClass
 
-        val expected = "class FullClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n}"
+        val expected = "import java.util.lang.String;\nimport java.util.lang.Integer;\nimport java.util.List;\n\nclass FullClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n}"
         val available = clazz.toString
-        //println(available)
+        println(available)
         Assert.assertEquals(expected, available)
     }
 
@@ -95,7 +96,7 @@ class ClassBuilderTest {
         builder.addFunction(functionTest.createInvokeAnotherFunction)
         builder.addFunction(functionTest.createInvokeFunction)
         builder.addFunction(functionTest.createToStringFunction)
-
+        builder.addPackage(JavaPackage("my.test.package","FullClass"))
         builder.addAnnotation(JavaAnnotation("Entity")("table", "simple_table"))
         val annotation: JavaAnnotation = new JavaAnnotation("NamedQuery")
         annotation.addParameter("name", "findAll")
@@ -103,7 +104,7 @@ class ClassBuilderTest {
         builder.addAnnotation(annotation)
         val clazz = builder.getJavaClass
 
-        val expected = "@Entity(table = \"simple_table\")\n@NamedQuery(name = \"findAll\", query = \"SELECT * FROM simple_table\")\nclass FullClass {\n\t@Id\n\tprivate String id = \"\";\n\t@Column(name = \"fc_name\")\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\t@Override\n\tpublic String toString(){\n\t\treturn \"toString invoked\";\n\t}\n}"
+        val expected = "package my.test.package;\n\nimport java.util.lang.String;\nimport java.util.lang.Integer;\nimport java.util.List;\n\n@Entity(table = \"simple_table\")\n@NamedQuery(name = \"findAll\", query = \"SELECT * FROM simple_table\")\nclass FullClass {\n\t@Id\n\tprivate String id = \"\";\n\t@Column(name = \"fc_name\")\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\t@Override\n\tpublic String toString(){\n\t\treturn \"toString invoked\";\n\t}\n}"
         val available = clazz.toString
         //println(available)
         Assert.assertEquals(expected, available)

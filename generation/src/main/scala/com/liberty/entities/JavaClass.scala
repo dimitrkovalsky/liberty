@@ -11,7 +11,7 @@ import com.liberty.traits.{NoPackage, JavaPackage, Importable, Annotatable}
  */
 // TODO: Add support function and field changing and removing
 // TODO: Add constructor support
-class JavaClass(jPackage:JavaPackage = new NoPackage) extends Annotatable with Importable{
+class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with Importable {
     this.javaPackage = jPackage
     var name: String = ""
     var functions: List[JavaFunction] = Nil
@@ -25,6 +25,14 @@ class JavaClass(jPackage:JavaPackage = new NoPackage) extends Annotatable with I
         functions = functions ::: List(function)
     }
 
+    private def getAllImports: String = {
+        var set: Set[JavaPackage] = Set()
+        fields.foreach(f => set += f.getPackage)
+        functions.foreach(f => set = set ++ f.getPackages)
+
+        set.map(jp => jp.getImport).mkString("\n")
+    }
+
     override def toString: String = {
         val fieldsString = fields.map(_.toClassPart()) match {
             case Nil => ""
@@ -35,7 +43,8 @@ class JavaClass(jPackage:JavaPackage = new NoPackage) extends Annotatable with I
             case list: List[String] => list.mkString("\n\n")
         }
 
-        patterns.JavaClassPattern(annotationToString(inline = false), name, fieldsString, functionsString)
+        patterns
+            .JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), name, fieldsString, functionsString)
     }
 }
 
@@ -64,4 +73,6 @@ case class JavaField(name: String, dataType: DataType, var modifier: Modifier = 
     }
 
     override def toClassPart(shift: String = "\t"): String = toString
+
+    def getPackage: JavaPackage = dataType.javaPackage
 }

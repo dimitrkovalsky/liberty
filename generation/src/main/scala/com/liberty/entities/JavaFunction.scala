@@ -3,7 +3,7 @@ package com.liberty.entities
 import com.liberty.types.{UndefinedType, DataType}
 import com.liberty.{patterns, types}
 import com.liberty.operations.Variable
-import com.liberty.traits.Annotatable
+import com.liberty.traits.{JavaPackage, Annotatable}
 
 /**
  * User: Dimitr
@@ -24,12 +24,19 @@ class JavaFunction extends ClassPart with Annotatable {
     override def toClassPart(shift: String = "\t"): String = {
         annotationToShiftedString(shift) + toString.split("\n").map(shift + _).mkString("\n")
     }
+
+    def getPackages: Set[JavaPackage] = {
+        val set: Set[JavaPackage] = signature.getPackages
+        set ++ body.getPackages
+    }
 }
 
 case class FunctionParameter(paramName: Variable, var paramType: DataType) {
     override def toString: String = paramType.toString + " " + paramName.toString
 }
 
+// TODO: Add normal throws support add Java exception type
+// TODO: Add exception import  support
 case class FunctionSignature(var name: String, var output: DataType, var modifier: Modifier = DefaultModifier,
                              var input: List[FunctionParameter] = Nil, var functionThrows: List[String] = Nil) {
     def this(name: String, output: DataType, input: List[FunctionParameter], functionThrows: List[String]) = this(name,
@@ -66,6 +73,13 @@ case class FunctionSignature(var name: String, var output: DataType, var modifie
             case t: UndefinedType => "void"
             case _ => dataType.toString
         }
+    }
+
+    def getPackages: Set[JavaPackage] = {
+        var set: Set[JavaPackage] = Set()
+        set += output.javaPackage
+        input.foreach(param => set += param.paramType.javaPackage)
+        set
     }
 
     override def toString: String = {

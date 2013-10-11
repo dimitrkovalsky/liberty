@@ -11,7 +11,8 @@ import com.liberty.traits.JavaPackage
 package object collections {
 
     abstract class CollectionType(collectionName: String) extends DataType("") {
-        javaPackage = JavaPackage("java.util")
+        javaPackage = JavaPackage("java.util", collectionName)
+
         override def getDefaultValue: String = "null"
     }
 
@@ -32,7 +33,8 @@ package object collections {
 
     case class ListType(collectionType: DataType) extends ListCollection("List", collectionType)
 
-    case class ArrayListType(collectionType: DataType) extends ListCollection("ArrayList", collectionType) with ConstructedType{
+    case class ArrayListType(collectionType: DataType)
+        extends ListCollection("ArrayList", collectionType) with ConstructedType {
         def getConstructor(): String = "ArrayList"
     }
 

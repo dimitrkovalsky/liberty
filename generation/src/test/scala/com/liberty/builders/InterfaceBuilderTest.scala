@@ -25,7 +25,7 @@ class InterfaceBuilderTest {
     @Test def withPackageInterface() {
         val builder = new InterfaceBuilder
         builder.setName("Marker")
-        builder.addPackage(JavaPackage("my.test.program"))
+        builder.addPackage(JavaPackage("my.test.program", "Marker"))
         val interface = builder.getInterface
         val expect = "package my.test.program;\n\ninterface Marker {}"
         println(interface)

@@ -1,6 +1,7 @@
 package com.liberty.builders
 
 import com.liberty.entities.{JavaAnnotation, JavaField, JavaClass, JavaFunction}
+import com.liberty.traits.JavaPackage
 
 /**
  * User: Dimitr
@@ -24,6 +25,10 @@ class ClassBuilder {
 
     def addAnnotation(annotation:JavaAnnotation){
         javaClass.addAnnotation(annotation)
+    }
+
+    def addPackage(javaPackage:JavaPackage){
+        javaClass.javaPackage = javaPackage
     }
 
     def getJavaClass: JavaClass = javaClass

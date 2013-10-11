@@ -1,6 +1,7 @@
 package com.liberty.entities
 
 import com.liberty.operations.Operation
+import com.liberty.traits.JavaPackage
 
 /**
  * User: Dimitr
@@ -24,4 +25,6 @@ class FunctionBody {
 
     // TODO: check if the function returns result and if result has appropriate type
     def isFunctionValid: Boolean = true
+
+    def getPackages:Set[JavaPackage] = Set()
 }

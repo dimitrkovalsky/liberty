@@ -9,7 +9,7 @@ import com.liberty.types.{primitives, ConstructedType, DataType}
  */
 trait Expression
 
-// TODO : Provide the possibility to pass function into another function
+// TODO : Provide the possibility to get packages from operations
 trait Operation extends Expression {
     def execute(): Option[String]
 
