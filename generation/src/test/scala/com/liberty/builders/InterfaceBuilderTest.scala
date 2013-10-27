@@ -1,7 +1,7 @@
 package com.liberty.builders
 
 import org.junit.{Assert, Test}
-import com.liberty.entities.{FunctionParameter, FunctionSignature}
+import com.liberty.entities.{JavaInterface, FunctionParameter, FunctionSignature}
 import com.liberty.types.{collections, primitives}
 import com.liberty.types.primitives.{IntegerType, BooleanType, StringType}
 import com.liberty.operations.Variable
@@ -23,16 +23,27 @@ class InterfaceBuilderTest {
     }
 
     @Test def withPackageInterface() {
-        val builder = new InterfaceBuilder
-        builder.setName("Marker")
-        builder.addPackage(JavaPackage("my.test.program", "Marker"))
-        val interface = builder.getInterface
+        val interface = createWithPackageInterface()
         val expect = "package my.test.program;\n\ninterface Marker {}"
         println(interface)
         Assert.assertEquals(expect, interface.toString)
     }
 
     @Test def withFunctions() {
+        val interface = createWithFunctionsInterface()
+        val expect = "interface TestInterface {\n\tvoid test();\n\tBoolean validate();\n\tBoolean validate(List<String> names);\n\tBoolean validate(ArrayList<Integer> costs) throws CostException, ValidationException;\n\tList<String> getData();\n}"
+        //println(interface)
+        Assert.assertEquals(expect, interface.toString)
+    }
+
+    def createWithPackageInterface(): JavaInterface = {
+        val builder = new InterfaceBuilder
+        builder.setName("Marker")
+        builder.addPackage(JavaPackage("my.test.program", "Marker"))
+        builder.getInterface
+    }
+
+    def createWithFunctionsInterface(): JavaInterface = {
         val builder = new InterfaceBuilder
         builder.setName("TestInterface")
         builder.addFunctionSignature(new FunctionSignature("test"))
@@ -43,9 +54,6 @@ class InterfaceBuilderTest {
             List(FunctionParameter(Variable("costs"), collections.ArrayListType(IntegerType))),
             List("CostException", "ValidationException")))
         builder.addFunctionSignature(new FunctionSignature("getData", collections.ListType(StringType)))
-        val interface = builder.getInterface
-        val expect = "interface TestInterface {\n\tvoid test();\n\tBoolean validate();\n\tBoolean validate(List<String> names);\n\tBoolean validate(ArrayList<Integer> costs) throws CostException, ValidationException;\n\tList<String> getData();\n}"
-        //println(interface)
-        Assert.assertEquals(expect, interface.toString)
+        builder.getInterface
     }
 }
