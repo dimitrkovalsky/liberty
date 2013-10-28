@@ -1,46 +1,52 @@
 package com.liberty.executor
 
+import com.liberty.entities.MavenEntity
+
 /**
  * User: Maxxis
  * Date: 28.10.13
  * Time: 9:28
  */
-class MavenExecutor {
+class MavenExecutor(me:MavenEntity) {
+    var mavenEntity: Option[MavenEntity] = Some(me)
+    def create(): Boolean = {
+        val result = mavenEntity match {
+            case Some(me: MavenEntity) => if (!me.path.isEmpty && !me.groupId.isEmpty && !me.projectName.isEmpty) {
+                val command: String = "mvn archetype:generate -DgroupId=" + me.groupId + " -DartifactId=" + me.projectName + " -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false"
+                CommandExecutor.execute(command, me.path)
+                true
+            } else {
+                false
+            }
+        }
+        result
+    }
 
-  val executor: CommandExecutor = new CommandExecutor();
+    def clean() {
+        val command: String = "mvn clean"
+        mavenEntity.map {
+            me: MavenEntity => CommandExecutor.execute(command, me.path)
+        }
+    }
 
-  def create(groupId: String, projectName: String) {
-    val command: String = "mvn archetype:generate -DgroupId=" + groupId + " -DartifactId=" + projectName + " -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false";
-    executor.execute(command);
-  }
+    def build() {
+        val command: String = "mvn package";
+        mavenEntity.map {
+            me: MavenEntity => CommandExecutor.execute(command, me.path)
+        }
+    }
 
-  def clean() {
-    val command: String = "mvn clean";
-    executor.execute(command);
-  }
+    def install() {
+        val command: String = "mvn install"
+        mavenEntity.map {
+            me: MavenEntity => CommandExecutor.execute(command, me.path)
+        }
+    }
 
-  def build() {
-    val command: String = "mvn package";
-    executor.execute(command);
-  }
-
-  def install() {
-    val command: String = "mvn install";
-    executor.execute(command);
-  }
-
-  def run() {
-    val command: String = "mvn clean";
-    executor.execute(command);
-  }
-
-  def runTest() {
-    val command: String = "mvn test";
-    executor.execute(command);
-  }
-
-  def runPlugin() {
-    val command: String = "mvn clean";
-    executor.execute(command);
-  }
+    def runTest() {
+        val command: String = "mvn test";
+        mavenEntity.map {
+            me: MavenEntity => CommandExecutor.execute(command, me.path)
+        }
+    }
 }

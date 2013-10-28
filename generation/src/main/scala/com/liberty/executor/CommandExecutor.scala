@@ -7,7 +7,7 @@ import java.io.{InputStreamReader, BufferedReader, File}
  * Date: 28.10.13
  * Time: 9:16
  */
-class CommandExecutor {
+object CommandExecutor {
 
   val WORKING_DIRECTORY : String = "C:\\"
 
