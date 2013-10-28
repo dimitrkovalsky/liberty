@@ -34,8 +34,8 @@ package object patterns {
         s"${if (jPackage.isEmpty) "" else jPackage + "\n\n"}interface $name {}"
     }
 
-    def JavaClassPattern(jPackage: String, imports: String, annotations: String, name: String, fields: String,
-                         functions: String): String = {
+    def JavaClassPattern(jPackage: String, imports: String, annotations: String, name: String, inherit: String,
+                         fields: String, functions: String): String = {
         if (fields.isEmpty && functions.isEmpty)
             return s"class $name {}"
         if (fields.isEmpty)
@@ -53,6 +53,6 @@ package object patterns {
             else {
                 imports + "\n\n"
             }
-        }${annotations}class $name {\n\t$fields\n\n$functions\n}"
+        }${annotations}class $name$inherit {\n\t$fields\n\n$functions\n}"
     }
 }

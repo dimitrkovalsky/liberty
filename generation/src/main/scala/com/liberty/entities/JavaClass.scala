@@ -11,11 +11,14 @@ import com.liberty.traits.{NoPackage, JavaPackage, Importable, Annotatable}
  */
 // TODO: Add support function and field changing and removing
 // TODO: Add constructor support
+// TODO: Add name validation
 class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with Importable {
     this.javaPackage = jPackage
     var name: String = ""
     var functions: List[JavaFunction] = Nil
     var fields: List[JavaField] = Nil
+    var implementList: List[JavaInterface] = Nil
+    var extendClass: Option[JavaClass] = None
 
     def addField(field: JavaField) {
         fields = fields ::: List(field)
@@ -25,12 +28,49 @@ class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with 
         functions = functions ::: List(function)
     }
 
+    def addImplements(interface: JavaInterface) {
+        implementList = implementList ::: List(interface)
+    }
+
+    def addExtend(clazz: JavaClass) {
+        extendClass = Some(clazz)
+    }
+
+    def removeImplements(interfaceName: JavaInterface): Option[JavaInterface] = {
+        val parts = implementList.partition(ji => !ji.name.equals(interfaceName))
+        implementList = parts._1
+        parts._2 match {
+            case Nil => None
+            case x :: xs => Some(x)
+        }
+    }
+
+    def removeExtend(): Option[JavaClass] = {
+        val extend = extendClass
+        extendClass = None
+        extend
+    }
+
     private def getAllImports: String = {
         var set: Set[JavaPackage] = Set()
         fields.foreach(f => set += f.getPackage)
         functions.foreach(f => set = set ++ f.getPackages)
 
         set.map(jp => jp.getImport).mkString("\n")
+    }
+
+    private def getInheritanceString: String = {
+        val extend = extendClass match {
+            case None => ""
+            case Some(clazz: JavaClass) => " extends " + clazz.name
+        }
+
+        val impl = implementList match {
+            case Nil => ""
+            case x :: xs => " implements " + implementList.map(interface => interface.name).mkString(", ")
+        }
+
+        extend + impl
     }
 
     override def toString: String = {
@@ -44,7 +84,8 @@ class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with 
         }
 
         patterns
-            .JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), name, fieldsString, functionsString)
+            .JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), name,getInheritanceString, fieldsString,
+            functionsString)
     }
 }
 

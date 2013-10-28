@@ -1,7 +1,11 @@
 package com.liberty.builders
 
-import com.liberty.entities.{JavaAnnotation, JavaField, JavaClass, JavaFunction}
+import com.liberty.entities._
 import com.liberty.traits.JavaPackage
+import com.liberty.entities.JavaAnnotation
+import com.liberty.traits.JavaPackage
+import com.liberty.entities.JavaField
+import scala.Some
 
 /**
  * User: Dimitr
@@ -9,9 +13,7 @@ import com.liberty.traits.JavaPackage
  * Time: 10:47
  */
 // TODO : Add abstract class support
-// TODO: Add import support
-class ClassBuilder {
-    private val javaClass: JavaClass = new JavaClass
+class ClassBuilder (var javaClass: JavaClass = new JavaClass) {
 
     def setName(name: String) = javaClass.name = name
 
@@ -29,6 +31,22 @@ class ClassBuilder {
 
     def addPackage(javaPackage:JavaPackage){
         javaClass.javaPackage = javaPackage
+    }
+
+    def addImplements(interface: JavaInterface) {
+        javaClass.addImplements(interface)
+    }
+
+    def addExtend(clazz: JavaClass) {
+       javaClass.addExtend(clazz)
+    }
+
+    def removeImplements(interfaceName: JavaInterface): Option[JavaInterface] = {
+        javaClass.removeImplements(interfaceName)
+    }
+
+    def removeExtend(): Option[JavaClass] = {
+        javaClass.removeExtend()
     }
 
     def getJavaClass: JavaClass = javaClass
