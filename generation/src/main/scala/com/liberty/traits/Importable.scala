@@ -5,7 +5,8 @@ package com.liberty.traits
  * Date: 10.10.13
  * Time: 18:00
  */
-// TODO : Add import support
+
+
 trait Importable {
     var javaPackage: JavaPackage = new NoPackage()
 

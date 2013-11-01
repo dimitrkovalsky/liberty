@@ -1,9 +1,9 @@
 package com.liberty.entities
 
-import com.liberty.types.{UndefinedType, DataType}
+import com.liberty.types.{VoidType, primitives, UndefinedType, DataType}
 import com.liberty.{patterns, types}
 import com.liberty.operations.Variable
-import com.liberty.traits.{JavaPackage, Annotatable}
+import com.liberty.traits.{NoPackage, JavaPackage, Annotatable}
 
 /**
  * User: Dimitr
@@ -15,6 +15,11 @@ class JavaFunction extends ClassPart with Annotatable {
     val signature: FunctionSignature = new FunctionSignature
 
     var body: FunctionBody = new FunctionBody()
+
+    def this(functionName: String) = {
+        this()
+        signature.name = functionName
+    }
 
 
     override def toString: String = {
@@ -28,11 +33,22 @@ class JavaFunction extends ClassPart with Annotatable {
     def getPackages: Set[JavaPackage] = {
         val set: Set[JavaPackage] = signature.getPackages
         set ++ body.getPackages
+        set.filter(p => !p.isInstanceOf[NoPackage])
+    }
+
+    override def equals(obj: Any): Boolean = {
+        if (!obj.isInstanceOf[JavaFunction])
+            return false
+        this.signature.equals(obj.asInstanceOf[JavaFunction])
     }
 }
 
 case class FunctionParameter(paramName: Variable, var paramType: DataType) {
     override def toString: String = paramType.toString + " " + paramName.toString
+}
+
+object FunctionParameter {
+    def apply(field: JavaField) = new FunctionParameter(Variable(field), field.dataType)
 }
 
 // TODO: Add normal throws support add Java exception type
@@ -50,6 +66,13 @@ case class FunctionSignature(var name: String, var output: DataType, var modifie
     def this(name: String) = this(name, new types.UndefinedType)
 
     def this() = this("")
+
+    override def equals(obj: Any): Boolean = {
+        if (!obj.isInstanceOf[FunctionSignature])
+            return false
+        val sign: FunctionSignature = obj.asInstanceOf[FunctionSignature]
+        this.name.equals(sign.name)
+    }
 
 
     def addParameter(in: FunctionParameter) {
@@ -77,6 +100,7 @@ case class FunctionSignature(var name: String, var output: DataType, var modifie
 
     def getPackages: Set[JavaPackage] = {
         var set: Set[JavaPackage] = Set()
+        //println(output + "\t" + output.javaPackage)
         set += output.javaPackage
         input.foreach(param => set += param.paramType.javaPackage)
         set
@@ -85,5 +109,9 @@ case class FunctionSignature(var name: String, var output: DataType, var modifie
     override def toString: String = {
         patterns.JavaFunctionSignaturePattern(modifier.toString, output, name, input.mkString(", "), functionThrows)
     }
+}
+
+object JavaFunction {
+    def apply(functionName: String) = new JavaFunction(functionName)
 }
 

@@ -42,3 +42,7 @@ class FunctionBuilder {
 
     def addOperation(operation: Operation) = function.body.addOperation(operation)
 }
+
+object FunctionBuilder {
+    def apply = new FunctionBuilder()
+}

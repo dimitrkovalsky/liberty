@@ -1,6 +1,8 @@
 package com.liberty.operations
 
 import com.liberty.types.{primitives, ConstructedType, DataType}
+import com.liberty.entities.JavaField
+import com.liberty.traits.Importable
 
 /**
  * User: dkovalskyi
@@ -10,7 +12,7 @@ import com.liberty.types.{primitives, ConstructedType, DataType}
 trait Expression
 
 // TODO : Provide the possibility to get packages from operations
-trait Operation extends Expression {
+trait Operation extends Expression with Importable{
     def execute(): Option[String]
 
     override def toString: String = execute() match {
@@ -21,6 +23,10 @@ trait Operation extends Expression {
 
 case class Variable(name: String) extends Expression {
     override def toString: String = name
+}
+
+object Variable {
+    def apply(field: JavaField) = new Variable(field.name)
 }
 
 case class Value(value: String) extends Expression {
@@ -64,6 +70,8 @@ case class VariableDeclarationOperation(v: Variable, dataType: DataType, expr: E
             v.name
         }$rightPart")
     }
+
+    override def getPackageString: String = super.getPackageString
 }
 
 class ConstructorInvokeOperation(typeToConstruct: ConstructedType, parameters: List[Expression] = Nil)
@@ -100,6 +108,20 @@ case class ReturnOperation(expression: Expression) extends Operation {
             case Some(res: String) => Some(s"return $res;")
             case _ => None
         }
+    }
+}
+
+case class SetValueOperation(field: JavaField, expression: Expression) extends Operation {
+    def execute(): Option[String] = {
+        val result = expression match {
+            case v: Variable => Some(v.toString)
+            case v: Value => Some(v.toString)
+            case op: Operation => op.execute()
+        }
+
+        result.map {
+            expressionResult => Some(s"${field.getInternalName} = $expressionResult;")
+        }.getOrElse(None)
     }
 }
 

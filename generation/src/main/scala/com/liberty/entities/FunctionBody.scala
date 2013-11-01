@@ -26,5 +26,6 @@ class FunctionBody {
     // TODO: check if the function returns result and if result has appropriate type
     def isFunctionValid: Boolean = true
 
+    // TODO: realize body getPackages
     def getPackages:Set[JavaPackage] = Set()
 }

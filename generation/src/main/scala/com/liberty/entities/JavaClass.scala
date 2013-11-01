@@ -9,11 +9,15 @@ import com.liberty.traits.{NoPackage, JavaPackage, Importable, Annotatable}
  * Date: 15.09.13
  * Time: 10:55
  */
-// TODO: Add support function and field changing and removing
+// TODO: Add support of function and field changing and removing
 // TODO: Add constructor support
 // TODO: Add name validation
-class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with Importable {
+class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with Importable with Cloneable {
+
     this.javaPackage = jPackage
+
+    override def clone(): AnyRef = super.clone()
+
     var name: String = ""
     var functions: List[JavaFunction] = Nil
     var fields: List[JavaField] = Nil
@@ -73,6 +77,10 @@ class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with 
         extend + impl
     }
 
+    def functionExist(functionName: String) = {
+        functions.contains(JavaFunction(functionName))
+    }
+
     override def toString: String = {
         val fieldsString = fields.map(_.toClassPart()) match {
             case Nil => ""
@@ -83,11 +91,11 @@ class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with 
             case list: List[String] => list.mkString("\n\n")
         }
 
-        patterns
-            .JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), name,getInheritanceString, fieldsString,
-            functionsString)
+        patterns.JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), name,
+            getInheritanceString, fieldsString, functionsString)
     }
 }
+
 
 trait ClassPart {
     def toClassPart(shift: String = "\t"): String
@@ -112,6 +120,8 @@ case class JavaField(name: String, dataType: DataType, var modifier: Modifier = 
             if (modifier.toString.isEmpty) "" else modifier.toString + " "
         }${dataType.toString} $name = $value"
     }
+
+    def getInternalName = "this." + name
 
     override def toClassPart(shift: String = "\t"): String = toString
 
