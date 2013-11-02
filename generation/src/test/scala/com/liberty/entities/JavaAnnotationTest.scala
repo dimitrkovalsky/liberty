@@ -12,7 +12,7 @@ class JavaAnnotationTest {
         val annotation: JavaAnnotation = new JavaAnnotation("Override")
         val expected = "@Override"
         val available = annotation.toString
-        println(available)
+     //   println(available)
         Assert.assertEquals(expected, available)
     }
 

@@ -13,7 +13,7 @@ class MavenExecutorTest {
 
   def toBeOrNotToBe: Boolean =  true
 
-  @Test
+ // @Test
   def createArchetype() {
     val me: MavenEntity = new MavenEntity(projectName = "test", groupId = "com.test", path = "C:\\")
     val mavenExecutor : MavenExecutor = new MavenExecutor(me)

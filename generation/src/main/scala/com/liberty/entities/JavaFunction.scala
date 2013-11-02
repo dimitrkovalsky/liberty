@@ -10,7 +10,6 @@ import com.liberty.traits.{NoPackage, JavaPackage, Annotatable}
  * Date: 01.09.13
  * Time: 12:42
  */
-// TODO: add access modifiers support
 class JavaFunction extends ClassPart with Annotatable {
     val signature: FunctionSignature = new FunctionSignature
 

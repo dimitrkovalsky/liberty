@@ -25,7 +25,7 @@ class InterfaceBuilderTest {
     @Test def withPackageInterface() {
         val interface = createWithPackageInterface()
         val expect = "package my.test.program;\n\ninterface Marker {}"
-        println(interface)
+      //  println(interface)
         Assert.assertEquals(expect, interface.toString)
     }
 

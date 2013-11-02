@@ -12,7 +12,8 @@ trait Annotatable {
     var annotations: List[JavaAnnotation] = Nil
 
     def addAnnotation(annotation: JavaAnnotation) {
-        annotations = annotations ::: List(annotation)
+        if (!annotations.contains(annotation))
+            annotations = annotations ::: List(annotation)
     }
 
     protected def annotationToString(inline: Boolean = false): String = {
@@ -25,7 +26,7 @@ trait Annotatable {
     protected def annotationToPostShiftedString(shift: String): String = {
         annotationToString() match {
             case "" => ""
-            case s:String => s + shift
+            case s: String => s + shift
         }
     }
 

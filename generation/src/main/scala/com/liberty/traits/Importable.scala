@@ -5,8 +5,6 @@ package com.liberty.traits
  * Date: 10.10.13
  * Time: 18:00
  */
-
-
 trait Importable {
     var javaPackage: JavaPackage = new NoPackage()
 
@@ -17,16 +15,24 @@ trait Importable {
 
     def getPackageString = javaPackage match {
         case p: NoPackage => ""
-        case _ => s"package ${javaPackage.name};"
+        case _ => s"package ${javaPackage.packagePath};"
     }
+
+
 }
 
 
-case class JavaPackage(name: String, packageClass: String) {
+case class JavaPackage(packagePath: String, packageClass: String = "") {
     def getImport: String = {
-        s"import $name.$packageClass;"
+        s"import $packagePath.$packageClass;"
+    }
+
+    override def equals(obj: Any): Boolean = {
+        if (!obj.isInstanceOf[JavaPackage])
+            return false
+        val pack: JavaPackage = obj.asInstanceOf[JavaPackage]
+        this.packagePath.equals(pack.packagePath) && this.packageClass.equals(pack.packageClass)
     }
 }
 
-class NoPackage() extends JavaPackage("", "") {
-}
+class NoPackage() extends JavaPackage("", "") {}

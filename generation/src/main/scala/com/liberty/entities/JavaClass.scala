@@ -57,9 +57,9 @@ class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with 
 
     private def getAllImports: String = {
         var set: Set[JavaPackage] = Set()
-        fields.foreach(f => set += f.getPackage)
+        fields.foreach(f => f.getPackages.foreach(p => set += p))
         functions.foreach(f => set = set ++ f.getPackages)
-
+        annotations.map(ann => ann.javaPackage).filter(p => !p.isInstanceOf[NoPackage]).foreach(p => set += p)
         set.map(jp => jp.getImport).mkString("\n")
     }
 
@@ -101,8 +101,10 @@ trait ClassPart {
     def toClassPart(shift: String = "\t"): String
 }
 
-case class JavaField(name: String, dataType: DataType, var modifier: Modifier = DefaultModifier, var value: String = "")
+case class JavaField(name: String, dataType: DataType, var modifier: Modifier = DefaultModifier, var value: String = "",
+                     var id: Boolean = false)
     extends ClassPart with Annotatable {
+
 
     def apply(annotation: JavaAnnotation): JavaField = {
         addAnnotation(annotation)
@@ -125,5 +127,6 @@ case class JavaField(name: String, dataType: DataType, var modifier: Modifier = 
 
     override def toClassPart(shift: String = "\t"): String = toString
 
-    def getPackage: JavaPackage = dataType.javaPackage
+    def getPackages: List[JavaPackage] = dataType.javaPackage :: annotations.map(ann => ann.javaPackage)
+        .filter(p => !p.isInstanceOf[NoPackage])
 }
