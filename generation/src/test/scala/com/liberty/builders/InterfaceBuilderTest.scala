@@ -6,6 +6,7 @@ import com.liberty.types.{collections, primitives}
 import com.liberty.types.primitives.{IntegerType, BooleanType, StringType}
 import com.liberty.operations.Variable
 import com.liberty.traits.JavaPackage
+import com.liberty.{StubType, types}
 
 /**
  * User: Dimitr
@@ -18,6 +19,19 @@ class InterfaceBuilderTest {
         builder.setName("Marker")
         val interface = builder.getInterface
         val expect = "interface Marker {}"
+        //println(interface)
+        Assert.assertEquals(expect, interface.toString)
+    }
+
+    @Test def genericInterface() {
+        val builder = new InterfaceBuilder
+        builder.setName("Marker")
+        builder.addGeneric(StubType("SomeType"))
+        builder.addGeneric(StubType("AnotherType"))
+        // Need to ignore the same type
+        builder.addGeneric(StubType("AnotherType"))
+        val interface = builder.getInterface
+        val expect = "interface Marker<SomeType, AnotherType> {}"
         //println(interface)
         Assert.assertEquals(expect, interface.toString)
     }
@@ -55,5 +69,14 @@ class InterfaceBuilderTest {
             List("CostException", "ValidationException")))
         builder.addFunctionSignature(new FunctionSignature("getData", collections.ListType(StringType)))
         builder.getInterface
+    }
+
+    def createGenericInterface():JavaInterface  = {
+        val builder = new InterfaceBuilder
+        builder.setName("GenericInterface")
+        builder.addFunctionSignature(new FunctionSignature("test"))
+        builder.addGeneric("SomeType")
+        builder.getInterface
+
     }
 }

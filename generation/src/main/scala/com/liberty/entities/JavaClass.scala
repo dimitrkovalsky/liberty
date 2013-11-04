@@ -2,7 +2,11 @@ package com.liberty.entities
 
 import com.liberty.types.DataType
 import com.liberty.patterns
-import com.liberty.traits.{NoPackage, JavaPackage, Importable, Annotatable}
+import com.liberty.traits._
+import com.liberty.entities.JavaAnnotation
+import com.liberty.entities.JavaField
+import scala.Some
+import com.liberty.traits.JavaPackage
 
 /**
  * User: Dimitr
@@ -12,7 +16,8 @@ import com.liberty.traits.{NoPackage, JavaPackage, Importable, Annotatable}
 // TODO: Add support of function and field changing and removing
 // TODO: Add constructor support
 // TODO: Add name validation
-class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with Importable with Cloneable {
+class JavaClass(jPackage: JavaPackage = new NoPackage)
+    extends Annotatable with Importable with Cloneable with Generalizable {
 
     this.javaPackage = jPackage
 
@@ -66,12 +71,13 @@ class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with 
     private def getInheritanceString: String = {
         val extend = extendClass match {
             case None => ""
-            case Some(clazz: JavaClass) => " extends " + clazz.name
+            case Some(clazz: JavaClass) => " extends " + clazz.name + clazz.getInheritanceString
         }
 
         val impl = implementList match {
             case Nil => ""
-            case x :: xs => " implements " + implementList.map(interface => interface.name).mkString(", ")
+            case x :: xs => " implements " + implementList.map(interface => interface.name + interface.getGenericString)
+                .mkString(", ")
         }
 
         extend + impl
@@ -92,7 +98,7 @@ class JavaClass(jPackage: JavaPackage = new NoPackage) extends Annotatable with 
         }
 
         patterns.JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), name,
-            getInheritanceString, fieldsString, functionsString)
+            getGenericString, getInheritanceString, fieldsString, functionsString)
     }
 }
 

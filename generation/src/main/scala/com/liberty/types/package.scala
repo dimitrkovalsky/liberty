@@ -1,9 +1,8 @@
 package com.liberty
 
 
-import com.liberty.types.primitives.PrimitiveType
-import com.liberty.types.collections.CollectionType
 import com.liberty.traits.Importable
+import com.liberty.types.DataType
 
 
 /**
@@ -13,11 +12,19 @@ import com.liberty.traits.Importable
  */
 package object types {
 
-    abstract class DataType(dataType: String) extends Importable {
+    abstract class DataType(typeName: String) extends Importable {
         def getDefaultValue: String = "null"
 
-        override def toString: String = dataType
+        override def toString: String = typeName
+
+        override def equals(obj: scala.Any): Boolean = {
+            if(!obj.isInstanceOf[com.liberty.types.DataType])
+                return false
+            val dt = obj.asInstanceOf[com.liberty.types.DataType]
+            this.typeName.equals(dt.toString)
+        }
     }
+
 
     trait ConstructedType {
         def getConstructor(): String
@@ -32,5 +39,7 @@ package object types {
     }
 
 }
+
+case class StubType(stubType:String) extends DataType(stubType)
 
 

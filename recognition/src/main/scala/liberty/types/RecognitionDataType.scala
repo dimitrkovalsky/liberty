@@ -5,7 +5,7 @@ package liberty.types
  * Date: 15.07.13
  * Time: 15:48
  */
-object DataType {
+object RecognitionDataType {
     final val VOID = 0
     final val BYTE = 1
     final val INTEGER = 2

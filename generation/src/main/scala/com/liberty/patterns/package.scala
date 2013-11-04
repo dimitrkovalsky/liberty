@@ -25,23 +25,23 @@ package object patterns {
 
     def JavaFunctionInterfacePattern(signature: String): String = { signature.trim + ";" }
 
-    def JavaInterfacePattern(jPackage: String, name: String, signatures: String): String = {
-        s"${if (jPackage.isEmpty) "" else jPackage + "\n\n"}interface $name {\n\t$signatures\n}"
+    def JavaInterfacePattern(jPackage: String, name: String, generics: String, signatures: String): String = {
+        s"${if (jPackage.isEmpty) "" else jPackage + "\n\n"}interface $name$generics {\n\t$signatures\n}"
     }
 
-    def JavaMarkerInterfacePattern(jPackage: String, name: String): String = {
+    def JavaMarkerInterfacePattern(jPackage: String, name: String, generics: String): String = {
 
-        s"${if (jPackage.isEmpty) "" else jPackage + "\n\n"}interface $name {}"
+        s"${if (jPackage.isEmpty) "" else jPackage + "\n\n"}interface $name$generics {}"
     }
 
-    def JavaClassPattern(jPackage: String, imports: String, annotations: String, name: String, inherit: String,
-                         fields: String, functions: String): String = {
+    def JavaClassPattern(jPackage: String, imports: String, annotations: String, name: String, generics: String,
+                         inherit: String, fields: String, functions: String): String = {
         if (fields.isEmpty && functions.isEmpty)
-            return s"class $name {}"
+            return s"class $name$generics {}"
         if (fields.isEmpty)
-            return s"class $name {\n$functions\n}"
+            return s"class $name$generics {\n$functions\n}"
         if (functions.isEmpty)
-            return s"class $name {\n\t$fields\n}"
+            return s"class $name$generics {\n\t$fields\n}"
 
         s"${
             if (jPackage.isEmpty) ""
@@ -53,6 +53,6 @@ package object patterns {
             else {
                 imports + "\n\n"
             }
-        }${annotations}class $name$inherit {\n\t$fields\n\n$functions\n}"
+        }${annotations}class $name$generics$inherit {\n\t$fields\n\n$functions\n}"
     }
 }

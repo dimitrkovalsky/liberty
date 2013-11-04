@@ -1,6 +1,6 @@
 package liberty.entities
 
-import liberty.types.{DataType, AccessModifier}
+import liberty.types.{RecognitionDataType, AccessModifier}
 
 /**
  * User: dkovalskyi
@@ -10,7 +10,7 @@ import liberty.types.{DataType, AccessModifier}
 class FunctionEntity {
     var accessModifier: Int = AccessModifier.NONE
     var name: String = ""
-    var returnType: DataTypeEntity = new DataTypeEntity(DataType.VOID)
+    var returnType: DataTypeEntity = new DataTypeEntity(RecognitionDataType.VOID)
     var input: Array[VariableEntity] = Array.empty[VariableEntity]
 
     override def toString: String = {

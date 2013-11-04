@@ -7,4 +7,4 @@ import scala.beans.BeanProperty
  * Date: 10/28/13
  * Time: 5:00 PM
  */
-class MavenEntity(var projectName: String = "", var groupId: String = "", var path: String = "") {}
+class MavenEntity(@BeanProperty var projectName: String = "", var groupId: String = "", var path: String = "") {}

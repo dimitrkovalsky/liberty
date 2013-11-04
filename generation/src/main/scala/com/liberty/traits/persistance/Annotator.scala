@@ -15,7 +15,7 @@ trait Annotator {
     }
 
     def addDatastoreAnnotation() {
-        getJavaClass.addAnnotation(getDatastoreAnnotation)
+        getEntityClass.addAnnotation(getDatastoreAnnotation)
     }
 
     def annotateClass() {

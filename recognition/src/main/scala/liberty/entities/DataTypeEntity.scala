@@ -1,6 +1,6 @@
 package liberty.entities
 
-import liberty.types.DataType
+import liberty.types.RecognitionDataType
 
 /**
  * User: dkovalskyi
@@ -12,12 +12,12 @@ class DataTypeEntity(var dataType: Int) {
 
     override def toString = {
         dataType match {
-            case DataType.VOID => "void"
-            case DataType.BYTE => "byte"
-            case DataType.INTEGER => "int"
-            case DataType.FLOAT => "float"
-            case DataType.DOUBLE => "double"
-            case DataType.OBJECT => "object"
+            case RecognitionDataType.VOID => "void"
+            case RecognitionDataType.BYTE => "byte"
+            case RecognitionDataType.INTEGER => "int"
+            case RecognitionDataType.FLOAT => "float"
+            case RecognitionDataType.DOUBLE => "double"
+            case RecognitionDataType.OBJECT => "object"
         }
     }
 }

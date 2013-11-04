@@ -2,6 +2,8 @@ package com.liberty.builders
 
 import com.liberty.entities.{FunctionSignature, JavaInterface}
 import com.liberty.traits.JavaPackage
+import com.liberty.types.DataType
+import com.liberty.StubType
 
 /**
  * User: Dimitr
@@ -21,7 +23,15 @@ class InterfaceBuilder {
     }
 
     def addPackage(jPackage: JavaPackage) {
-        javaInterface.javaPackage = jPackage;
+        javaInterface.javaPackage = jPackage
+    }
+
+    def addGeneric(generic: DataType) {
+        javaInterface.addGenericType(generic)
+    }
+
+    def addGeneric(generic: String) {
+        javaInterface.addGenericType(StubType(generic))
     }
 
     def getInterface = javaInterface

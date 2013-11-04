@@ -1,14 +1,19 @@
 package com.liberty.traits.persistance
 
-import com.liberty.entities.{JavaClass, JavaField, JavaAnnotation}
+import com.liberty.entities.{JavaFunction, JavaClass, JavaField, JavaAnnotation}
+import com.liberty.traits.Accessible
+import com.liberty.builders.ClassBuilder
 
 /**
  * User: Dimitr
  * Date: 27.10.13
  * Time: 12:05
  */
-trait DaoAdapter extends Annotator{
-    var datastoreName:String
+trait DaoAdapter extends Annotator with CRUDable with Accessible {
+    this: {var javaClass: JavaClass} =>
+    var builder: ClassBuilder = new ClassBuilder()
+
+    var datastoreName: String
 
     def getDatastoreAnnotation: JavaAnnotation
 
@@ -18,5 +23,11 @@ trait DaoAdapter extends Annotator{
 
     def markField(field: JavaField, annotation: JavaAnnotation)
 
-    def getJavaClass: JavaClass
+    def getEntityClass: JavaClass
+
+    def createDaoFields()
+
+    def createDaoClass()
+    
+    def getDaoClass: JavaClass = builder.getJavaClass
 }

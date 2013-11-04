@@ -1,7 +1,7 @@
 package com.liberty.generators.adapters
 
 import com.liberty.traits.{JavaPackage, Accessible}
-import com.liberty.entities.{JavaAnnotation, JavaField, JavaClass}
+import com.liberty.entities.{JavaFunction, JavaAnnotation, JavaField, JavaClass}
 import com.liberty.traits.persistance.{Annotator, DaoAdapter}
 
 /**
@@ -9,7 +9,7 @@ import com.liberty.traits.persistance.{Annotator, DaoAdapter}
  * Date: 01.11.13
  * Time: 9:45
  */
-class MongoAdapter(var javaClass: JavaClass) extends Accessible with DaoAdapter {
+class MongoAdapter(var javaClass: JavaClass) extends DaoAdapter {
     private val morphiaPackage: JavaPackage = JavaPackage("com.google.code.morphia.annotations")
     var datastoreName: String = javaClass.name.toLowerCase
 
@@ -34,6 +34,20 @@ class MongoAdapter(var javaClass: JavaClass) extends Accessible with DaoAdapter 
         field.addAnnotation(annotation)
     }
 
-    def getJavaClass: JavaClass = javaClass
+    def getEntityClass: JavaClass = javaClass
 
+    def createDaoFields(): Unit = ???
+
+    def createDelete(entity: JavaClass): JavaFunction = ???
+
+
+    def createFind(entity: JavaClass): JavaFunction = ???
+
+    def createUpdate(entity: JavaClass): JavaFunction = ???
+
+    def createInsert(entity: JavaClass): JavaFunction = ???
+
+    def createDaoClass(): Unit = {
+      //  builder.
+    }
 }

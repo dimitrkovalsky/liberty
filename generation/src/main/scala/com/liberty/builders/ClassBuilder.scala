@@ -6,6 +6,7 @@ import com.liberty.entities.JavaAnnotation
 import com.liberty.traits.JavaPackage
 import com.liberty.entities.JavaField
 import scala.Some
+import com.liberty.types.DataType
 
 /**
  * User: Dimitr
@@ -49,5 +50,13 @@ class ClassBuilder (var javaClass: JavaClass = new JavaClass) {
         javaClass.removeExtend()
     }
 
+    def addGeneric(generic: DataType) {
+        javaClass.addGenericType(generic)
+    }
+
     def getJavaClass: JavaClass = javaClass
+}
+
+object ClassBuilder {
+    def apply() : ClassBuilder = new ClassBuilder()
 }
