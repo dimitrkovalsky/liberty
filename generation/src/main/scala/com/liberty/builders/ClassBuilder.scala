@@ -14,7 +14,7 @@ import com.liberty.types.DataType
  * Time: 10:47
  */
 // TODO : Add abstract class support
-class ClassBuilder (var javaClass: JavaClass = new JavaClass) {
+class ClassBuilder(var javaClass: JavaClass = new JavaClass) {
 
     def setName(name: String) = javaClass.name = name
 
@@ -22,15 +22,20 @@ class ClassBuilder (var javaClass: JavaClass = new JavaClass) {
         javaClass.addFunction(function)
     }
 
+    def addFunctions(functions: List[JavaFunction]) {
+        for (function <- functions)
+            javaClass.addFunction(function)
+    }
+
     def addField(field: JavaField) {
         javaClass.addField(field)
     }
 
-    def addAnnotation(annotation:JavaAnnotation){
+    def addAnnotation(annotation: JavaAnnotation) {
         javaClass.addAnnotation(annotation)
     }
 
-    def addPackage(javaPackage:JavaPackage){
+    def addPackage(javaPackage: JavaPackage) {
         javaClass.javaPackage = javaPackage
     }
 
@@ -39,7 +44,7 @@ class ClassBuilder (var javaClass: JavaClass = new JavaClass) {
     }
 
     def addExtend(clazz: JavaClass) {
-       javaClass.addExtend(clazz)
+        javaClass.addExtend(clazz)
     }
 
     def removeImplements(interfaceName: JavaInterface): Option[JavaInterface] = {
@@ -58,5 +63,5 @@ class ClassBuilder (var javaClass: JavaClass = new JavaClass) {
 }
 
 object ClassBuilder {
-    def apply() : ClassBuilder = new ClassBuilder()
+    def apply(): ClassBuilder = new ClassBuilder()
 }

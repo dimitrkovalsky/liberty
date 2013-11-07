@@ -1,9 +1,13 @@
 package com.liberty.entities
 
-import com.liberty.types.{VoidType, primitives, UndefinedType, DataType}
+import com.liberty.types.DataType
 import com.liberty.{patterns, types}
 import com.liberty.operations.Variable
-import com.liberty.traits.{NoPackage, JavaPackage, Annotatable}
+import com.liberty.traits.{NoPackage, Annotatable}
+import scala.Predef._
+import com.liberty.types.UndefinedType
+import scala.Some
+import com.liberty.traits.JavaPackage
 
 /**
  * User: Dimitr
@@ -11,9 +15,11 @@ import com.liberty.traits.{NoPackage, JavaPackage, Annotatable}
  * Time: 12:42
  */
 class JavaFunction extends ClassPart with Annotatable {
-    val signature: FunctionSignature = new FunctionSignature
+
+    var signature: FunctionSignature = new FunctionSignature
 
     var body: FunctionBody = new FunctionBody()
+
 
     def this(functionName: String) = {
         this()
@@ -43,11 +49,15 @@ class JavaFunction extends ClassPart with Annotatable {
 }
 
 case class FunctionParameter(paramName: Variable, var paramType: DataType) {
+    def this(paramName: String, paramType: DataType) = this(Variable(paramName), paramType)
+
     override def toString: String = paramType.toString + " " + paramName.toString
 }
 
 object FunctionParameter {
     def apply(field: JavaField) = new FunctionParameter(Variable(field), field.dataType)
+
+    def apply(paramName: String, paramType: DataType) = new FunctionParameter(Variable(paramName), paramType)
 }
 
 // TODO: Add normal throws support add Java exception type

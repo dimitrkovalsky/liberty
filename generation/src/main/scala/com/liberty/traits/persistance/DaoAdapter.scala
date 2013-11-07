@@ -11,7 +11,7 @@ import com.liberty.builders.ClassBuilder
  */
 trait DaoAdapter extends Annotator with CRUDable with Accessible {
     this: {var javaClass: JavaClass} =>
-    var builder: ClassBuilder = new ClassBuilder()
+    protected var daoBuilder: ClassBuilder = new ClassBuilder()
 
     var datastoreName: String
 
@@ -27,7 +27,20 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
 
     def createDaoFields()
 
-    def createDaoClass()
-    
-    def getDaoClass: JavaClass = builder.getJavaClass
+    def createDaoClass(): Either[String, JavaClass]
+
+    def createDaoConstructor()
+
+    def getDaoClass: JavaClass = daoBuilder.getJavaClass
+
+    def createDAO: Either[String, JavaClass] = {
+        val result = createDaoClass()
+        if (result.isLeft)
+            return result
+
+        createDaoFields()
+        createDaoConstructor()
+        daoBuilder.addFunctions(createMethods())
+        Right(daoBuilder.getJavaClass)
+    }
 }

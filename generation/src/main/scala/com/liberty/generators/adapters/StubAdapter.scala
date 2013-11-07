@@ -24,13 +24,16 @@ case class StubAdapter() extends DaoAdapter{
 
     def createDaoFields(): Unit = ???
 
-    def createDaoClass(): Unit = ???
+    def createDaoClass(): Either[String, JavaClass] = ???
 
-    def createDelete(entity: JavaClass): JavaFunction = ???
+    def createDaoConstructor(): Unit = ???
 
-    def createFind(entity: JavaClass): JavaFunction = ???
+    def createDelete(): JavaFunction = ???
 
-    def createUpdate(entity: JavaClass): JavaFunction = ???
+    def createFind(): JavaFunction = ???
 
-    def createInsert(entity: JavaClass): JavaFunction = ???
+    def createUpdate(): JavaFunction = ???
+
+    def createInsert(): JavaFunction = ???
 }
+

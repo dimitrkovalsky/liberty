@@ -15,6 +15,13 @@ trait Generalizable {
             generics = generics ::: List(dataType)
     }
 
+    def addGenericType(dataTypes: DataType*) {
+        for (dType <- dataTypes) {
+            if (!generics.contains(dType))
+                generics = generics ::: List(dType)
+        }
+    }
+
     def getGenericString: String = {
         generics match {
             case Nil => ""

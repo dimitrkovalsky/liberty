@@ -3,8 +3,6 @@ package com.liberty.entities
 import com.liberty.types.DataType
 import com.liberty.patterns
 import com.liberty.traits._
-import com.liberty.entities.JavaAnnotation
-import com.liberty.entities.JavaField
 import scala.Some
 import com.liberty.traits.JavaPackage
 
@@ -16,14 +14,16 @@ import com.liberty.traits.JavaPackage
 // TODO: Add support of function and field changing and removing
 // TODO: Add constructor support
 // TODO: Add name validation
-class JavaClass(jPackage: JavaPackage = new NoPackage)
-    extends Annotatable with Importable with Cloneable with Generalizable {
+// TODO: Add try catch support
+class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackage)
+    extends DataType(name) with Annotatable with Importable with Cloneable with Generalizable {
+    def this(jPackage: JavaPackage) = this("", jPackage)
 
     this.javaPackage = jPackage
 
     override def clone(): AnyRef = super.clone()
 
-    var name: String = ""
+
     var functions: List[JavaFunction] = Nil
     var fields: List[JavaField] = Nil
     var implementList: List[JavaInterface] = Nil
