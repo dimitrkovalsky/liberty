@@ -11,17 +11,18 @@ import com.liberty.entities.MavenEntity
  */
 class MavenExecutorTest {
 
-  def toBeOrNotToBe: Boolean =  true
+    def toBeOrNotToBe: Boolean = true
 
- // @Test
-  def createArchetype() {
-    val me: MavenEntity = new MavenEntity(projectName = "test", groupId = "com.test", path = "C:\\")
-    val mavenExecutor : MavenExecutor = new MavenExecutor(me)
+    @Test
+    def test() {
+        val me: MavenEntity = new MavenEntity(projectName = "test", groupId = "com.test", path = "C:\\")
+        val mavenExecutor: MavenExecutor = new MavenExecutor(me)
 
-    mavenExecutor.create()
-    Assert.assertTrue(toBeOrNotToBe)
-    mavenExecutor.clean()
-    mavenExecutor.build()
-  }
+        mavenExecutor.create()
+        Assert.assertTrue(toBeOrNotToBe)
+        mavenExecutor.clean()
+        mavenExecutor.build()
+
+    }
 }
 
