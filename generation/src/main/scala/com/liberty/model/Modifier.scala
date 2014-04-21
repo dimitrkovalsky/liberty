@@ -1,11 +1,11 @@
-package com.liberty.entities
+package com.liberty.model
 
 /**
  * User: Dimitr
  * Date: 15.09.13
  * Time: 11:16
  */
-trait Modifier {}
+sealed trait Modifier {}
 
 case object DefaultModifier extends Modifier{
     override def toString: String = ""

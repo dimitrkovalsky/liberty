@@ -1,4 +1,4 @@
-package com.liberty.entities
+package com.liberty.model
 
 import com.liberty.traits.{NoPackage, JavaPackage, Importable}
 import com.liberty.helpers.StringHelper

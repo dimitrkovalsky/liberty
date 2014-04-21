@@ -1,4 +1,4 @@
-package com.liberty.entities
+package com.liberty.model
 
 import com.liberty.types.DataType
 import com.liberty.{patterns, types}

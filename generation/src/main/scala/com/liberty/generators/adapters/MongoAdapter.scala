@@ -1,12 +1,12 @@
 package com.liberty.generators.adapters
 
 import com.liberty.traits.{JavaPackage, Accessible}
-import com.liberty.entities._
+import com.liberty.model._
 import com.liberty.traits.persistance.{Annotator, DaoAdapter}
 import com.liberty.builders.{FunctionBuilder, ClassBuilder}
-import com.liberty.entities.JavaAnnotation
+import com.liberty.model.JavaAnnotation
 import com.liberty.traits.JavaPackage
-import com.liberty.entities.JavaField
+import com.liberty.model.JavaField
 import com.liberty.operations.{Variable, FunctionType, SelfFunctionInvokeOperation}
 
 /**

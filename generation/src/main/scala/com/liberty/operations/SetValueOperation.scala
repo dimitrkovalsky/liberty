@@ -1,6 +1,6 @@
 package com.liberty.operations
 
-import com.liberty.entities.JavaField
+import com.liberty.model.JavaField
 
 /**
  * User: Dimitr

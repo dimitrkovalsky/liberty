@@ -1,12 +1,12 @@
 package com.liberty.builders
 
 import org.junit.{Assert, Test}
-import com.liberty.entities._
+import com.liberty.model._
 import com.liberty.types.primitives._
 import com.liberty.traits.JavaPackage
-import com.liberty.entities.JavaAnnotation
+import com.liberty.model.JavaAnnotation
 import com.liberty.traits.JavaPackage
-import com.liberty.entities.JavaField
+import com.liberty.model.JavaField
 import com.liberty.StubType
 
 /**
@@ -89,7 +89,7 @@ class ClassBuilderTest {
     @Test def fullClass() {
         val clazz = createFullClass
 
-        val expected = "package com.guide.city.entities;\n\nimport java.lang.String;\nimport java.lang.Integer;\nimport java.util.List;\n\nclass FullClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n}"
+        val expected = "package com.guide.city.model;\n\nimport java.lang.String;\nimport java.lang.Integer;\nimport java.util.List;\n\nclass FullClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n}"
         val available = clazz.toString
         //  println(available)
         Assert.assertEquals(expected, available)
@@ -116,7 +116,7 @@ class ClassBuilderTest {
         val builder = new ClassBuilder
         builder.setName("FullClass")
         val functionTest = new FunctionBuilderTest
-        builder.addPackage(JavaPackage("com.guide.city.entities"))
+        builder.addPackage(JavaPackage("com.guide.city.model"))
         builder.addField(JavaField("name", StringType, PrivateModifier, id = true))
         builder.addField(JavaField("age", IntegerType, PrivateModifier))
         builder.addField(JavaField("position", StringType, ProtectedModifier))

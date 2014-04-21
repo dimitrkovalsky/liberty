@@ -1,10 +1,10 @@
 package com.liberty.builders
 
-import com.liberty.entities._
+import com.liberty.model._
 import com.liberty.types
 import com.liberty.operations.Operation
-import com.liberty.entities.JavaAnnotation
-import com.liberty.entities.FunctionParameter
+import com.liberty.model.JavaAnnotation
+import com.liberty.model.FunctionParameter
 
 /**
  * User: Dimitr

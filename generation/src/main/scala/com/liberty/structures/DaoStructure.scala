@@ -1,6 +1,6 @@
 package com.liberty.structures
 
-import com.liberty.entities.JavaClass
+import com.liberty.model.JavaClass
 import com.liberty.traits.Persistable
 
 /**

@@ -1,6 +1,6 @@
 package com.liberty.traits
 
-import com.liberty.entities.JavaAnnotation
+import com.liberty.model.JavaAnnotation
 
 /**
  * User: Dimitr

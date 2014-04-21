@@ -1,10 +1,10 @@
 package com.liberty.builders
 
-import com.liberty.entities._
+import com.liberty.model._
 import com.liberty.traits.JavaPackage
-import com.liberty.entities.JavaAnnotation
+import com.liberty.model.JavaAnnotation
 import com.liberty.traits.JavaPackage
-import com.liberty.entities.JavaField
+import com.liberty.model.JavaField
 import scala.Some
 import com.liberty.types.DataType
 

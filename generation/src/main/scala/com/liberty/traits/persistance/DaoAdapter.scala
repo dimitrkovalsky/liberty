@@ -1,6 +1,6 @@
 package com.liberty.traits.persistance
 
-import com.liberty.entities.{JavaFunction, JavaClass, JavaField, JavaAnnotation}
+import com.liberty.model.{JavaFunction, JavaClass, JavaField, JavaAnnotation}
 import com.liberty.traits.Accessible
 import com.liberty.builders.ClassBuilder
 

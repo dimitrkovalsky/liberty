@@ -1,7 +1,7 @@
 package com.liberty.operations
 
 import com.liberty.types.{primitives, ConstructedType, DataType}
-import com.liberty.entities.JavaField
+import com.liberty.model.JavaField
 import com.liberty.traits.Importable
 
 /**

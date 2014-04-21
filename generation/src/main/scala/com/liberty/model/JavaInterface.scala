@@ -1,4 +1,4 @@
-package com.liberty.entities
+package com.liberty.model
 
 import com.liberty.patterns
 import com.liberty.traits.{Generalizable, NoPackage, JavaPackage, Importable}

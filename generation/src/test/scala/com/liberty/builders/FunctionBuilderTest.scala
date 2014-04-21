@@ -6,7 +6,7 @@ import com.liberty.types.primitives._
 import com.liberty.operations._
 import com.liberty.types.collections.MapType
 import com.liberty.types.collections.ListType
-import com.liberty.entities.{PublicModifier, JavaAnnotation, JavaFunction, FunctionParameter}
+import com.liberty.model.{PublicModifier, JavaAnnotation, JavaFunction, FunctionParameter}
 import com.liberty.types.collections._
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.VoidType
 import com.liberty.operations.FunctionInvokeOperation

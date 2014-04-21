@@ -1,7 +1,7 @@
 package com.liberty.builders
 
 import org.junit.{Assert, Test}
-import com.liberty.entities.{JavaInterface, FunctionParameter, FunctionSignature}
+import com.liberty.model.{JavaInterface, FunctionParameter, FunctionSignature}
 import com.liberty.types.{collections, primitives}
 import com.liberty.types.primitives.{IntegerType, BooleanType, StringType}
 import com.liberty.operations.Variable
@@ -19,7 +19,7 @@ class InterfaceBuilderTest {
         builder.setName("Marker")
         val interface = builder.getInterface
         val expect = "interface Marker {}"
-        //println(interface)
+        println(interface)
         Assert.assertEquals(expect, interface.toString)
     }
 

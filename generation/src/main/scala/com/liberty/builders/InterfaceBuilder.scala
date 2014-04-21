@@ -1,6 +1,6 @@
 package com.liberty.builders
 
-import com.liberty.entities.{FunctionSignature, JavaInterface}
+import com.liberty.model.{FunctionSignature, JavaInterface}
 import com.liberty.traits.JavaPackage
 import com.liberty.types.DataType
 import com.liberty.StubType
@@ -12,27 +12,27 @@ import com.liberty.StubType
  */
 // TODO: Add inheritance support
 class InterfaceBuilder {
-    private val javaInterface = new JavaInterface
+  private val javaInterface = new JavaInterface
 
-    def setName(name: String) {
-        javaInterface.name = name
-    }
+  def setName(name: String) {
+    javaInterface.name = name
+  }
 
-    def addFunctionSignature(signature: FunctionSignature) {
-        javaInterface.addSignature(signature)
-    }
+  def addFunctionSignature(signature: FunctionSignature) {
+    javaInterface.addSignature(signature)
+  }
 
-    def addPackage(jPackage: JavaPackage) {
-        javaInterface.javaPackage = jPackage
-    }
+  def addPackage(jPackage: JavaPackage) {
+    javaInterface.javaPackage = jPackage
+  }
 
-    def addGeneric(generic: DataType) {
-        javaInterface.addGenericType(generic)
-    }
+  def addGeneric(generic: DataType) {
+    javaInterface.addGenericType(generic)
+  }
 
-    def addGeneric(generic: String) {
-        javaInterface.addGenericType(StubType(generic))
-    }
+  def addGeneric(generic: String) {
+    javaInterface.addGenericType(StubType(generic))
+  }
 
-    def getInterface = javaInterface
+  def getInterface = javaInterface
 }

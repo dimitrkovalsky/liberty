@@ -1,9 +1,9 @@
 package com.liberty.traits
 
-import com.liberty.entities._
+import com.liberty.model._
 import com.liberty.builders.FunctionBuilder
 import com.liberty.operations.{SetValueOperation, Variable, ReturnOperation}
-import com.liberty.entities.JavaField
+import com.liberty.model.JavaField
 
 /**
  * User: Dimitr

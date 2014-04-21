@@ -2,7 +2,7 @@ package com.liberty.executor
 
 import org.junit.{Assert, Test}
 import com.liberty.executor.MavenExecutor
-import com.liberty.entities.MavenEntity
+import com.liberty.model.MavenEntity
 
 /**
  * User: mkontarev

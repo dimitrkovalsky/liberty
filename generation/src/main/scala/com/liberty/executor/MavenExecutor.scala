@@ -1,6 +1,6 @@
 package com.liberty.executor
 
-import com.liberty.entities.MavenEntity
+import com.liberty.model.MavenEntity
 
 /**
  * User: Maxxis

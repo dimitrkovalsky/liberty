@@ -1,4 +1,4 @@
-package com.liberty.entities
+package com.liberty.model
 
 import com.liberty.operations.Operation
 import com.liberty.traits.JavaPackage

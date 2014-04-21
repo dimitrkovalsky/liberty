@@ -1,7 +1,7 @@
 package com.liberty.generators.adapters
 
 import com.liberty.traits.persistance.DaoAdapter
-import com.liberty.entities.{JavaFunction, JavaAnnotation, JavaField, JavaClass}
+import com.liberty.model.{JavaFunction, JavaAnnotation, JavaField, JavaClass}
 
 /**
  * User: Dimitr

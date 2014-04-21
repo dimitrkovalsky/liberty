@@ -1,7 +1,7 @@
 package com.liberty.generators
 
 import com.liberty.traits.persistance.DaoAdapter
-import com.liberty.entities.JavaClass
+import com.liberty.model.JavaClass
 import com.liberty.generators.adapters.StubAdapter
 
 /**
