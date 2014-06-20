@@ -1,7 +1,7 @@
 package com.liberty
 
 
-import com.liberty.traits.Importable
+import com.liberty.traits.{NoPackage, JavaPackage, Importable}
 import com.liberty.types.DataType
 
 
@@ -12,34 +12,38 @@ import com.liberty.types.DataType
  */
 package object types {
 
-    abstract class DataType(typeName: String) extends Importable {
-        def getDefaultValue: String = "null"
+  abstract class DataType(typeName: String) extends Importable {
+    def getDefaultValue: String = "null"
 
-        override def toString: String = typeName
+    override def toString: String = typeName
 
-        override def equals(obj: scala.Any): Boolean = {
-            if(!obj.isInstanceOf[com.liberty.types.DataType])
-                return false
-            val dt = obj.asInstanceOf[com.liberty.types.DataType]
-            this.typeName.equals(dt.toString)
-        }
+    override def equals(obj: scala.Any): Boolean = {
+      if (!obj.isInstanceOf[com.liberty.types.DataType])
+        return false
+      val dt = obj.asInstanceOf[com.liberty.types.DataType]
+      this.typeName.equals(dt.toString)
     }
 
+    def getTypeName = typeName
+  }
 
-    trait ConstructedType {
-        def getConstructor(): String
-    }
 
-    case class UndefinedType() extends DataType("")
+  trait ConstructedType {
+    def getConstructor(): String
+  }
 
-    case class VoidType() extends DataType("void")
+  case class UndefinedType() extends DataType("")
 
-    case class ObjectType(classType: String) extends DataType(classType) with ConstructedType {
-        def getConstructor(): String = classType
-    }
+  case class VoidType() extends DataType("void")
+
+  case class ObjectType(classType: String, jPackage: JavaPackage = new NoPackage) extends DataType(classType) with ConstructedType with Importable {
+    this.javaPackage = jPackage
+
+    def getConstructor(): String = classType
+  }
 
 }
 
-case class StubType(stubType:String) extends DataType(stubType)
+case class StubType(stubType: String) extends DataType(stubType)
 
 

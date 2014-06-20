@@ -1,7 +1,7 @@
 package com.liberty.builders
 
 import org.junit.{Assert, Test}
-import com.liberty.model.{JavaInterface, FunctionParameter, FunctionSignature}
+import com.liberty.model._
 import com.liberty.types.{collections, primitives}
 import com.liberty.types.primitives.{IntegerType, BooleanType, StringType}
 import com.liberty.operations.Variable
@@ -19,7 +19,7 @@ class InterfaceBuilderTest {
         builder.setName("Marker")
         val interface = builder.getInterface
         val expect = "interface Marker {}"
-        println(interface)
+        //println(interface)
         Assert.assertEquals(expect, interface.toString)
     }
 
@@ -66,7 +66,7 @@ class InterfaceBuilderTest {
             List(FunctionParameter(Variable("names"), collections.ListType(StringType)))))
         builder.addFunctionSignature(new FunctionSignature("validate", BooleanType,
             List(FunctionParameter(Variable("costs"), collections.ArrayListType(IntegerType))),
-            List("CostException", "ValidationException")))
+            List(JavaException("CostException"), JavaException("ValidationException"))))
         builder.addFunctionSignature(new FunctionSignature("getData", collections.ListType(StringType)))
         builder.getInterface
     }

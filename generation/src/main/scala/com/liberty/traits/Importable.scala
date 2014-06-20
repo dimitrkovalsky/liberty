@@ -22,8 +22,10 @@ trait Importable {
 }
 
 
-case class JavaPackage(packagePath: String, packageClass: String = "") {
-    def getImport: String = {
+case class JavaPackage(packagePath: String, packageClass: String) {
+  def isEmpty = packagePath.isEmpty || packageClass.isEmpty
+
+  def getImport: String = {
         s"import $packagePath.$packageClass;"
     }
 

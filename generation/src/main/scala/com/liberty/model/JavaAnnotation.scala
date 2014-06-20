@@ -51,3 +51,5 @@ case class JavaAnnotation(var name: String = "", pack: JavaPackage = new NoPacka
         this.name.equals(annotation.name) && this.javaPackage.equals(annotation.javaPackage)
     }
 }
+
+case class SimpleAnnotation(var name: String = "", pack: String)

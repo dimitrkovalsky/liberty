@@ -3,6 +3,8 @@ package com.liberty.generators.adapters
 import com.liberty.traits.persistance.DaoAdapter
 import com.liberty.model.{JavaFunction, JavaAnnotation, JavaField, JavaClass}
 
+import scala.util.Try
+
 /**
  * User: Dimitr
  * Date: 04.11.13
@@ -24,16 +26,16 @@ case class StubAdapter() extends DaoAdapter{
 
     def createDaoFields(): Unit = ???
 
-    def createDaoClass(): Either[String, JavaClass] = ???
+    def createDaoClass(): Try[JavaClass] = ???
 
     def createDaoConstructor(): Unit = ???
 
-    def createDelete(): JavaFunction = ???
+    def createDelete() = ???
 
-    def createFind(): JavaFunction = ???
+    def createFind() = ???
 
-    def createUpdate(): JavaFunction = ???
+    def createUpdate() = ???
 
-    def createInsert(): JavaFunction = ???
+    def createInsert() = ???
 }
 

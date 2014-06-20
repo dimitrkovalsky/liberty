@@ -9,27 +9,27 @@ import com.liberty.generators.DaoGenerator
  * Time: 12:01
  */
 trait CRUDable extends Insertable with Removable with Updatable with Findable {
-    def createMethods(): List[JavaFunction] = {
-        createInsert() :: createFind() :: createUpdate() :: createDelete() :: Nil
-    }
+  def createMethods(): List[JavaFunction] = {
+    (createInsert() :: createFind() :: createUpdate() :: createDelete() :: Nil).flatten
+  }
 }
 
 trait Adaptable {
 }
 
 trait Insertable {
-    def createInsert(): JavaFunction
+  def createInsert(): Option[JavaFunction]
 }
 
 trait Removable {
-    def createDelete(): JavaFunction
+  def createDelete(): Option[JavaFunction]
 }
 
 trait Updatable {
-    def createUpdate(): JavaFunction
+  def createUpdate(): Option[JavaFunction]
 }
 
 trait Findable {
-    def createFind(): JavaFunction
+  def createFind(): Option[JavaFunction]
 }
 

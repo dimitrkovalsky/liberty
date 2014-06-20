@@ -8,24 +8,24 @@ import com.liberty.types.DataType
  * Time: 10:14
  */
 trait Generalizable {
-    var generics: List[DataType] = Nil
+  var generics: List[DataType] = Nil
 
-    def addGenericType(dataType: DataType) {
-        if (!generics.contains(dataType))
-            generics = generics ::: List(dataType)
-    }
+  def addGenericType(dataType: DataType) {
+    if (!generics.contains(dataType))
+      generics = generics ::: List(dataType)
+  }
 
-    def addGenericType(dataTypes: DataType*) {
-        for (dType <- dataTypes) {
-            if (!generics.contains(dType))
-                generics = generics ::: List(dType)
-        }
+  def addGenericType(dataTypes: DataType*) {
+    for (dType <- dataTypes) {
+      if (!generics.contains(dType))
+        generics = generics ::: List(dType)
     }
+  }
 
-    def getGenericString: String = {
-        generics match {
-            case Nil => ""
-            case _ => s"<${generics.map(_.toString).mkString(", ")}>"
-        }
+  def getGenericString: String = {
+    generics match {
+      case Nil => ""
+      case _ => s"<${generics.map(_.getTypeName).mkString(", ")}>"
     }
+  }
 }

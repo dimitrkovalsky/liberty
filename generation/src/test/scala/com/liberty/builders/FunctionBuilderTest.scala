@@ -6,7 +6,7 @@ import com.liberty.types.primitives._
 import com.liberty.operations._
 import com.liberty.types.collections.MapType
 import com.liberty.types.collections.ListType
-import com.liberty.model.{PublicModifier, JavaAnnotation, JavaFunction, FunctionParameter}
+import com.liberty.model._
 import com.liberty.types.collections._
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.VoidType
 import com.liberty.operations.FunctionInvokeOperation
@@ -28,7 +28,7 @@ class FunctionBuilderTest {
         val function = builder.getFunction
         val resultString = "void create(String name, Map<String, Integer> languages){" +
             "\n\t// Empty body\n}"
-        // println(function.toString)
+        //println(function.toString)
         Assert.assertEquals(resultString, function.toString)
 
     }
@@ -72,7 +72,7 @@ class FunctionBuilderTest {
         builder.addOperation(
             FunctionInvokeOperation("validate", List(CreationOperation(ArrayListType(StringType)), input), result))
         builder.addOperation(ReturnOperation(FunctionInvokeOperation("split", List(input, result))))
-        builder.addThrow("Exception")
+        builder.addThrow(JavaException("Exception"))
         builder.getFunction
     }
 
