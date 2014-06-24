@@ -1,9 +1,9 @@
 package com.liberty.builders
 
+import com.liberty.StubType
 import com.liberty.model.{FunctionSignature, JavaInterface}
 import com.liberty.traits.JavaPackage
 import com.liberty.types.DataType
-import com.liberty.StubType
 
 /**
  * User: Dimitr

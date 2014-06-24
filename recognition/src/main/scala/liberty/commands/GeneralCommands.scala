@@ -6,6 +6,6 @@ package liberty.commands
  * Time: 16:15
  */
 object GeneralCommands {
-    final val NO_COMMAND = 0
-    final val FINISH = 10
+  final val NO_COMMAND = 0
+  final val FINISH = 10
 }

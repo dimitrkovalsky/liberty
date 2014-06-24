@@ -1,13 +1,11 @@
 package com.liberty.builders
 
-import org.junit.{Assert, Test}
-import com.liberty.model._
-import com.liberty.types.primitives._
-import com.liberty.common.Implicits._
-import com.liberty.model.JavaAnnotation
-import com.liberty.traits.JavaPackage
-import com.liberty.model.JavaField
 import com.liberty.StubType
+import com.liberty.common.Implicits._
+import com.liberty.model.{JavaAnnotation, JavaField, _}
+import com.liberty.traits.JavaPackage
+import com.liberty.types.primitives._
+import org.junit.{Assert, Test}
 
 /**
  * User: Dimitr

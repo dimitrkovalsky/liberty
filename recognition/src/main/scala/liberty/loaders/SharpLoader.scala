@@ -6,10 +6,10 @@ package liberty.loaders
  * Time: 15:29
  */
 object SharpLoader {
-    def load() {
-        println("[SharpLoader]")
-        val executor = new CommandExecutor
-        executor.setCommand("C:\\sharp_startup.bat")
-        new Thread(executor).start()
-    }
+  def load() {
+    println("[SharpLoader]")
+    val executor = new CommandExecutor
+    executor.setCommand("C:\\sharp_startup.bat")
+    new Thread(executor).start()
+  }
 }

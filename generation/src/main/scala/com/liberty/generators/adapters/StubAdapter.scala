@@ -1,7 +1,7 @@
 package com.liberty.generators.adapters
 
+import com.liberty.model.{JavaAnnotation, JavaClass, JavaField}
 import com.liberty.traits.persistance.DaoAdapter
-import com.liberty.model.{JavaFunction, JavaAnnotation, JavaField, JavaClass}
 
 import scala.util.Try
 
@@ -10,32 +10,32 @@ import scala.util.Try
  * Date: 04.11.13
  * Time: 9:27
  */
-case class StubAdapter() extends DaoAdapter{
-    var javaClass: JavaClass = _
-    var datastoreName: String = _
+case class StubAdapter() extends DaoAdapter {
+  var javaClass: JavaClass = _
+  var datastoreName: String = _
 
-    def getDatastoreAnnotation: JavaAnnotation = ???
+  def getDatastoreAnnotation: JavaAnnotation = ???
 
-    def getIdAnnotation: JavaAnnotation = ???
+  def getIdAnnotation: JavaAnnotation = ???
 
-    def getIdField: Option[JavaField] = ???
+  def getIdField: Option[JavaField] = ???
 
-    def markField(field: JavaField, annotation: JavaAnnotation): Unit = ???
+  def markField(field: JavaField, annotation: JavaAnnotation): Unit = ???
 
-    def getEntityClass: JavaClass = ???
+  def getEntityClass: JavaClass = ???
 
-    def createDaoFields(): Unit = ???
+  def createDaoFields(): Unit = ???
 
-    def createDaoClass(): Try[JavaClass] = ???
+  def createDaoClass(): Try[JavaClass] = ???
 
-    def createDaoConstructor(): Unit = ???
+  def createDaoConstructor(): Unit = ???
 
-    def createDelete() = ???
+  def createDelete() = ???
 
-    def createFind() = ???
+  def createFind() = ???
 
-    def createUpdate() = ???
+  def createUpdate() = ???
 
-    def createInsert() = ???
+  def createInsert() = ???
 }
 

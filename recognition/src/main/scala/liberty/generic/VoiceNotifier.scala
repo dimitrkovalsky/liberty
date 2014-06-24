@@ -8,5 +8,5 @@ import liberty.entities.RecognitionResult
  * Time: 16:06
  */
 trait VoiceNotifier {
-    def onRecognized(recognized: RecognitionResult): Option[OperationResult]
+  def onRecognized(recognized: RecognitionResult): Option[OperationResult]
 }

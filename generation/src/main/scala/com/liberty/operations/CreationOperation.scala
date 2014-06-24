@@ -1,6 +1,6 @@
 package com.liberty.operations
 
-import com.liberty.types.{primitives, ConstructedType, DataType}
+import com.liberty.types.{ConstructedType, DataType, primitives}
 
 /**
  * User: Dimitr
@@ -10,18 +10,18 @@ import com.liberty.types.{primitives, ConstructedType, DataType}
 // TODO : Validate variable name
 case class CreationOperation(dataType: DataType, variableName: Variable = Variable(""),
                              var params: List[Expression] = Nil)
-    extends Operation {
-    // TODO: realize creation of primitives with params
-    def createFromDataType(dataType: DataType): String = dataType match {
-        case t: ConstructedType => s"new ${new ConstructorInvokeOperation(t, params).execute().get}"
-        case prim: primitives.PrimitiveType => prim.getDefaultValue
-    }
+  extends Operation {
+  // TODO: realize creation of primitives with params
+  def createFromDataType(dataType: DataType): String = dataType match {
+    case t: ConstructedType => s"new ${new ConstructorInvokeOperation(t, params).execute().get}"
+    case prim: primitives.PrimitiveType => prim.getDefaultValue
+  }
 
-    override def execute(): Option[String] = {
-        val construct = createFromDataType(dataType)
-        variableName match {
-            case Variable("") => Some(construct)
-            case _ => Some(s"${dataType.toString} $variableName = $construct")
-        }
+  override def execute(): Option[String] = {
+    val construct = createFromDataType(dataType)
+    variableName match {
+      case Variable("") => Some(construct)
+      case _ => Some(s"${dataType.toString} $variableName = $construct")
     }
+  }
 }

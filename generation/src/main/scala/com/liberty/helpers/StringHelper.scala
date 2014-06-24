@@ -6,14 +6,14 @@ package com.liberty.helpers
  * Time: 11:33
  */
 object StringHelper {
-    def isBoolean(input: String): Boolean = {
-        try {
-            input.toBoolean
-            true
-        } catch {
-            case _: Throwable => false
-        }
+  def isBoolean(input: String): Boolean = {
+    try {
+      input.toBoolean
+      true
+    } catch {
+      case _: Throwable => false
     }
+  }
 
-    def isNumeric(input: String): Boolean = input.forall(_.isDigit)
+  def isNumeric(input: String): Boolean = input.forall(_.isDigit)
 }

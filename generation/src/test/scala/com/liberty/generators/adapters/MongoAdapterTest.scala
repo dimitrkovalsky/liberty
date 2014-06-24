@@ -1,9 +1,9 @@
 package com.liberty.generators.adapters
 
-import com.liberty.traits.{LocationPackage, JavaPackage}
-import org.junit.{Assert, Test}
-import com.liberty.model.JavaClass
 import com.liberty.builders.ClassBuilderTest
+import com.liberty.model.JavaClass
+import com.liberty.traits.LocationPackage
+import org.junit.{Assert, Test}
 
 import scala.util.{Failure, Success}
 
@@ -14,6 +14,7 @@ import scala.util.{Failure, Success}
  */
 class MongoAdapterTest {
   private val basePackage = LocationPackage("com.city.guide")
+
   @Test def createAccessors() {
     val initialClass = createClass()
     assertInitialClass(initialClass)

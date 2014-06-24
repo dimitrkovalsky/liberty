@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
+import sbt.Keys._
 import sbt._
-import Keys._
 
 object ApplicationBuild extends Build {
   // Target JVM version

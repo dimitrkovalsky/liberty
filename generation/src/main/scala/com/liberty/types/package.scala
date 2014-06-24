@@ -1,7 +1,7 @@
 package com.liberty
 
 
-import com.liberty.traits.{NoPackage, JavaPackage, Importable}
+import com.liberty.traits.{Importable, JavaPackage, NoPackage}
 import com.liberty.types.DataType
 
 

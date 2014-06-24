@@ -1,7 +1,6 @@
 package com.liberty.traits.persistance
 
-import com.liberty.model.{JavaFunction, JavaClass}
-import com.liberty.generators.DaoGenerator
+import com.liberty.model.JavaFunction
 
 /**
  * User: Dimitr

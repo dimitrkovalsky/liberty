@@ -7,19 +7,19 @@ package com.liberty.model
  */
 sealed trait Modifier {}
 
-case object DefaultModifier extends Modifier{
-    override def toString: String = ""
+case object DefaultModifier extends Modifier {
+  override def toString: String = ""
 }
 
 case object PrivateModifier extends Modifier {
-    override def toString: String = "private"
+  override def toString: String = "private"
 }
 
 case object PublicModifier extends Modifier {
-    override def toString: String = "public"
+  override def toString: String = "public"
 }
 
 case object ProtectedModifier extends Modifier {
-    override def toString: String = "protected"
+  override def toString: String = "protected"
 }
 

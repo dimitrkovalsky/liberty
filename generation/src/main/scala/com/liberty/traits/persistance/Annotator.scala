@@ -6,20 +6,20 @@ package com.liberty.traits.persistance
  * Time: 9:45
  */
 trait Annotator {
-    this: DaoAdapter =>
+  this: DaoAdapter =>
 
-    def addIdAnnotation() {
-        getIdField.map {
-            field => field.addAnnotation(getIdAnnotation)
-        }
+  def addIdAnnotation() {
+    getIdField.map {
+      field => field.addAnnotation(getIdAnnotation)
     }
+  }
 
-    def addDatastoreAnnotation() {
-        getEntityClass.addAnnotation(getDatastoreAnnotation)
-    }
+  def addDatastoreAnnotation() {
+    getEntityClass.addAnnotation(getDatastoreAnnotation)
+  }
 
-    def annotateClass() {
-        addDatastoreAnnotation()
-        addIdAnnotation()
-    }
+  def annotateClass() {
+    addDatastoreAnnotation()
+    addIdAnnotation()
+  }
 }

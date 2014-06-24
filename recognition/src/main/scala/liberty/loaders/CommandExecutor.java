@@ -8,11 +8,11 @@ import java.util.List;
  * Date: 16.07.13
  * Time: 15:21
  */
-public class CommandExecutor implements Runnable{
-    private  ProcessBuilder processBuilder;
+public class CommandExecutor implements Runnable {
+    private ProcessBuilder processBuilder;
     private String[] commands;
 
-    public  void setCommand(String...command) throws IOException, InterruptedException {
+    public void setCommand(String... command) throws IOException, InterruptedException {
         //processBuilder = new ProcessBuilder(command);
         //processBuilder.redirectErrorStream(true); // redirect ErrorStream into standard error stream
         commands = command;
@@ -30,14 +30,13 @@ public class CommandExecutor implements Runnable{
                 System.out.println(line);
             }*/
             Runtime.getRuntime().exec(commands);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.err.println("[CommandExecutor] error");
         }
 
     }
 
-    public  void setCommand(List<String> command) throws IOException, InterruptedException {
+    public void setCommand(List<String> command) throws IOException, InterruptedException {
 
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true); // redirect ErrorStream into standard error stream
@@ -45,38 +44,40 @@ public class CommandExecutor implements Runnable{
 
     }
 
-    public Process getExecuteProcess(String...command) throws IOException {
+    public Process getExecuteProcess(String... command) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true); // redirect ErrorStream into standard error stream
         return processBuilder.start();
     }
 
-    public InputStream getCommandOutputStream(String...command) throws IOException, InterruptedException {
+    public InputStream getCommandOutputStream(String... command) throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true); // redirect ErrorStream into standard error stream
         Process process = processBuilder.start();
 
         InputStream inputStream = process.getInputStream();
         int exitVal = process.waitFor();
-        if(exitVal==0)
-            return  inputStream;
+        if (exitVal == 0)
+            return inputStream;
         else
             return null;
     }
 
     /**
      * Creates linux script file
+     *
      * @param scriptName File name
-     * @param body  Script text
+     * @param body       Script text
      */
-    public void createScript(String scriptName,List<String> body){
+    public void createScript(String scriptName, List<String> body) {
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(new OutputStreamWriter( new FileOutputStream(scriptName)));
+            writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(scriptName)));
             for (String s : body)
                 writer.println(s);
             writer.close();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
 

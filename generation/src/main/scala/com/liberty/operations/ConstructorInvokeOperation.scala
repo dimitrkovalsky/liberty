@@ -8,4 +8,4 @@ import com.liberty.types.ConstructedType
  * Time: 10:27
  */
 class ConstructorInvokeOperation(typeToConstruct: ConstructedType, parameters: List[Expression] = Nil)
-    extends FunctionInvokeOperation(typeToConstruct.getConstructor(), parameters)
+  extends FunctionInvokeOperation(typeToConstruct.getConstructor(), parameters)

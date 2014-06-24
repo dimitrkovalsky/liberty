@@ -1,7 +1,5 @@
 package com.liberty
 
-import com.liberty.traits.JavaPackage
-
 /**
  * User: Dimitr
  * Date: 05.09.13

@@ -1,6 +1,6 @@
 package com.liberty.model
 
-import com.liberty.operations.{CreationOperation, ConstructorInvokeOperation, Operation}
+import com.liberty.operations.{CreationOperation, Operation}
 import com.liberty.traits.JavaPackage
 
 /**

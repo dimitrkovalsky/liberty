@@ -5,6 +5,6 @@ package com.liberty.errors
  * Date: 05.09.13
  * Time: 11:21
  */
-class Error(message:String){
-    override def toString: String = "<ERROR> Message : " + message
+class Error(message: String) {
+  override def toString: String = "<ERROR> Message : " + message
 }

@@ -1,6 +1,5 @@
 package com.liberty.structures
 
-import com.liberty.model.JavaClass
 import com.liberty.traits.Persistable
 
 /**
@@ -9,5 +8,5 @@ import com.liberty.traits.Persistable
  * Time: 11:36
  */
 class DAOStructure {
-    val entity: Option[Persistable] = None
+  val entity: Option[Persistable] = None
 }

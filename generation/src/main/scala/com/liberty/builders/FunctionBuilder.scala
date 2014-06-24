@@ -1,10 +1,8 @@
 package com.liberty.builders
 
-import com.liberty.model._
-import com.liberty.types
+import com.liberty.model.{FunctionParameter, JavaAnnotation, _}
 import com.liberty.operations._
-import com.liberty.model.JavaAnnotation
-import com.liberty.model.FunctionParameter
+import com.liberty.types
 
 /**
  * User: Dimitr

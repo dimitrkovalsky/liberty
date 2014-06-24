@@ -1,13 +1,11 @@
 package com.liberty.model
 
-import com.liberty.types.DataType
-import com.liberty.{patterns, types}
 import com.liberty.operations.Variable
-import com.liberty.traits.{NoPackage, Annotatable}
+import com.liberty.traits.{Annotatable, JavaPackage, NoPackage}
+import com.liberty.types.{DataType, UndefinedType}
+import com.liberty.{patterns, types}
+
 import scala.Predef._
-import com.liberty.types.UndefinedType
-import scala.Some
-import com.liberty.traits.JavaPackage
 
 /**
  * User: Dimitr

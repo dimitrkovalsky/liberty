@@ -8,22 +8,22 @@ import liberty.types.RecognitionDataType
  * Time: 15:21
  */
 class DataTypeEntity(var dataType: Int) {
-    var data: Object = _
+  var data: Object = _
 
-    override def toString = {
-        dataType match {
-            case RecognitionDataType.VOID => "void"
-            case RecognitionDataType.BYTE => "byte"
-            case RecognitionDataType.INTEGER => "int"
-            case RecognitionDataType.FLOAT => "float"
-            case RecognitionDataType.DOUBLE => "double"
-            case RecognitionDataType.OBJECT => "object"
-        }
+  override def toString = {
+    dataType match {
+      case RecognitionDataType.VOID => "void"
+      case RecognitionDataType.BYTE => "byte"
+      case RecognitionDataType.INTEGER => "int"
+      case RecognitionDataType.FLOAT => "float"
+      case RecognitionDataType.DOUBLE => "double"
+      case RecognitionDataType.OBJECT => "object"
     }
+  }
 }
 
 case class VariableEntity(var dataType: DataTypeEntity, var name: String) {
-    def toFunctionParam: String = {
-        dataType + " " + name
-    }
+  def toFunctionParam: String = {
+    dataType + " " + name
+  }
 }

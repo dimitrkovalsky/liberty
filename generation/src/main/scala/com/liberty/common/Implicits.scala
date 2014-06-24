@@ -1,7 +1,7 @@
 package com.liberty.common
 
 import com.liberty.model.{FunctionParameter, JavaAnnotation, SimpleAnnotation}
-import com.liberty.operations.{Variable, Expression}
+import com.liberty.operations.{Expression, Variable}
 import com.liberty.traits.JavaPackage
 
 /**

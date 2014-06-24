@@ -1,6 +1,6 @@
 package liberty.entities
 
-import liberty.types.{RecognitionDataType, AccessModifier}
+import liberty.types.{AccessModifier, RecognitionDataType}
 
 /**
  * User: dkovalskyi
@@ -8,23 +8,23 @@ import liberty.types.{RecognitionDataType, AccessModifier}
  * Time: 15:20
  */
 class FunctionEntity {
-    var accessModifier: Int = AccessModifier.NONE
-    var name: String = ""
-    var returnType: DataTypeEntity = new DataTypeEntity(RecognitionDataType.VOID)
-    var input: Array[VariableEntity] = Array.empty[VariableEntity]
+  var accessModifier: Int = AccessModifier.NONE
+  var name: String = ""
+  var returnType: DataTypeEntity = new DataTypeEntity(RecognitionDataType.VOID)
+  var input: Array[VariableEntity] = Array.empty[VariableEntity]
 
-    override def toString: String = {
-        AccessModifier.toString(accessModifier) + " " + returnType + " " + name + getParameterString + "{}"
-    }
+  override def toString: String = {
+    AccessModifier.toString(accessModifier) + " " + returnType + " " + name + getParameterString + "{}"
+  }
 
-    private def getParameterString: String = {
-        if (input.isEmpty)
-            return "()"
-        var result = "("
-        for (variable <- input) {
-            result += variable.toFunctionParam
-        }
-        result += ")"
-        result
+  private def getParameterString: String = {
+    if (input.isEmpty)
+      return "()"
+    var result = "("
+    for (variable <- input) {
+      result += variable.toFunctionParam
     }
+    result += ")"
+    result
+  }
 }

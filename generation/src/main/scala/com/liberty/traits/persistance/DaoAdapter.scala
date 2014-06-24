@@ -1,8 +1,8 @@
 package com.liberty.traits.persistance
 
-import com.liberty.model.{JavaFunction, JavaClass, JavaField, JavaAnnotation}
-import com.liberty.traits.Accessible
 import com.liberty.builders.ClassBuilder
+import com.liberty.model.{JavaAnnotation, JavaClass, JavaField}
+import com.liberty.traits.Accessible
 
 import scala.util.{Success, Try}
 

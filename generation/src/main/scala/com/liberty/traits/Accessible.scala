@@ -1,9 +1,8 @@
 package com.liberty.traits
 
-import com.liberty.model._
 import com.liberty.builders.FunctionBuilder
-import com.liberty.operations.{SetValueOperation, Variable, ReturnOperation}
-import com.liberty.model.JavaField
+import com.liberty.model.{JavaField, _}
+import com.liberty.operations.{ReturnOperation, SetValueOperation, Variable}
 
 /**
  * User: Dimitr
@@ -12,61 +11,61 @@ import com.liberty.model.JavaField
  */
 trait Accessible {
 
-    def addGetters(clazz: JavaClass) {
-        for (field: JavaField <- clazz.fields) {
-            addGetter(clazz, field)
-        }
+  def addGetters(clazz: JavaClass) {
+    for (field: JavaField <- clazz.fields) {
+      addGetter(clazz, field)
     }
+  }
 
-    def addSetters(clazz: JavaClass) {
-        for (field: JavaField <- clazz.fields) {
-            addSetter(clazz, field)
-        }
+  def addSetters(clazz: JavaClass) {
+    for (field: JavaField <- clazz.fields) {
+      addSetter(clazz, field)
     }
+  }
 
 
-    def addGetter(clazz: JavaClass, field: JavaField) {
-        if (!clazz.functionExist(getGetterName(field)))
-            clazz.addFunction(createGetter(field))
-    }
+  def addGetter(clazz: JavaClass, field: JavaField) {
+    if (!clazz.functionExist(getGetterName(field)))
+      clazz.addFunction(createGetter(field))
+  }
 
-    def addSetter(clazz: JavaClass, field: JavaField) {
-        if (!clazz.functionExist(getSetterName(field)))
-            clazz.addFunction(createSetter(field))
-    }
+  def addSetter(clazz: JavaClass, field: JavaField) {
+    if (!clazz.functionExist(getSetterName(field)))
+      clazz.addFunction(createSetter(field))
+  }
 
-    private def getGetterName(field: JavaField): String = "get" + field.name.capitalize
+  private def getGetterName(field: JavaField): String = "get" + field.name.capitalize
 
-    private def getSetterName(field: JavaField): String = "set" + field.name.capitalize
+  private def getSetterName(field: JavaField): String = "set" + field.name.capitalize
 
-    private def createGetter(field: JavaField): JavaFunction = {
-        val builder = new FunctionBuilder
-        builder.setName(getGetterName(field))
-        builder.addModifier(PublicModifier)
-        builder.setOutputType(field.dataType)
-        builder.addOperation(ReturnOperation(Variable(field)))
-        builder.getFunction
-    }
+  private def createGetter(field: JavaField): JavaFunction = {
+    val builder = new FunctionBuilder
+    builder.setName(getGetterName(field))
+    builder.addModifier(PublicModifier)
+    builder.setOutputType(field.dataType)
+    builder.addOperation(ReturnOperation(Variable(field)))
+    builder.getFunction
+  }
 
-    private def createSetter(field: JavaField): JavaFunction = {
-        val builder = new FunctionBuilder
-        builder.setName(getSetterName(field))
-        builder.addModifier(PublicModifier)
-        builder.addParam(FunctionParameter(field))
-        // TODO : Add set operation
-        builder.addOperation(SetValueOperation(field, Variable(field)))
-        builder.getFunction
-    }
+  private def createSetter(field: JavaField): JavaFunction = {
+    val builder = new FunctionBuilder
+    builder.setName(getSetterName(field))
+    builder.addModifier(PublicModifier)
+    builder.addParam(FunctionParameter(field))
+    // TODO : Add set operation
+    builder.addOperation(SetValueOperation(field, Variable(field)))
+    builder.getFunction
+  }
 
-    def addAccessors(clazz: JavaClass) {
-        addGetters(clazz)
-        addSetters(clazz)
-    }
+  def addAccessors(clazz: JavaClass) {
+    addGetters(clazz)
+    addSetters(clazz)
+  }
 
-    def getAccessible(clazz: JavaClass): JavaClass = {
-        val result: JavaClass = clazz.clone().asInstanceOf[JavaClass]
-        addGetters(result)
-        addSetters(result)
-        result
-    }
+  def getAccessible(clazz: JavaClass): JavaClass = {
+    val result: JavaClass = clazz.clone().asInstanceOf[JavaClass]
+    addGetters(result)
+    addSetters(result)
+    result
+  }
 }

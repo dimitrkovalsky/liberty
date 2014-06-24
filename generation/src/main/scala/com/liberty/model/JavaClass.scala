@@ -1,10 +1,8 @@
 package com.liberty.model
 
-import com.liberty.types.DataType
 import com.liberty.patterns
-import com.liberty.traits._
-import scala.Some
-import com.liberty.traits.JavaPackage
+import com.liberty.traits.{JavaPackage, _}
+import com.liberty.types.DataType
 
 /**
  * User: Dimitr

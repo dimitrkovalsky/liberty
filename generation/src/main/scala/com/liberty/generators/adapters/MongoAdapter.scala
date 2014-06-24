@@ -1,18 +1,14 @@
 package com.liberty.generators.adapters
 
-import com.liberty.common.Implicits
+import com.liberty.builders.FunctionBuilder
 import com.liberty.exceptions.IdMissedException
-import com.liberty.traits.{LocationPackage, JavaPackage, Accessible}
-import com.liberty.model._
-import com.liberty.traits.persistance.{Annotator, DaoAdapter}
-import com.liberty.builders.{FunctionBuilder, ClassBuilder}
-import com.liberty.model.JavaAnnotation
-import com.liberty.model.JavaField
-import com.liberty.operations.{ReturnOperation, Variable, FunctionType, SelfFunctionInvokeOperation}
+import com.liberty.model.{JavaAnnotation, JavaField, _}
+import com.liberty.operations.{FunctionType, SelfFunctionInvokeOperation, Variable}
+import com.liberty.traits.persistance.DaoAdapter
+import com.liberty.traits.{JavaPackage, LocationPackage}
 import com.liberty.types.ObjectType
-import Implicits._
 
-import scala.util.{Success, Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 /**
  * User: Dimitr

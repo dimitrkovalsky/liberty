@@ -1,11 +1,7 @@
 package com.liberty.builders
 
-import com.liberty.model._
+import com.liberty.model.{JavaAnnotation, JavaField, _}
 import com.liberty.traits.JavaPackage
-import com.liberty.model.JavaAnnotation
-import com.liberty.traits.JavaPackage
-import com.liberty.model.JavaField
-import scala.Some
 import com.liberty.types.DataType
 
 /**
@@ -16,52 +12,52 @@ import com.liberty.types.DataType
 // TODO : Add abstract class support
 class ClassBuilder(var javaClass: JavaClass = new JavaClass) {
 
-    def setName(name: String) = javaClass.name = name
+  def setName(name: String) = javaClass.name = name
 
-    def addFunction(function: JavaFunction) {
-        javaClass.addFunction(function)
-    }
+  def addFunction(function: JavaFunction) {
+    javaClass.addFunction(function)
+  }
 
-    def addFunctions(functions: List[JavaFunction]) {
-        for (function <- functions)
-            javaClass.addFunction(function)
-    }
+  def addFunctions(functions: List[JavaFunction]) {
+    for (function <- functions)
+      javaClass.addFunction(function)
+  }
 
-    def addField(field: JavaField) {
-        javaClass.addField(field)
-    }
+  def addField(field: JavaField) {
+    javaClass.addField(field)
+  }
 
-    def addAnnotation(annotation: JavaAnnotation) {
-        javaClass.addAnnotation(annotation)
-    }
+  def addAnnotation(annotation: JavaAnnotation) {
+    javaClass.addAnnotation(annotation)
+  }
 
-    def addPackage(javaPackage: JavaPackage) {
-        javaClass.javaPackage = javaPackage
-    }
+  def addPackage(javaPackage: JavaPackage) {
+    javaClass.javaPackage = javaPackage
+  }
 
-    def addImplements(interface: JavaInterface) {
-        javaClass.addImplements(interface)
-    }
+  def addImplements(interface: JavaInterface) {
+    javaClass.addImplements(interface)
+  }
 
-    def addExtend(clazz: JavaClass) {
-        javaClass.addExtend(clazz)
-    }
+  def addExtend(clazz: JavaClass) {
+    javaClass.addExtend(clazz)
+  }
 
-    def removeImplements(interfaceName: JavaInterface): Option[JavaInterface] = {
-        javaClass.removeImplements(interfaceName)
-    }
+  def removeImplements(interfaceName: JavaInterface): Option[JavaInterface] = {
+    javaClass.removeImplements(interfaceName)
+  }
 
-    def removeExtend(): Option[JavaClass] = {
-        javaClass.removeExtend()
-    }
+  def removeExtend(): Option[JavaClass] = {
+    javaClass.removeExtend()
+  }
 
-    def addGeneric(generic: DataType) {
-        javaClass.addGenericType(generic)
-    }
+  def addGeneric(generic: DataType) {
+    javaClass.addGenericType(generic)
+  }
 
-    def getJavaClass: JavaClass = javaClass
+  def getJavaClass: JavaClass = javaClass
 }
 
 object ClassBuilder {
-    def apply(): ClassBuilder = new ClassBuilder()
+  def apply(): ClassBuilder = new ClassBuilder()
 }
