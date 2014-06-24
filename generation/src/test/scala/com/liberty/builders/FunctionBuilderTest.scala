@@ -1,21 +1,12 @@
 package com.liberty.builders
 
-import org.junit.{Assert, Test}
-import com.liberty.types
-import com.liberty.types.primitives._
-import com.liberty.operations._
-import com.liberty.types.collections.MapType
-import com.liberty.types.collections.ListType
 import com.liberty.model._
-import com.liberty.types.collections._
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.VoidType
-import com.liberty.operations.FunctionInvokeOperation
-import com.liberty.operations.Variable
-import com.liberty.types.collections.MapType
-import com.liberty.types.collections.ListType
-import com.liberty.operations.CreationOperation
-import com.liberty.operations.ReturnOperation
-import com.liberty.types.collections.ArrayListType
+import com.liberty.operations.{CreationOperation, FunctionInvokeOperation, ReturnOperation, Variable, _}
+import com.liberty.types
+import com.liberty.types.collections.{ArrayListType, ListType, MapType}
+import com.liberty.types.primitives._
+import org.junit.{Assert, Test}
+import com.liberty.common.Implicits._
 
 class FunctionBuilderTest {
 

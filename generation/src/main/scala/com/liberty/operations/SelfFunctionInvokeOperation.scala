@@ -7,11 +7,8 @@ import com.liberty.operations.FunctionType.FunctionType
  * Date: 07.11.13
  * Time: 10:28
  */
-/**
- * Should has name if functionType is not SELF_CONSTRUCTOR OR  SELF_CONSTRUCTOR
- */
 class SelfFunctionInvokeOperation(functionType: FunctionType, name: String = "",
-                                  var parameters: List[Expression] = Nil, functionResult: Variable = Variable(""))
+                                  var parameters: List[Expression] = Nil, functionResult: Option[Variable] = None)
   extends FunctionInvokeOperation(name, parameters, functionResult) {
   override def execute(): Option[String] = {
     functionType match {
@@ -31,5 +28,5 @@ object FunctionType extends Enumeration {
 
 object SelfFunctionInvokeOperation {
   def apply(functionType: FunctionType, name: String = "", parameters: List[Expression] = Nil,
-            functionResult: Variable = Variable("")) = new SelfFunctionInvokeOperation(functionType, name, parameters, functionResult)
+            functionResult: Option[Variable] = None) = new SelfFunctionInvokeOperation(functionType, name, parameters, functionResult)
 }

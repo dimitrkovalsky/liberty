@@ -7,25 +7,25 @@ package com.liberty.operations
  */
 // TODO: creation variables without expressions like :<<< List<Integer> list; >>>
 case class FunctionInvokeOperation(functionName: String, var params: List[Expression] = Nil,
-                                   result: Variable = Variable("")) extends Operation {
-    override def execute(): Option[String] = {
-        executeNamed(functionName)
-    }
+                                   result: Option[Variable] = None) extends Operation {
+  override def execute(): Option[String] = {
+    executeNamed(functionName)
+  }
 
 
-    protected def getInvokeParams: String = {
-        params match {
-            case x :: xs => params.mkString(", ")
-            case _ => ""
-        }
+  protected def getInvokeParams: String = {
+    params match {
+      case x :: xs => params.mkString(", ")
+      case _ => ""
     }
+  }
 
-    protected def executeNamed(named: String): Option[String] = {
-        val invokeParams = getInvokeParams
-        result match {
-            case Variable("") => Some(s"$named($invokeParams)")
-            case v: Variable => Some(s"${v.name} = $named($invokeParams)")
-            case _ => None
-        }
+  protected def executeNamed(named: String): Option[String] = {
+    val invokeParams = getInvokeParams
+    result match {
+      case None => Some(s"$named($invokeParams)")
+      case Some(v) => Some(s"${v.name} = $named($invokeParams)")
+      case _ => None
     }
+  }
 }

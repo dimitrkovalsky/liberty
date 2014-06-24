@@ -44,7 +44,7 @@ class JavaFunction extends ClassPart with Annotatable {
   override def equals(obj: Any): Boolean = {
     if (!obj.isInstanceOf[JavaFunction])
       return false
-    this.signature.equals(obj.asInstanceOf[JavaFunction])
+    this.signature.equals(obj.asInstanceOf[JavaFunction].signature)
   }
 }
 
@@ -60,7 +60,6 @@ object FunctionParameter {
   def apply(paramName: String, paramType: DataType) = new FunctionParameter(Variable(paramName), paramType)
 }
 
-// TODO: Add normal throws support add Java exception type
 // TODO: Add exception import  support
 case class FunctionSignature(var name: String, var output: DataType, var modifier: Modifier = DefaultModifier,
                              var input: List[FunctionParameter] = Nil, var functionThrows: List[JavaException] = Nil) {

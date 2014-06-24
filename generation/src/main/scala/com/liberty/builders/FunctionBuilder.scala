@@ -2,7 +2,7 @@ package com.liberty.builders
 
 import com.liberty.model._
 import com.liberty.types
-import com.liberty.operations.Operation
+import com.liberty.operations._
 import com.liberty.model.JavaAnnotation
 import com.liberty.model.FunctionParameter
 
@@ -14,6 +14,9 @@ import com.liberty.model.FunctionParameter
 // TODO: In future use method getInstance for retrieving appropriate builder for some language
 class FunctionBuilder {
   private val function = new JavaFunction
+  private var inTrySection = false
+  private var withTry: List[Operation] = Nil
+  private var lastTry: Option[TryOperation] = None
 
   def setName(name: String) = function.signature.name = name
 
@@ -40,7 +43,30 @@ class FunctionBuilder {
 
   def getFunction = function
 
-  def addOperation(operation: Operation) = function.body.addOperation(operation)
+  def addOperation(operation: Operation) {
+    if (inTrySection) {
+      withTry = withTry ::: operation :: Nil
+    }
+    else
+      function.body.addOperation(operation)
+  }
+
+  def addSuperMethodInvoke(name: String, params: List[Expression], result: Option[Variable]) {
+    val function = new SelfFunctionInvokeOperation(FunctionType.SUPER_FUNCTION, name, params, result)
+    addOperation(function)
+  }
+
+  def addSuperMethodInvoke(name: String, result: Option[Variable], params: Expression*) {
+    val function = new SelfFunctionInvokeOperation(FunctionType.SUPER_FUNCTION, name, params.toList, result)
+    addOperation(function)
+  }
+
+  def tryable(f: => Unit): Tryable = {
+    inTrySection = true
+    f
+    inTrySection = false
+    new Tryable(this, withTry)
+  }
 }
 
 object FunctionBuilder {

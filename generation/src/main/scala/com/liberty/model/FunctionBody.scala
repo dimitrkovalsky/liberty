@@ -16,8 +16,7 @@ class FunctionBody {
     case x :: xs => operationsToString()
   }
 
-  // TODO: do not add ';' if in operation loop or if-else expression
-  private def operationsToString(): String = operations.mkString(";\n\t")
+  private def operationsToString(): String = operations.map(s => if (!s.toString.endsWith("}")) s + ";" else s).mkString("\n\t")
 
   def addOperation(operation: Operation) {
     operations = operations ::: operation :: Nil

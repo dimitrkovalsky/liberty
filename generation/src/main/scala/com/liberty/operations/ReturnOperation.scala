@@ -14,7 +14,7 @@ case class ReturnOperation(expression: Expression) extends Operation {
         }
 
         result match {
-            case Some(res: String) => Some(s"return $res;")
+            case Some(res: String) => Some(s"return $res")
             case _ => None
         }
     }

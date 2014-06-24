@@ -2,12 +2,11 @@ package com.liberty.generators.adapters
 
 import com.liberty.common.Implicits
 import com.liberty.exceptions.IdMissedException
-import com.liberty.traits.{JavaPackage, Accessible}
+import com.liberty.traits.{LocationPackage, JavaPackage, Accessible}
 import com.liberty.model._
 import com.liberty.traits.persistance.{Annotator, DaoAdapter}
 import com.liberty.builders.{FunctionBuilder, ClassBuilder}
 import com.liberty.model.JavaAnnotation
-import com.liberty.traits.JavaPackage
 import com.liberty.model.JavaField
 import com.liberty.operations.{ReturnOperation, Variable, FunctionType, SelfFunctionInvokeOperation}
 import com.liberty.types.ObjectType
@@ -20,7 +19,7 @@ import scala.util.{Success, Failure, Try}
  * Date: 01.11.13
  * Time: 9:45
  */
-class MongoAdapter(var javaClass: JavaClass) extends DaoAdapter {
+class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) extends DaoAdapter {
   private val morphiaPackage: String = "com.google.code.morphia.annotations"
   var datastoreName: String = javaClass.name.toLowerCase
 
@@ -75,8 +74,9 @@ class MongoAdapter(var javaClass: JavaClass) extends DaoAdapter {
   override def createInsert() = {
     val param = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
     val builder = FunctionBuilder(PublicModifier, "insert", param)
-    builder.addThrow(StandardExceptions.Exception)
-    builder.addOperation(SelfFunctionInvokeOperation(FunctionType.SUPER_FUNCTION, "save", List(param)))
+    builder.tryable {
+      builder.addSuperMethodInvoke("save", None, param.paramName)
+    }.throwWrapped(JavaException("DaoException", basePackage.nested("errors", "DaoException")))
     Some(builder.getFunction)
   }
 

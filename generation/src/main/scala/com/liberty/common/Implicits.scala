@@ -1,7 +1,7 @@
 package com.liberty.common
 
 import com.liberty.model.{FunctionParameter, JavaAnnotation, SimpleAnnotation}
-import com.liberty.operations.Expression
+import com.liberty.operations.{Variable, Expression}
 import com.liberty.traits.JavaPackage
 
 /**
@@ -12,4 +12,6 @@ object Implicits {
 
   implicit def simpleAnnotationToJavaAnnotation(annotation: SimpleAnnotation): JavaAnnotation =
     JavaAnnotation(annotation.name, JavaPackage(annotation.pack, annotation.name))
+
+  implicit def variableToOption(v: Variable): Option[Variable] = Some(v)
 }
