@@ -32,7 +32,7 @@ object ApplicationBuild extends Build {
   def sharedSettings = Defaults.defaultSettings ++ Seq(
     organization := "com.liberty",
     version := "0.1.0",
-    scalaVersion := "2.10.3",
+    scalaVersion := "2.11.1",
 
     // also check the local Maven repository ~/.m2
     resolvers ++= Seq(Resolver.file("Local Maven Repo", file(Path.userHome + "/.m2/repository"))),
@@ -40,7 +40,7 @@ object ApplicationBuild extends Build {
     publishMavenStyle := true,
 
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "1.9.1" % "test",
+      "org.scalatest" % "scalatest_2.11" % "2.2.0" % "test",
       "org.codehaus.jackson" % "jackson-jaxrs" % "1.9.13",
       "junit" % "junit" % "4.11"
     ),
