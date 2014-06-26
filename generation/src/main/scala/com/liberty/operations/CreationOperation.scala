@@ -8,7 +8,7 @@ import com.liberty.types.{ConstructedType, DataType, primitives}
  * Time: 10:24
  */
 // TODO : Validate variable name
-case class CreationOperation(dataType: DataType, variableName: Variable = Variable(""),
+case class CreationOperation(dataType: DataType, variableName: Option[Variable] = None,
                              var params: List[Expression] = Nil)
   extends Operation {
   // TODO: realize creation of primitives with params
@@ -20,7 +20,7 @@ case class CreationOperation(dataType: DataType, variableName: Variable = Variab
   override def execute(): Option[String] = {
     val construct = createFromDataType(dataType)
     variableName match {
-      case Variable("") => Some(construct)
+      case None => Some(construct)
       case _ => Some(s"${dataType.toString} $variableName = $construct")
     }
   }

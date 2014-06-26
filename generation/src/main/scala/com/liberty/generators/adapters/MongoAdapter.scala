@@ -1,12 +1,13 @@
 package com.liberty.generators.adapters
 
 import com.liberty.builders.FunctionBuilder
+import com.liberty.common.Implicits._
 import com.liberty.exceptions.IdMissedException
-import com.liberty.model.{JavaAnnotation, JavaField, _}
-import com.liberty.operations.{FunctionType, SelfFunctionInvokeOperation, Variable}
+import com.liberty.model._
+import com.liberty.operations._
 import com.liberty.traits.persistance.DaoAdapter
 import com.liberty.traits.{JavaPackage, LocationPackage}
-import com.liberty.types.ObjectType
+import com.liberty.types.{ObjectType, SimpleObjectType}
 
 import scala.util.{Failure, Success, Try}
 
@@ -15,9 +16,11 @@ import scala.util.{Failure, Success, Try}
  * Date: 01.11.13
  * Time: 9:45
  */
+// TODO: change param from javaClass : JavaClass to EntityClass with addition methods such as getIdField
 class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) extends DaoAdapter {
   private val morphiaPackage: String = "com.google.code.morphia.annotations"
   var datastoreName: String = javaClass.name.toLowerCase
+  private val daoException = JavaException("DaoException", basePackage.nested("errors", "DaoException"))
 
   def getAccessible: JavaClass = getAccessible(javaClass)
 
@@ -33,6 +36,13 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
 
   def getIdField: Option[JavaField] = {
     javaClass.fields.find(field => field.id || field.name.startsWith("id") || field.name.contains("Id"))
+  }
+
+  def getIdFieldName = getIdField.fold("ERROR")(_.name)
+
+  private def getIdMethodName = {
+    // TODO : throws exception instead of ERROR
+    getIdField.map(n => s"get${n.name.capitalize}").getOrElse("ERROR")
   }
 
   def markField(field: JavaField, annotation: JavaAnnotation): Unit = {
@@ -66,20 +76,44 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
     daoBuilder.addFunction(builder.getFunction)
   }
 
-
   override def createInsert() = {
     val param = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
     val builder = FunctionBuilder(PublicModifier, "insert", param)
     builder.tryable {
       builder.addSuperMethodInvoke("save", None, param.paramName)
-    }.throwWrapped(JavaException("DaoException", basePackage.nested("errors", "DaoException")))
+    }.throwWrapped(daoException)
     Some(builder.getFunction)
   }
 
-  override def createFind() = None
+  override def createFind() = {
+    val param = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+    val builder = FunctionBuilder(PublicModifier, "find", param)
+    builder.wrapable(daoException) {
+      val ret = ReturnOperation(SuperFunctionInvokeOperation("findOne", List(GetValueOperation(param.paramName.name, getIdMethodName))))
+      builder.addOperation(ret)
+    }
+    Some(builder.getFunction)
+  }
 
-  override def createUpdate() = None
+  override def createUpdate() = {
+    val param = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+    val builder = FunctionBuilder(PublicModifier, "update", param)
+    builder.tryable {
+      builder.addSuperMethodInvoke("save", None, param.paramName)
+    }.throwWrapped(daoException)
+    Some(builder.getFunction)
+  }
 
-  override def createDelete() = None
+  override def createDelete() = {
+    val param = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+    val builder = FunctionBuilder(PublicModifier, "delete", param)
+    builder.tryable {
+      val basicDBObject = SimpleObjectType("BasicDBObject", "com.mongodb")
+      val removeParam = ChainedOperations(CreationOperation(basicDBObject), FunctionInvokeOperation("append",
+        List(getIdFieldName.asString, GetValueOperation(param.paramName.name, getIdMethodName))))
+      builder.addOperation(ChainedOperations(FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("remove", List(removeParam))))
+    }.throwWrapped(daoException)
+    Some(builder.getFunction)
+  }
 
 }

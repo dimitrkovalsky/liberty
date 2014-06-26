@@ -42,8 +42,11 @@ package object types {
     def getConstructor(): String = classType
   }
 
+  case class SimpleObjectType(className: String, packagePath: String)
+
 }
 
 case class StubType(stubType: String) extends DataType(stubType)
+
 
 

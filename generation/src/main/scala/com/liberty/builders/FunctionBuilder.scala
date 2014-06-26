@@ -1,6 +1,6 @@
 package com.liberty.builders
 
-import com.liberty.model.{FunctionParameter, JavaAnnotation, _}
+import com.liberty.model._
 import com.liberty.operations._
 import com.liberty.types
 
@@ -64,6 +64,10 @@ class FunctionBuilder {
     f
     inTrySection = false
     new Tryable(this, withTry)
+  }
+
+  def wrapable(wrapper: JavaException)(f: => Unit) = {
+    tryable(f).throwWrapped(wrapper)
   }
 }
 

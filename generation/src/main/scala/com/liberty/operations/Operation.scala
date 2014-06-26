@@ -30,12 +30,19 @@ case class Variable(name: String) extends Expression {
   override def toString: String = name
 }
 
+
 object Variable {
   def apply(field: JavaField) = new Variable(field.name)
 }
 
 case class Value(value: String) extends Expression {
   override def toString: String = value
+
+  def asString = new StringValue(value)
+}
+
+class StringValue(value: String) extends Expression {
+  override def toString: String = "\"" + value + "\""
 }
 
 case class NoneExpression() extends Expression

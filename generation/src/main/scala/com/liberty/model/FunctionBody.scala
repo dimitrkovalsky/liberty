@@ -1,6 +1,6 @@
 package com.liberty.model
 
-import com.liberty.operations.{CreationOperation, Operation}
+import com.liberty.operations.{ChainedOperations, CreationOperation, Operation}
 import com.liberty.traits.JavaPackage
 
 /**
@@ -34,8 +34,17 @@ class FunctionBody {
     var set: Set[JavaPackage] = Set()
     operations.foreach {
       case o: CreationOperation => set += o.dataType.javaPackage
+      case o: ChainedOperations => getPackages(o, Set()).foreach(set += _)
       case _ =>
     }
     set
+  }
+
+  private def getPackages(op: Operation, set: Set[JavaPackage]): Set[JavaPackage] = {
+    op match {
+      case o: CreationOperation => set + o.dataType.javaPackage
+      case o: ChainedOperations => set ++ (for (o <- o.operations) yield getPackages(o, set)).flatten
+      case _ => set
+    }
   }
 }

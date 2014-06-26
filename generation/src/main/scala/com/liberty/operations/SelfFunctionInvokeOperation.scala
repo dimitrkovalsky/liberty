@@ -26,7 +26,19 @@ object FunctionType extends Enumeration {
   val SELF_FUNCTION, SELF_CONSTRUCTOR, SUPER_FUNCTION, SUPER_CONSTRUCTOR, USUAL_FUNCTION = Value
 }
 
+class SuperFunctionInvokeOperation(name: String, functionParameters: List[Expression] = Nil,
+                                   functionResult: Option[Variable] = None) extends
+SelfFunctionInvokeOperation(FunctionType.SUPER_FUNCTION, name, functionParameters, functionResult)
+
+
 object SelfFunctionInvokeOperation {
   def apply(functionType: FunctionType, name: String = "", parameters: List[Expression] = Nil,
             functionResult: Option[Variable] = None) = new SelfFunctionInvokeOperation(functionType, name, parameters, functionResult)
 }
+
+object SuperFunctionInvokeOperation {
+  def apply(name: String = "", parameters: List[Expression] = Nil,
+            functionResult: Option[Variable] = None) = new SuperFunctionInvokeOperation(name, parameters, functionResult)
+}
+
+
