@@ -9,7 +9,7 @@ import com.liberty.model.JavaFunction
  */
 trait CRUDable extends Insertable with Removable with Updatable with Findable {
   def createMethods(): List[JavaFunction] = {
-    (createInsert() :: createFind() :: createUpdate() :: createDelete() :: Nil).flatten
+    (createInsert() :: createFind() :: createFindAll :: createFindById() :: createUpdate() :: createDelete() :: Nil).flatten
   }
 }
 
@@ -30,5 +30,9 @@ trait Updatable {
 
 trait Findable {
   def createFind(): Option[JavaFunction]
+
+  def createFindAll(): Option[JavaFunction]
+
+  def createFindById(): Option[JavaFunction]
 }
 

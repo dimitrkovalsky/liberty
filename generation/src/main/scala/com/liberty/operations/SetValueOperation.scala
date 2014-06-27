@@ -16,7 +16,7 @@ case class SetValueOperation(field: JavaField, expression: Expression) extends O
     }
 
     result.map {
-      expressionResult => Some(s"${field.getInternalName} = $expressionResult;")
+      expressionResult => Some(s"${field.getInternalName} = $expressionResult")
     }.getOrElse(None)
   }
 }

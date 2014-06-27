@@ -1,7 +1,8 @@
 package com.liberty.model
 
+import com.liberty.operations.{Expression, StringValue}
 import com.liberty.patterns
-import com.liberty.traits.{JavaPackage, _}
+import com.liberty.traits._
 import com.liberty.types.DataType
 
 /**
@@ -12,8 +13,7 @@ import com.liberty.types.DataType
 // TODO: Add support of function and field changing and removing
 // TODO: Add constructor support
 // TODO: Add name validation
-// TODO: Add try catch support
-class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackage)
+case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackage)
   extends DataType(name) with Annotatable with Importable with Cloneable with Generalizable {
   def this(jPackage: JavaPackage) = this("", jPackage)
 
@@ -117,6 +117,7 @@ class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackage)
     patterns.JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), name,
       getGenericString, getInheritanceString, fieldsString, functionsString)
   }
+
 }
 
 

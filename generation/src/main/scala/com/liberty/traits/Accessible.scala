@@ -52,7 +52,6 @@ trait Accessible {
     builder.setName(getSetterName(field))
     builder.addModifier(PublicModifier)
     builder.addParam(FunctionParameter(field))
-    // TODO : Add set operation
     builder.addOperation(SetValueOperation(field, Variable(field)))
     builder.getFunction
   }

@@ -1,7 +1,7 @@
 package com.liberty.common
 
-import com.liberty.model.{FunctionParameter, JavaAnnotation, SimpleAnnotation}
-import com.liberty.operations.{Expression, Value, Variable}
+import com.liberty.model.{FunctionParameter, JavaAnnotation, JavaClass, SimpleAnnotation}
+import com.liberty.operations.{Expression, StringValue, Value, Variable}
 import com.liberty.traits.JavaPackage
 import com.liberty.types.{ObjectType, SimpleObjectType}
 
@@ -18,5 +18,22 @@ object Implicits {
 
   implicit def simpleObjectTypeToObjectType(t: SimpleObjectType): ObjectType = ObjectType(t.className, JavaPackage(t.packagePath, t.className))
 
-  implicit def stringToValue(s: String): Value = Value(s)
+  implicit def stringToValue(s: String) = new StringValue(s)
+
+  implicit class ClassParam(clazz: JavaClass) {
+    def asClassParam: Expression = new Value(s"${clazz.name}.class")
+  }
+
+  implicit class StringExtended(s: String) {
+    def firstToLowerCase : String = {
+      if (s == null) null
+      else if (s.length == 0) ""
+      else {
+        val chars = s.toCharArray
+        chars(0) = chars(0).toLower
+        new String(chars)
+      }
+    }
+  }
+
 }

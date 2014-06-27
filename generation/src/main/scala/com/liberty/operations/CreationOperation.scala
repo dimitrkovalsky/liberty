@@ -21,7 +21,8 @@ case class CreationOperation(dataType: DataType, variableName: Option[Variable] 
     val construct = createFromDataType(dataType)
     variableName match {
       case None => Some(construct)
-      case _ => Some(s"${dataType.toString} $variableName = $construct")
+      case Some(n) => Some(s"${dataType.toString} $n = $construct")
+      case _ => None
     }
   }
 }

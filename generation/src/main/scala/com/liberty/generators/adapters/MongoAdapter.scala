@@ -16,10 +16,9 @@ import scala.util.{Failure, Success, Try}
  * Date: 01.11.13
  * Time: 9:45
  */
-// TODO: change param from javaClass : JavaClass to EntityClass with addition methods such as getIdField
 class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) extends DaoAdapter {
   private val morphiaPackage: String = "com.google.code.morphia.annotations"
-  var datastoreName: String = javaClass.name.toLowerCase
+  var datastoreName: String = javaClass.name.firstToLowerCase
   private val daoException = JavaException("DaoException", basePackage.nested("errors", "DaoException"))
 
   def getAccessible: JavaClass = getAccessible(javaClass)
@@ -66,6 +65,8 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
 
   override def createDaoFields(): Unit = {}
 
+  private def createEntityParameter = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+
   override def createDaoConstructor() {
     val builder = new FunctionBuilder
     builder.setName(daoBuilder.javaClass.name)
@@ -77,7 +78,7 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
   }
 
   override def createInsert() = {
-    val param = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+    val param = createEntityParameter
     val builder = FunctionBuilder(PublicModifier, "insert", param)
     builder.tryable {
       builder.addSuperMethodInvoke("save", None, param.paramName)
@@ -86,17 +87,17 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
   }
 
   override def createFind() = {
-    val param = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+    val param = createEntityParameter
     val builder = FunctionBuilder(PublicModifier, "find", param)
     builder.wrapable(daoException) {
-      val ret = ReturnOperation(SuperFunctionInvokeOperation("findOne", List(GetValueOperation(param.paramName.name, getIdMethodName))))
+      val ret = ReturnOperation(SuperFunctionInvokeOperation("findOne", List("_id",GetValueOperation(param.paramName.name, getIdMethodName))))
       builder.addOperation(ret)
     }
     Some(builder.getFunction)
   }
 
   override def createUpdate() = {
-    val param = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+    val param = createEntityParameter
     val builder = FunctionBuilder(PublicModifier, "update", param)
     builder.tryable {
       builder.addSuperMethodInvoke("save", None, param.paramName)
@@ -105,15 +106,36 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
   }
 
   override def createDelete() = {
-    val param = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+    val param = createEntityParameter
     val builder = FunctionBuilder(PublicModifier, "delete", param)
     builder.tryable {
       val basicDBObject = SimpleObjectType("BasicDBObject", "com.mongodb")
       val removeParam = ChainedOperations(CreationOperation(basicDBObject), FunctionInvokeOperation("append",
-        List(getIdFieldName.asString, GetValueOperation(param.paramName.name, getIdMethodName))))
+        List(getIdFieldName, GetValueOperation(param.paramName.name, getIdMethodName))))
       builder.addOperation(ChainedOperations(FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("remove", List(removeParam))))
     }.throwWrapped(daoException)
     Some(builder.getFunction)
   }
 
+  override def createFindAll(): Option[JavaFunction] = {
+    val builder = FunctionBuilder(PublicModifier, "findAll")
+    builder.tryable {
+      val chain = ChainedOperations(FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("find",
+        List(javaClass.asClassParam)), FunctionInvokeOperation("asList"))
+      builder.addOperation(chain)
+    }.throwWrapped(daoException)
+    Some(builder.getFunction)
+  }
+
+  override def createFindById(): Option[JavaFunction] = {
+    getIdField.map {
+      id =>
+        val param =  FunctionParameter(id)
+        val builder = FunctionBuilder(PublicModifier, s"findBy${id.name.capitalize}", param)
+        builder.tryable {
+          builder.addOperation(ReturnOperation(SuperFunctionInvokeOperation("findOne", List("_id", param.paramName.name.asValue))))
+        }.throwWrapped(daoException)
+        Some(builder.getFunction)
+    }.getOrElse(None)
+  }
 }

@@ -16,12 +16,12 @@ class MongoAdapterTest {
   private val basePackage = LocationPackage("com.city.guide")
 
   @Test def createAccessors() {
-    val initialClass = createClass()
+    val initialClass = createPojo
     assertInitialClass(initialClass)
     val adapter = new MongoAdapter(initialClass, basePackage)
     val accessible = adapter.getAccessible
-    //   println(accessible)
-    val expected = "package com.guide.city.model;\n\nimport java.lang.String;\nimport java.lang.Integer;\nimport java.util.List;\n\nclass FullClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tpublic String getName(){\n\t\treturn name;\n\t}\n\n\tpublic Integer getAge(){\n\t\treturn age;\n\t}\n\n\tpublic String getPosition(){\n\t\treturn position;\n\t}\n\n\tpublic void setName(String name){\n\t\tthis.name = name;\n\t}\n\n\tpublic void setAge(Integer age){\n\t\tthis.age = age;\n\t}\n\n\tpublic void setPosition(String position){\n\t\tthis.position = position;\n\t}\n}"
+    //println(accessible)
+    val expected = "package com.guide.city.model;\n\nimport java.lang.Integer;\nimport java.lang.String;\n\nclass PojoClass {\n\tprivate Integer id = 0;\n\tprotected String name = \"\";\n\tprivate Integer age = 0;\n\tprivate String position = \"\";\n\n\tpublic Integer getId(){\n\t\treturn id;\n\t}\n\n\tpublic String getName(){\n\t\treturn name;\n\t}\n\n\tpublic Integer getAge(){\n\t\treturn age;\n\t}\n\n\tpublic String getPosition(){\n\t\treturn position;\n\t}\n\n\tpublic void setId(Integer id){\n\t\tthis.id = id;\n\t}\n\n\tpublic void setName(String name){\n\t\tthis.name = name;\n\t}\n\n\tpublic void setAge(Integer age){\n\t\tthis.age = age;\n\t}\n\n\tpublic void setPosition(String position){\n\t\tthis.position = position;\n\t}\n}"
     Assert.assertEquals(expected, accessible.toString)
     assertInitialClass(initialClass)
 
@@ -32,22 +32,19 @@ class MongoAdapterTest {
   }
 
   @Test def createAccessorsAndAnnotations() {
-    val clazz = createClass()
+    val clazz = createPojo
     assertInitialClass(clazz)
     val adapter = new MongoAdapter(clazz, basePackage)
     adapter.addAccessors()
     adapter.annotateClass()
-    val expected = "package com.guide.city.model;\n\nimport com.google.code.morphia.annotations.Entity;\nimport java.lang.String;\nimport com.google.code.morphia.annotations.Id;\nimport java.util.List;\nimport java.lang.Integer;\n\n@Entity(value = \"fullclass\", noClassnameStored = true)\nclass FullClass {\n\t@Id\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tpublic String getName(){\n\t\treturn name;\n\t}\n\n\tpublic Integer getAge(){\n\t\treturn age;\n\t}\n\n\tpublic String getPosition(){\n\t\treturn position;\n\t}\n\n\tpublic void setName(String name){\n\t\tthis.name = name;\n\t}\n\n\tpublic void setAge(Integer age){\n\t\tthis.age = age;\n\t}\n\n\tpublic void setPosition(String position){\n\t\tthis.position = position;\n\t}\n}"
+    val expected = "package com.guide.city.model;\n\nimport java.lang.Integer;\nimport com.google.code.morphia.annotations.Id;\nimport java.lang.String;\nimport com.google.code.morphia.annotations.Entity;\n\n@Entity(value = \"pojoClass\", noClassnameStored = true)\nclass PojoClass {\n\t@Id\n\tprivate Integer id = 0;\n\tprotected String name = \"\";\n\tprivate Integer age = 0;\n\tprivate String position = \"\";\n\n\tpublic Integer getId(){\n\t\treturn id;\n\t}\n\n\tpublic String getName(){\n\t\treturn name;\n\t}\n\n\tpublic Integer getAge(){\n\t\treturn age;\n\t}\n\n\tpublic String getPosition(){\n\t\treturn position;\n\t}\n\n\tpublic void setId(Integer id){\n\t\tthis.id = id;\n\t}\n\n\tpublic void setName(String name){\n\t\tthis.name = name;\n\t}\n\n\tpublic void setAge(Integer age){\n\t\tthis.age = age;\n\t}\n\n\tpublic void setPosition(String position){\n\t\tthis.position = position;\n\t}\n}"
     println(clazz)
     Assert.assertEquals(expected, clazz.toString)
   }
 
-  private def createClass(): JavaClass = {
-    new ClassBuilderTest().createFullClass
-  }
 
   private def assertInitialClass(initialClass: JavaClass) = {
-    val expected = "package com.guide.city.model;\n\nimport java.lang.String;\nimport java.lang.Integer;\nimport java.util.List;\n\nclass FullClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n}"
+    val expected = "package com.guide.city.model;\n\nimport java.lang.Integer;\nimport java.lang.String;\n\nclass PojoClass {\n\tprivate Integer id = 0;\n\tprotected String name = \"\";\n\tprivate Integer age = 0;\n\tprivate String position = \"\";\n}"
     val available = initialClass.toString
     //println(available)
     Assert.assertEquals(expected, available)
@@ -62,7 +59,11 @@ class MongoAdapterTest {
     adapter.annotateClass()
 
     adapter.createDAO match {
-      case Success(dao) => println(dao.toString)
+      case Success(dao) =>
+        val available = dao.toString
+        val expected = "import com.city.guide.errors.DaoException;\nimport com.google.code.morphia.Datastore;\nimport com.google.code.morphia.dao.BasicDAO;\nimport com.guide.city.model.PojoClass;\nimport java.lang.Integer;\n\nclass PojoClassDao extends BasicDAO<PojoClass, Integer> {\n\tpublic void PojoClassDao(Datastore datastore){\n\t\tsuper(datastore);\n\t}\n\n\tpublic void insert(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void find(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", entity.getId());\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void findAll() throws DaoException {\n\t\ttry {\n\t\t\tgetCollection().find(PojoClass.class).asList();\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void findById(Integer id) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", id);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void update(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void delete(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tgetCollection().remove(new BasicDBObject().append(\"id\", entity.getId()));\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n}"
+        //println(available)
+        Assert.assertEquals(expected, available)
       case Failure(e) => Assert.fail(e.getMessage)
     }
   }

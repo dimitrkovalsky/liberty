@@ -89,7 +89,7 @@ class FunctionBuilderTest {
     val paramName = Variable("list")
     builder.addParam(FunctionParameter(paramName, ListType(StringType)))
     val result = Variable("result")
-    builder.addOperation(CreationOperation(ArrayListType(StringType), result))
+    builder.addOperation(CreationOperation(ArrayListType(StringType), Some(result)))
     builder.addOperation(FunctionInvokeOperation("validate", List(result)))
     builder.addOperation(ReturnOperation(FunctionInvokeOperation("split", List(paramName, result))))
     builder.getFunction

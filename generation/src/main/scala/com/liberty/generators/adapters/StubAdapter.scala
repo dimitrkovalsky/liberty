@@ -1,6 +1,6 @@
 package com.liberty.generators.adapters
 
-import com.liberty.model.{JavaAnnotation, JavaClass, JavaField}
+import com.liberty.model.{JavaFunction, JavaAnnotation, JavaClass, JavaField}
 import com.liberty.traits.persistance.DaoAdapter
 
 import scala.util.Try
@@ -37,5 +37,9 @@ case class StubAdapter() extends DaoAdapter {
   def createUpdate() = ???
 
   def createInsert() = ???
+
+  override def createFindAll(): Option[JavaFunction] = ???
+
+  override def createFindById(): Option[JavaFunction] = ???
 }
 

@@ -38,10 +38,11 @@ object Variable {
 case class Value(value: String) extends Expression {
   override def toString: String = value
 
-  def asString = new StringValue(value)
 }
 
 class StringValue(value: String) extends Expression {
+  def asValue = new Value(value)
+
   override def toString: String = "\"" + value + "\""
 }
 
