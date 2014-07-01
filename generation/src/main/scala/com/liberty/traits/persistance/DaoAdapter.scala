@@ -1,6 +1,7 @@
 package com.liberty.traits.persistance
 
 import com.liberty.builders.ClassBuilder
+import com.liberty.common.DBConfig
 import com.liberty.model.{JavaAnnotation, JavaClass, JavaField}
 import com.liberty.traits.Accessible
 
@@ -13,6 +14,10 @@ import scala.util.{Success, Try}
  */
 trait DaoAdapter extends Annotator with CRUDable with Accessible {
   this: {var javaClass: JavaClass} =>
+  protected val DAO_FACTORY_NAME = "DaoFactory"
+  protected val DB_URL = "DATABASE_URL"
+  protected val DB_PORT = "DATABASE_PORT"
+  protected val DB_NAME = "DATABASE_NAME"
   protected var daoBuilder: ClassBuilder = new ClassBuilder()
 
   var datastoreName: String
@@ -34,6 +39,8 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
   def createDaoConstructor()
 
   def getDaoClass: JavaClass = daoBuilder.getJavaClass
+
+  def createDaoFactory(config: DBConfig): JavaClass
 
   def createDAO: Try[JavaClass] = {
     createDaoClass().flatMap {

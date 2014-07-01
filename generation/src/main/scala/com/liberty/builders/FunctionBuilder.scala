@@ -14,7 +14,6 @@ class FunctionBuilder {
   private val function = new JavaFunction
   private var inTrySection = false
   private var withTry: List[Operation] = Nil
-  private var lastTry: Option[TryOperation] = None
 
   def setName(name: String) = function.signature.name = name
 
@@ -49,6 +48,7 @@ class FunctionBuilder {
       function.body.addOperation(operation)
   }
 
+
   def addSuperMethodInvoke(name: String, params: List[Expression], result: Option[Variable]) {
     val function = new SelfFunctionInvokeOperation(FunctionType.SUPER_FUNCTION, name, params, result)
     addOperation(function)
@@ -65,6 +65,8 @@ class FunctionBuilder {
     inTrySection = false
     new Tryable(this, withTry)
   }
+
+
 
   def wrapable(wrapper: JavaException)(f: => Unit) = {
     tryable(f).throwWrapped(wrapper)

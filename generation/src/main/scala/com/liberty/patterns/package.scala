@@ -35,7 +35,7 @@ package object patterns {
 
   // TODO : Change all empty strings into None
   def JavaClassPattern(jPackage: String, imports: String, annotations: String, name: String, generics: String,
-                       inherit: String, fields: String, functions: String): String = {
+                       inherit: String, fields: String, staticBlocks: String, functions: String): String = {
     s"${
       if (jPackage.isEmpty) ""
       else {
@@ -47,13 +47,14 @@ package object patterns {
         imports + "\n\n"
       }
     }${annotations}${
-      if (fields.isEmpty && functions.isEmpty)
+      if (fields.isEmpty && functions.isEmpty && staticBlocks.isEmpty)
         s"class $name$generics$inherit {}"
-      if (fields.isEmpty)
+      if (fields.isEmpty && staticBlocks.isEmpty)
         s"class $name$generics$inherit {\n$functions\n}"
-      else if (functions.isEmpty)
+      else if (functions.isEmpty && staticBlocks.isEmpty)
         s"class $name$generics$inherit {\n\t$fields\n}"
-      else s"class $name$generics$inherit {\n\t$fields\n\n$functions\n}"
+      else if (staticBlocks.isEmpty) s"class $name$generics$inherit {\n\t$fields\n\n$functions\n}"
+      else s"class $name$generics$inherit {\n\t$fields\n\n$staticBlocks\n\n$functions\n}"
     }"
   }
 }

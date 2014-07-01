@@ -1,9 +1,8 @@
 package com.liberty.model
 
-import com.liberty.operations.{Expression, StringValue}
 import com.liberty.patterns
 import com.liberty.traits._
-import com.liberty.types.DataType
+import com.liberty.types.{DataType, primitives}
 
 /**
  * User: Dimitr
@@ -21,16 +20,20 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
 
   override def clone(): AnyRef = super.clone()
 
-
+  var extendClass: Option[JavaClass] = None
   var functions: List[JavaFunction] = Nil
   var fields: List[JavaField] = Nil
   var implementList: List[JavaInterface] = Nil
-  var extendClass: Option[JavaClass] = None
+  var blocks: List[StaticBlock] = Nil
 
   override def getTypeName = name
 
   def addField(field: JavaField) {
     fields = fields ::: List(field)
+  }
+
+  def addBlock(block: StaticBlock) {
+    blocks = blocks ::: List(block)
   }
 
   def addFunction(function: JavaFunction) {
@@ -64,6 +67,7 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
     var set: Set[JavaPackage] = getPackages
     fields.foreach(f => f.getPackages.foreach(p => set += p))
     functions.foreach(f => set = set ++ f.getPackages)
+    blocks.foreach(b => set = set ++ b.getPackages)
     annotations.map(ann => ann.javaPackage).filter(p => !p.isInstanceOf[NoPackage]).foreach(p => set += p)
     set.filter(p => !p.isEmpty).filterNot(_.packagePath == javaPackage.packagePath).map(jp => jp.getImport).mkString("\n")
   }
@@ -109,13 +113,18 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
       case Nil => ""
       case list: List[String] => list.mkString(";\n\t") + ";"
     }
+    val staticBlocks = blocks.map(_.toClassPart()) match {
+      case Nil => ""
+      case list: List[String] => list.mkString("\n\t")
+    }
+
     val functionsString = functions.map(_.toClassPart()) match {
       case Nil => ""
       case list: List[String] => list.mkString("\n\n")
     }
 
     patterns.JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), name,
-      getGenericString, getInheritanceString, fieldsString, functionsString)
+      getGenericString, getInheritanceString, fieldsString, staticBlocks, functionsString)
   }
 
 }
@@ -129,6 +138,7 @@ case class JavaField(name: String, dataType: DataType, var modifier: Modifier = 
                      var id: Boolean = false)
   extends ClassPart with Annotatable {
 
+  import com.liberty.common.Implicits._
 
   def apply(annotation: JavaAnnotation): JavaField = {
     addAnnotation(annotation)
@@ -137,7 +147,8 @@ case class JavaField(name: String, dataType: DataType, var modifier: Modifier = 
 
   if (value.isEmpty)
     value = dataType.getDefaultValue
-
+  else if (dataType == primitives.StringType)
+    value = value.quotes
 
   override def toString: String = {
     s"${
@@ -153,4 +164,18 @@ case class JavaField(name: String, dataType: DataType, var modifier: Modifier = 
 
   def getPackages: List[JavaPackage] = dataType.javaPackage :: annotations.map(ann => ann.javaPackage)
     .filter(p => !p.isInstanceOf[NoPackage])
+}
+
+class StaticBlock extends FunctionBody with ClassPart {
+  override def toClassPart(shift: String = "\t"): String = toString.split("\n").map(shift + _).mkString("\n")
+
+  override def toString: String = {
+    s"static {\n\t${
+      super.toString
+    }\n}"
+  }
+}
+
+object StaticBlock {
+  def apply = new StaticBlock()
 }

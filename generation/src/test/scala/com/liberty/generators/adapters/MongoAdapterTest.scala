@@ -1,6 +1,7 @@
 package com.liberty.generators.adapters
 
 import com.liberty.builders.ClassBuilderTest
+import com.liberty.common.DBConfig
 import com.liberty.model.JavaClass
 import com.liberty.traits.LocationPackage
 import org.junit.{Assert, Test}
@@ -52,7 +53,7 @@ class MongoAdapterTest {
 
   private def createPojo: JavaClass = new ClassBuilderTest().createPojoClass
 
-  @Test def test() {
+  @Test def daoClassGeneration() {
     val entity = createPojo
     val adapter = new MongoAdapter(entity, basePackage)
     adapter.addAccessors()
@@ -62,9 +63,17 @@ class MongoAdapterTest {
       case Success(dao) =>
         val available = dao.toString
         val expected = "import com.city.guide.errors.DaoException;\nimport com.google.code.morphia.Datastore;\nimport com.google.code.morphia.dao.BasicDAO;\nimport com.guide.city.model.PojoClass;\nimport java.lang.Integer;\n\nclass PojoClassDao extends BasicDAO<PojoClass, Integer> {\n\tpublic void PojoClassDao(Datastore datastore){\n\t\tsuper(datastore);\n\t}\n\n\tpublic void insert(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void find(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", entity.getId());\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void findAll() throws DaoException {\n\t\ttry {\n\t\t\tgetCollection().find(PojoClass.class).asList();\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void findById(Integer id) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", id);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void update(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void delete(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tgetCollection().remove(new BasicDBObject().append(\"id\", entity.getId()));\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n}"
-        //println(available)
+        println(available)
         Assert.assertEquals(expected, available)
       case Failure(e) => Assert.fail(e.getMessage)
     }
+  }
+
+  @Test def factoryClassGeneration() {
+    val entity = createPojo
+    val adapter = new MongoAdapter(entity, basePackage)
+    val config = DBConfig("guidedb", "127.0.0.1", 27017)
+    val factory = adapter.createDaoFactory(config)
+    println(factory)
   }
 }

@@ -1,6 +1,7 @@
 package com.liberty.builders
 
-import com.liberty.model.{JavaAnnotation, JavaField, _}
+import com.liberty.model._
+import com.liberty.operations.Operation
 import com.liberty.traits.JavaPackage
 import com.liberty.types.DataType
 
@@ -11,6 +12,8 @@ import com.liberty.types.DataType
  */
 // TODO : Add abstract class support
 class ClassBuilder(var javaClass: JavaClass = new JavaClass) {
+  private var inStaticSection = false
+  private var withStatic: List[Operation] = Nil
 
   def setName(name: String) = javaClass.name = name
 
@@ -39,6 +42,10 @@ class ClassBuilder(var javaClass: JavaClass = new JavaClass) {
     javaClass.addImplements(interface)
   }
 
+  def addBlock(block: StaticBlock) {
+    javaClass.addBlock(block)
+  }
+
   def addExtend(clazz: JavaClass) {
     javaClass.addExtend(clazz)
   }
@@ -55,9 +62,30 @@ class ClassBuilder(var javaClass: JavaClass = new JavaClass) {
     javaClass.addGenericType(generic)
   }
 
+  def addOperation(operation: Operation) {
+    if (inStaticSection)
+      withStatic = withStatic ::: operation :: Nil
+  }
+
+  def static(f: => Unit) = {
+    inStaticSection = true
+    f
+    inStaticSection = false
+    val block = new StaticBlock()
+    for (o <- withStatic)
+      block.addOperation(o)
+    addBlock(block)
+  }
+
   def getJavaClass: JavaClass = javaClass
 }
 
 object ClassBuilder {
   def apply(): ClassBuilder = new ClassBuilder()
+
+  def apply(name: String): ClassBuilder = {
+    val b = new ClassBuilder()
+    b.setName(name)
+    b
+  }
 }

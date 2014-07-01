@@ -15,5 +15,4 @@ import com.liberty.traits.persistance.DaoAdapter
  * @param adapter
  */
 class DaoGenerator(var entity: JavaClass, var adapter: DaoAdapter = new StubAdapter) {
-
 }

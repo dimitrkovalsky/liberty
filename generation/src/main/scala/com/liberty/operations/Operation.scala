@@ -1,7 +1,9 @@
 package com.liberty.operations
 
+import com.liberty.common.Implicits._
 import com.liberty.model._
 import com.liberty.traits.Importable
+import com.liberty.types.ObjectType
 
 /**
  * User: dkovalskyi
@@ -33,6 +35,8 @@ case class Variable(name: String) extends Expression {
 
 object Variable {
   def apply(field: JavaField) = new Variable(field.name)
+
+  def apply(obj: ObjectType) = new Variable(obj.getTypeName.firstToLowerCase)
 }
 
 case class Value(value: String) extends Expression {

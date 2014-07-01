@@ -1,5 +1,6 @@
 package com.liberty.generators.adapters
 
+import com.liberty.common.DBConfig
 import com.liberty.model.{JavaFunction, JavaAnnotation, JavaClass, JavaField}
 import com.liberty.traits.persistance.DaoAdapter
 
@@ -41,5 +42,7 @@ case class StubAdapter() extends DaoAdapter {
   override def createFindAll(): Option[JavaFunction] = ???
 
   override def createFindById(): Option[JavaFunction] = ???
+
+  override def createDaoFactory(config: DBConfig): JavaClass = ???
 }
 

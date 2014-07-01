@@ -25,7 +25,7 @@ object Implicits {
   }
 
   implicit class StringExtended(s: String) {
-    def firstToLowerCase : String = {
+    def firstToLowerCase: String = {
       if (s == null) null
       else if (s.length == 0) ""
       else {
@@ -34,6 +34,8 @@ object Implicits {
         new String(chars)
       }
     }
+
+    def quotes: String = "\"" + s + "\""
   }
 
 }

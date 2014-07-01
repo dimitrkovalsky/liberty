@@ -1,6 +1,7 @@
 package com.liberty.generators.adapters
 
-import com.liberty.builders.FunctionBuilder
+import com.liberty.builders.{ClassBuilder, FunctionBuilder}
+import com.liberty.common.DBConfig
 import com.liberty.common.Implicits._
 import com.liberty.exceptions.IdMissedException
 import com.liberty.model._
@@ -19,6 +20,7 @@ import scala.util.{Failure, Success, Try}
 class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) extends DaoAdapter {
   private val morphiaPackage: String = "com.google.code.morphia.annotations"
   var datastoreName: String = javaClass.name.firstToLowerCase
+  val datastore = ObjectType("Datastore", JavaPackage("com.google.code.morphia", "Datastore"))
   private val daoException = JavaException("DaoException", basePackage.nested("errors", "DaoException"))
 
   def getAccessible: JavaClass = getAccessible(javaClass)
@@ -72,7 +74,7 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
     builder.setName(daoBuilder.javaClass.name)
     builder.addModifier(PublicModifier)
     val variable = new Variable("datastore")
-    builder.addParam(FunctionParameter(variable, ObjectType("Datastore", JavaPackage("com.google.code.morphia", "Datastore"))))
+    builder.addParam(FunctionParameter(variable, datastore))
     builder.addOperation(new SelfFunctionInvokeOperation(FunctionType.SUPER_CONSTRUCTOR, parameters = List(variable)))
     daoBuilder.addFunction(builder.getFunction)
   }
@@ -90,7 +92,7 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
     val param = createEntityParameter
     val builder = FunctionBuilder(PublicModifier, "find", param)
     builder.wrapable(daoException) {
-      val ret = ReturnOperation(SuperFunctionInvokeOperation("findOne", List("_id",GetValueOperation(param.paramName.name, getIdMethodName))))
+      val ret = ReturnOperation(SuperFunctionInvokeOperation("findOne", List("_id", GetValueOperation(param.paramName.name, getIdMethodName))))
       builder.addOperation(ret)
     }
     Some(builder.getFunction)
@@ -130,12 +132,30 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
   override def createFindById(): Option[JavaFunction] = {
     getIdField.map {
       id =>
-        val param =  FunctionParameter(id)
+        val param = FunctionParameter(id)
         val builder = FunctionBuilder(PublicModifier, s"findBy${id.name.capitalize}", param)
         builder.tryable {
           builder.addOperation(ReturnOperation(SuperFunctionInvokeOperation("findOne", List("_id", param.paramName.name.asValue))))
         }.throwWrapped(daoException)
         Some(builder.getFunction)
     }.getOrElse(None)
+  }
+
+  override def createDaoFactory(config: DBConfig): JavaClass = {
+    import com.liberty.types.primitives._
+    val builder = ClassBuilder(DAO_FACTORY_NAME)
+    builder.addField(JavaField(DB_URL, StringType, PrivateStaticModifier, config.url))
+    builder.addField(JavaField(DB_PORT, IntegerType, PrivateStaticModifier, config.port.toString))
+    builder.addField(JavaField(DB_NAME, StringType, PrivateStaticModifier, config.database))
+    builder.addField(JavaField("datastore", datastore, PrivateStaticModifier))
+    builder.static {
+      val mongoType = ObjectType("Mongo", JavaPackage("com.mongodb", "Mongo"))
+      val mongo = Variable(mongoType)
+      builder addOperation CreationOperation(mongoType, mongo, List(DB_URL.asValue, DB_PORT.asValue))
+      val morphiaType = ObjectType("Morphia", JavaPackage("com.google.code.morphia", "Morphia"))
+      val morphia = Variable(morphiaType)
+      builder addOperation CreationOperation(morphiaType, morphia)
+    }
+    builder.getJavaClass
   }
 }
