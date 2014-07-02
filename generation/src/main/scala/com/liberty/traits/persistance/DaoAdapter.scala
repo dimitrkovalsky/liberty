@@ -14,6 +14,11 @@ import scala.util.{Success, Try}
  */
 trait DaoAdapter extends Annotator with CRUDable with Accessible {
   this: {var javaClass: JavaClass} =>
+
+  trait FactoryCreator {
+    def createDaoFactory(config: DBConfig, dao: List[JavaClass]): JavaClass
+  }
+
   protected val DAO_FACTORY_NAME = "DaoFactory"
   protected val DB_URL = "DATABASE_URL"
   protected val DB_PORT = "DATABASE_PORT"
@@ -40,7 +45,7 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
 
   def getDaoClass: JavaClass = daoBuilder.getJavaClass
 
-  def createDaoFactory(config: DBConfig): JavaClass
+  def getFactoryCreator: FactoryCreator
 
   def createDAO: Try[JavaClass] = {
     createDaoClass().flatMap {

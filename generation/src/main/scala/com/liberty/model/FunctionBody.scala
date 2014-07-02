@@ -1,6 +1,6 @@
 package com.liberty.model
 
-import com.liberty.operations.{ChainedOperations, CreationOperation, Operation}
+import com.liberty.operations._
 import com.liberty.traits.JavaPackage
 
 /**
@@ -35,6 +35,7 @@ class FunctionBody {
     operations.foreach {
       case o: CreationOperation => set += o.dataType.javaPackage
       case o: ChainedOperations => getPackages(o, Set()).foreach(set += _)
+      case TryOperation(c: CatchOperation) => set += c.e.javaPackage; c.ops.foreach(o => set = set ++ getPackages(o, Set()))
       case _ =>
     }
     set

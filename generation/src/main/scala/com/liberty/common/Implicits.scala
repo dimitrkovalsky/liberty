@@ -1,6 +1,6 @@
 package com.liberty.common
 
-import com.liberty.model.{FunctionParameter, JavaAnnotation, JavaClass, SimpleAnnotation}
+import com.liberty.model._
 import com.liberty.operations.{Expression, StringValue, Value, Variable}
 import com.liberty.traits.JavaPackage
 import com.liberty.types.{ObjectType, SimpleObjectType}
@@ -19,6 +19,8 @@ object Implicits {
   implicit def simpleObjectTypeToObjectType(t: SimpleObjectType): ObjectType = ObjectType(t.className, JavaPackage(t.packagePath, t.className))
 
   implicit def stringToValue(s: String) = new StringValue(s)
+
+  implicit def javaFieldToVariableOption(field: JavaField): Option[Variable] = Some(Variable(field))
 
   implicit class ClassParam(clazz: JavaClass) {
     def asClassParam: Expression = new Value(s"${clazz.name}.class")

@@ -43,6 +43,6 @@ case class StubAdapter() extends DaoAdapter {
 
   override def createFindById(): Option[JavaFunction] = ???
 
-  override def createDaoFactory(config: DBConfig): JavaClass = ???
+  override def getFactoryCreator: FactoryCreator = ???
 }
 

@@ -68,8 +68,9 @@ case class CatchOperation(e: JavaException, ops: List[Operation], result: CatchR
     val body = result match {
       case Throws => ""
       case ThrowWrapped(ex) => s"throw new ${ex.name}(e);"
+      case PrintError => s"System.err.println(e.getMessage());"
       case _ => ""
     }
-    Some(s"${ops.flatMap(o => o.execute()).map(_ + ";").mkString("\n\t")}\n\t} catch(${e.name} e){\n\t\t$body\n\t}")
+    Some(s"${ops.flatMap(o => o.execute()).map(_ + ";").mkString("\n\t\t")}\n\t} catch(${e.name} e){\n\t\t$body\n\t}")
   }
 }

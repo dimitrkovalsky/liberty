@@ -73,7 +73,8 @@ class MongoAdapterTest {
     val entity = createPojo
     val adapter = new MongoAdapter(entity, basePackage)
     val config = DBConfig("guidedb", "127.0.0.1", 27017)
-    val factory = adapter.createDaoFactory(config)
+    val factoryCreator = adapter.getFactoryCreator
+    val factory = factoryCreator.createDaoFactory(config, List(adapter.createDaoClass().get))
     println(factory)
   }
 }

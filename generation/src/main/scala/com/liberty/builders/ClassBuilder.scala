@@ -14,6 +14,8 @@ import com.liberty.types.DataType
 class ClassBuilder(var javaClass: JavaClass = new JavaClass) {
   private var inStaticSection = false
   private var withStatic: List[Operation] = Nil
+  private var inTrySection = false
+  private var withTry: List[Operation] = Nil
 
   def setName(name: String) = javaClass.name = name
 
@@ -62,9 +64,15 @@ class ClassBuilder(var javaClass: JavaClass = new JavaClass) {
     javaClass.addGenericType(generic)
   }
 
+  /**
+   * Can be used only in static block
+   * @param operation
+   */
   def addOperation(operation: Operation) {
-    if (inStaticSection)
+    if (inStaticSection && !inTrySection)
       withStatic = withStatic ::: operation :: Nil
+    if (inTrySection)
+      withTry = withTry ::: operation :: Nil
   }
 
   def static(f: => Unit) = {
@@ -75,6 +83,13 @@ class ClassBuilder(var javaClass: JavaClass = new JavaClass) {
     for (o <- withStatic)
       block.addOperation(o)
     addBlock(block)
+  }
+
+  def tryable(f: => Unit): ClassTryable = {
+    inTrySection = true
+    f
+    inTrySection = false
+    new ClassTryable(this, withTry)
   }
 
   def getJavaClass: JavaClass = javaClass

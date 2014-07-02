@@ -7,7 +7,7 @@ package com.liberty.operations
  */
 // TODO: creation variables without expressions like :<<< List<Integer> list; >>>
 case class FunctionInvokeOperation(functionName: String, var params: List[Expression] = Nil,
-                                   result: Option[Variable] = None) extends Operation {
+                              result: Option[Variable] = None) extends Operation {
   override def execute(): Option[String] = {
     executeNamed(functionName)
   }
@@ -27,6 +27,13 @@ case class FunctionInvokeOperation(functionName: String, var params: List[Expres
       case Some(v) => Some(s"${v.name} = $named($invokeParams)")
       case _ => None
     }
+  }
+}
+
+object ObjectFunctionInvokeOperation {
+  def apply(v: Variable, functionName: String, params: List[Expression] = Nil,
+            result: Option[Variable] = None) = {
+    new FunctionInvokeOperation(v.name + "." + functionName, params, result)
   }
 }
 

@@ -1,6 +1,6 @@
 package com.liberty.model
 
-import com.liberty.builders.FunctionBuilder
+import com.liberty.builders.{ClassBuilder, FunctionBuilder}
 import com.liberty.operations.{CatchOperation, Operation, TryOperation}
 import com.liberty.traits.{JavaPackage, NoPackage}
 
@@ -12,6 +12,8 @@ class JavaException(name: String, jPackage: JavaPackage = new NoPackage) extends
 object StandardExceptions {
 
   object Exception extends JavaException("Exception", JavaPackage("java.lang", "Exception"))
+
+  object UnknownHostException extends JavaException("UnknownHostException", JavaPackage("java.net", "UnknownHostException"))
 
 }
 
@@ -34,9 +36,22 @@ class Tryable(builder: FunctionBuilder, withTry: List[Operation]) {
   }
 }
 
+/**
+ * Can be used only with ClassBuilder
+ * Returns operations wrapped into TryOperation
+ */
+class ClassTryable(builder: ClassBuilder, withTry: List[Operation]) {
+  def printError(forCatch: JavaException = StandardExceptions.Exception) {
+    val op = TryOperation(CatchOperation(forCatch, withTry, PrintError))
+    builder addOperation op
+  }
+}
+
 sealed trait CatchResult
 
 case object Ignore extends CatchResult
+
+case object PrintError extends CatchResult
 
 case object Throws extends CatchResult
 

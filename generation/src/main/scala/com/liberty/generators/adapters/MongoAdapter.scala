@@ -141,21 +141,28 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
     }.getOrElse(None)
   }
 
-  override def createDaoFactory(config: DBConfig): JavaClass = {
-    import com.liberty.types.primitives._
-    val builder = ClassBuilder(DAO_FACTORY_NAME)
-    builder.addField(JavaField(DB_URL, StringType, PrivateStaticModifier, config.url))
-    builder.addField(JavaField(DB_PORT, IntegerType, PrivateStaticModifier, config.port.toString))
-    builder.addField(JavaField(DB_NAME, StringType, PrivateStaticModifier, config.database))
-    builder.addField(JavaField("datastore", datastore, PrivateStaticModifier))
-    builder.static {
-      val mongoType = ObjectType("Mongo", JavaPackage("com.mongodb", "Mongo"))
-      val mongo = Variable(mongoType)
-      builder addOperation CreationOperation(mongoType, mongo, List(DB_URL.asValue, DB_PORT.asValue))
-      val morphiaType = ObjectType("Morphia", JavaPackage("com.google.code.morphia", "Morphia"))
-      val morphia = Variable(morphiaType)
-      builder addOperation CreationOperation(morphiaType, morphia)
+  override def getFactoryCreator: FactoryCreator = new FactoryCreator {
+    override def createDaoFactory(config: DBConfig, dao: List[JavaClass]): JavaClass = {
+      import com.liberty.types.primitives._
+      val builder = ClassBuilder(DAO_FACTORY_NAME)
+      builder.addField(JavaField(DB_URL, StringType, PrivateStaticModifier, config.url))
+      builder.addField(JavaField(DB_PORT, IntegerType, PrivateStaticModifier, config.port.toString))
+      builder.addField(JavaField(DB_NAME, StringType, PrivateStaticModifier, config.database))
+      val datastoreVariable = JavaField("datastore", datastore, PrivateStaticModifier)
+      builder.addField(datastoreVariable)
+      builder.static {
+        builder.tryable {
+          val mongoType = ObjectType("Mongo", JavaPackage("com.mongodb", "Mongo"))
+          val mongo = Variable(mongoType)
+          builder addOperation CreationOperation(mongoType, mongo, List(DB_URL.asValue, DB_PORT.asValue))
+          val morphiaType = ObjectType("Morphia", JavaPackage("com.google.code.morphia", "Morphia"))
+          val morphia = Variable(morphiaType)
+          builder addOperation CreationOperation(morphiaType, morphia)
+          builder addOperation ObjectFunctionInvokeOperation(morphia, "createDatastore", List(mongo, DB_NAME.asValue), datastoreVariable)
+        }.printError(StandardExceptions.UnknownHostException)
+      }
+
+      builder.getJavaClass
     }
-    builder.getJavaClass
   }
 }
