@@ -1,7 +1,7 @@
 package com.liberty.builders
 
 import com.liberty.StubType
-import com.liberty.model.{FunctionSignature, JavaInterface}
+import com.liberty.model._
 import com.liberty.traits.JavaPackage
 import com.liberty.types.DataType
 
@@ -34,4 +34,36 @@ class InterfaceBuilder {
   }
 
   def getInterface = javaInterface
+}
+
+object InterfaceBuilder {
+  def apply(name: String): InterfaceBuilder = {
+    val b = new InterfaceBuilder
+    b.setName(name)
+    b
+  }
+
+  /**
+   * Creates builder class with interface from all public methods except constructor and locate interface in the same package as dao class
+   * @param name
+   * @param fromClass
+   * @return
+   */
+  def apply(name: String, fromClass: JavaClass): InterfaceBuilder = {
+    val builder = apply(name)
+    builder.addPackage(fromClass.javaPackage)
+    fromClass.functions.foreach { f =>
+      if (f.signature.isModifierPresent(PublicModifier) && f.signature.name != fromClass.name)
+        builder.addFunctionSignature(f.signature)
+    }
+    builder
+  }
+
+  def apply(name: String, functions: List[JavaFunction]): InterfaceBuilder = {
+    val builder = apply(name)
+    functions.foreach { f =>
+      builder.addFunctionSignature(f.signature)
+    }
+    builder
+  }
 }

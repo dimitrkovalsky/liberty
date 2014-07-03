@@ -2,7 +2,7 @@ package com.liberty.model
 
 import com.liberty.patterns
 import com.liberty.traits._
-import com.liberty.types.{DataType, primitives}
+import com.liberty.types.{ConstructedType, DataType, primitives}
 
 /**
  * User: Dimitr
@@ -13,7 +13,7 @@ import com.liberty.types.{DataType, primitives}
 // TODO: Add constructor support
 // TODO: Add name validation
 case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackage)
-  extends DataType(name) with Annotatable with Importable with Cloneable with Generalizable {
+  extends DataType(name) with Annotatable with Importable with Cloneable with Generalizable with ConstructedType {
   def this(jPackage: JavaPackage) = this("", jPackage)
 
   this.javaPackage = jPackage
@@ -72,7 +72,7 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
     set.filter(p => !p.isEmpty).filterNot(_.packagePath == javaPackage.packagePath).map(jp => jp.getImport).mkString("\n")
   }
 
-  def getPackages: Set[JavaPackage] = {
+  private def getPackages: Set[JavaPackage] = {
     var set: Set[JavaPackage] = Set()
     implementList.foreach(i => set += i.javaPackage)
     extendClass.map(c => set = set ++ c.getImportablePackages)
@@ -127,6 +127,7 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
       getGenericString, getInheritanceString, fieldsString, staticBlocks, functionsString)
   }
 
+  override def getConstructor(): String = name
 }
 
 

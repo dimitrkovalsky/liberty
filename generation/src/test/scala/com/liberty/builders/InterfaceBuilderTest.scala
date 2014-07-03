@@ -29,10 +29,10 @@ class InterfaceBuilderTest {
     builder.addGeneric(StubType("SomeType"))
     builder.addGeneric(StubType("AnotherType"))
     // Need to ignore the same type
-    builder.addGeneric(StubType("AnotherType"))
+//    builder.addGeneric(StubType("AnotherType"))
     val interface = builder.getInterface
     val expect = "interface Marker<SomeType, AnotherType> {}"
-    //println(interface)
+    println(interface)
     Assert.assertEquals(expect, interface.toString)
   }
 

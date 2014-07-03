@@ -59,22 +59,42 @@ class MongoAdapterTest {
     adapter.addAccessors()
     adapter.annotateClass()
 
-    adapter.createDAO match {
+    adapter.createDao match {
       case Success(dao) =>
         val available = dao.toString
-        val expected = "import com.city.guide.errors.DaoException;\nimport com.google.code.morphia.Datastore;\nimport com.google.code.morphia.dao.BasicDAO;\nimport com.guide.city.model.PojoClass;\nimport java.lang.Integer;\n\nclass PojoClassDao extends BasicDAO<PojoClass, Integer> {\n\tpublic void PojoClassDao(Datastore datastore){\n\t\tsuper(datastore);\n\t}\n\n\tpublic void insert(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void find(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", entity.getId());\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void findAll() throws DaoException {\n\t\ttry {\n\t\t\tgetCollection().find(PojoClass.class).asList();\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void findById(Integer id) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", id);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void update(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void delete(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tgetCollection().remove(new BasicDBObject().append(\"id\", entity.getId()));\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n}"
+        val expected = "package com.city.guide.dao;\n\nimport com.city.guide.errors.DaoException;\nimport com.google.code.morphia.Datastore;\nimport com.google.code.morphia.dao.BasicDAO;\nimport com.guide.city.model.PojoClass;\nimport java.lang.Integer;\n\nclass PojoClassDao extends BasicDAO<PojoClass, Integer> implements IPojoClassDao {\n\tpublic void PojoClassDao(Datastore datastore){\n\t\tsuper(datastore);\n\t}\n\n\tpublic void insert(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void find(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", entity.getId());\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void findAll() throws DaoException {\n\t\ttry {\n\t\t\tgetCollection().find(PojoClass.class).asList();\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void findById(Integer id) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", id);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void update(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void delete(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tgetCollection().remove(new BasicDBObject().append(\"id\", entity.getId()));\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n}"
         println(available)
         Assert.assertEquals(expected, available)
       case Failure(e) => Assert.fail(e.getMessage)
     }
   }
 
+  @Test def interfaceCreation() {
+    val entity = createPojo
+    val adapter = new MongoAdapter(entity, basePackage)
+    adapter.addAccessors()
+    adapter.annotateClass()
+
+    adapter.createDaoInterface match {
+      case Success(inter) =>
+        val available = inter.toString
+        val expected = "package com.city.guide.dao;\nimport com.guide.city.model.PojoClass;\nimport com.city.guide.errors.DaoException;\nimport java.lang.Integer;\n\ninterface IPojoClassDao {\n\n\tpublic void insert(PojoClass entity) throws DaoException;\n\n\tpublic void find(PojoClass entity) throws DaoException;\n\n\tpublic void findAll() throws DaoException;\n\n\tpublic void findById(Integer id) throws DaoException;\n\n\tpublic void update(PojoClass entity) throws DaoException;\n\n\tpublic void delete(PojoClass entity) throws DaoException;\n}"
+        //println(available)
+        Assert.assertEquals(expected, available)
+      case Failure(e) => Assert.fail(e.getMessage)
+    }
+  }
+
+
   @Test def factoryClassGeneration() {
     val entity = createPojo
     val adapter = new MongoAdapter(entity, basePackage)
     val config = DBConfig("guidedb", "127.0.0.1", 27017)
+    adapter.createDao
     val factoryCreator = adapter.getFactoryCreator
-    val factory = factoryCreator.createDaoFactory(config, List(adapter.createDaoClass().get))
+    val factory = factoryCreator.createDaoFactory(config, List(adapter.getDaoCreationFunction.get))
+
+    // TODO : Doesn't work import for PojoClassDao and  IPojoClassDao
     println(factory)
   }
 }

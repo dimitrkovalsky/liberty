@@ -80,6 +80,7 @@ case class FunctionSignature(var name: String, var output: DataType, var modifie
     this.name.equals(sign.name)
   }
 
+  def isModifierPresent(modifier: Modifier) = this.modifier == modifier
 
   def addParameter(in: FunctionParameter) {
     input = input ::: List(in)

@@ -17,10 +17,12 @@ import scala.util.{Failure, Success, Try}
  * Date: 01.11.13
  * Time: 9:45
  */
-class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) extends DaoAdapter {
+class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends DaoAdapter {
+  val basePackage = bPackage
   private val morphiaPackage: String = "com.google.code.morphia.annotations"
   var datastoreName: String = javaClass.name.firstToLowerCase
   val datastore = ObjectType("Datastore", JavaPackage("com.google.code.morphia", "Datastore"))
+  var dao: Option[JavaClass] = None
   private val daoException = JavaException("DaoException", basePackage.nested("errors", "DaoException"))
 
   def getAccessible: JavaClass = getAccessible(javaClass)
@@ -52,8 +54,15 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
 
   def getEntityClass: JavaClass = javaClass
 
-  override def createDaoClass(): Try[JavaClass] = {
-    daoBuilder.setName(javaClass.name + "Dao")
+  override def getDaoName: String = javaClass.name + "Dao"
+
+  /**
+   * Creates Dao class in  basePackage + .dao package
+   * @return
+   */
+  override protected def createDaoClass(): Try[JavaClass] = {
+    daoBuilder.setName(getDaoName)
+    daoBuilder.addPackage(basePackage.nested("dao"))
     val extension = new JavaClass("BasicDAO", JavaPackage("com.google.code.morphia.dao", "BasicDAO"))
     getIdField.map {
       idField =>
@@ -62,7 +71,9 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
       return Failure(new IdMissedException("[MongoAdapter] Id field is not specified"))
     }
     daoBuilder.addExtend(extension)
-    Success(daoBuilder.getJavaClass)
+    val daoClazz = daoBuilder.getJavaClass
+    dao = Some(daoClazz)
+    Success(daoClazz)
   }
 
   override def createDaoFields(): Unit = {}
@@ -141,14 +152,23 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
     }.getOrElse(None)
   }
 
+  override def getDaoCreationFunction: Option[JavaFunction] = getFactoryCreator.getDaoCreationFunction
+
   override def getFactoryCreator: FactoryCreator = new FactoryCreator {
-    override def createDaoFactory(config: DBConfig, dao: List[JavaClass]): JavaClass = {
+    private val datastoreVariable = JavaField("datastore", datastore, PrivateStaticModifier)
+
+    /**
+     * Creates factory class in  basePackage + .common package
+     * @param config
+     * @return
+     */
+    override def createDaoFactory(config: DBConfig, daos: List[JavaFunction]): JavaClass = {
       import com.liberty.types.primitives._
       val builder = ClassBuilder(DAO_FACTORY_NAME)
+      builder.addPackage(basePackage.nested("common"))
       builder.addField(JavaField(DB_URL, StringType, PrivateStaticModifier, config.url))
       builder.addField(JavaField(DB_PORT, IntegerType, PrivateStaticModifier, config.port.toString))
       builder.addField(JavaField(DB_NAME, StringType, PrivateStaticModifier, config.database))
-      val datastoreVariable = JavaField("datastore", datastore, PrivateStaticModifier)
       builder.addField(datastoreVariable)
       builder.static {
         builder.tryable {
@@ -162,7 +182,20 @@ class MongoAdapter(var javaClass: JavaClass, basePackage: LocationPackage) exten
         }.printError(StandardExceptions.UnknownHostException)
       }
 
+      builder.addFunctions(daos)
       builder.getJavaClass
     }
+
+    override def getDaoCreationFunction: Option[JavaFunction] = {
+      dao.flatMap {
+        dao =>
+          val builder = FunctionBuilder(PublicStaticModifier, "get" + getDaoName)
+          builder.setOutputType(getDaoInterface.get)
+          builder.addOperation(ReturnOperation(CreationOperation(dao, None, List(Variable(datastoreVariable)))))
+          Some(builder.getFunction)
+      }
+    }
   }
+
+
 }

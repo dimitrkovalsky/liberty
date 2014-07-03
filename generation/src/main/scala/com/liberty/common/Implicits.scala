@@ -22,6 +22,9 @@ object Implicits {
 
   implicit def javaFieldToVariableOption(field: JavaField): Option[Variable] = Some(Variable(field))
 
+  implicit def interfaceToObjectType(interface: JavaInterface): ObjectType = ObjectType(interface.name, interface.javaPackage)
+
+
   implicit class ClassParam(clazz: JavaClass) {
     def asClassParam: Expression = new Value(s"${clazz.name}.class")
   }
