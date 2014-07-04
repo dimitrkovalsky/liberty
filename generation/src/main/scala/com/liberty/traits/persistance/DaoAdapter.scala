@@ -1,7 +1,7 @@
 package com.liberty.traits.persistance
 
 import com.liberty.builders.{ClassBuilder, InterfaceBuilder}
-import com.liberty.common.DBConfig
+import com.liberty.common.ConnectionConfig
 import com.liberty.model._
 import com.liberty.traits.{Accessible, LocationPackage}
 
@@ -17,7 +17,7 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
     val basePackage: LocationPackage} =>
 
   trait FactoryCreator {
-    def createDaoFactory(config: DBConfig, daos: List[JavaFunction]): JavaClass
+    def createDaoFactory(config: ConnectionConfig, creationFunctions: List[JavaFunction]): JavaClass
 
     /**
      * Returns function for creation appropriate Dao class in DaoFactory
@@ -31,6 +31,12 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
   protected val DB_PORT = "DATABASE_PORT"
   protected val DB_NAME = "DATABASE_NAME"
   protected var daoBuilder: ClassBuilder = new ClassBuilder()
+
+  /**
+   * Returns marked entity for appropriate database
+   * @return
+   */
+  def createEntity: JavaClass
 
   var datastoreName: String
   private var daoInterface: Option[JavaInterface] = None

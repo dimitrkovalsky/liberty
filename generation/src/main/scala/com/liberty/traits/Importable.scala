@@ -47,4 +47,6 @@ object LocationPackage {
   def apply(packagePath: String) = new LocationPackage(packagePath)
 }
 
-class NoPackage() extends JavaPackage("", "") {}
+class NoPackage() extends JavaPackage("", "")
+
+class LocationNoPackage() extends LocationPackage("")

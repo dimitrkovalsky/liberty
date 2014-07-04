@@ -1,7 +1,7 @@
 package com.liberty.generators.adapters
 
 import com.liberty.builders.ClassBuilderTest
-import com.liberty.common.DBConfig
+import com.liberty.common.ConnectionConfig
 import com.liberty.model.JavaClass
 import com.liberty.traits.LocationPackage
 import org.junit.{Assert, Test}
@@ -36,11 +36,11 @@ class MongoAdapterTest {
     val clazz = createPojo
     assertInitialClass(clazz)
     val adapter = new MongoAdapter(clazz, basePackage)
-    adapter.addAccessors()
-    adapter.annotateClass()
+    // adapter.addAccessors()
+    //  adapter.annotateClass()
     val expected = "package com.guide.city.model;\n\nimport com.google.code.morphia.annotations.Entity;\nimport com.google.code.morphia.annotations.Id;\nimport java.lang.Integer;\nimport java.lang.String;\n\n@Entity(value = \"pojoClass\", noClassnameStored = true)\nclass PojoClass {\n\t@Id\n\tprivate Integer id = 0;\n\tprotected String name = \"\";\n\tprivate Integer age = 0;\n\tprivate String position = \"\";\n\n\tpublic Integer getId(){\n\t\treturn id;\n\t}\n\n\tpublic String getName(){\n\t\treturn name;\n\t}\n\n\tpublic Integer getAge(){\n\t\treturn age;\n\t}\n\n\tpublic String getPosition(){\n\t\treturn position;\n\t}\n\n\tpublic void setId(Integer id){\n\t\tthis.id = id;\n\t}\n\n\tpublic void setName(String name){\n\t\tthis.name = name;\n\t}\n\n\tpublic void setAge(Integer age){\n\t\tthis.age = age;\n\t}\n\n\tpublic void setPosition(String position){\n\t\tthis.position = position;\n\t}\n}"
     //println(clazz)
-    Assert.assertEquals(expected, clazz.toString)
+    Assert.assertEquals(expected, adapter.createEntity.toString)
   }
 
 
@@ -78,7 +78,7 @@ class MongoAdapterTest {
     adapter.createDaoInterface match {
       case Success(inter) =>
         val available = inter.toString
-        val expected = "package com.city.guide.dao;\nimport com.guide.city.model.PojoClass;\nimport com.city.guide.errors.DaoException;\nimport java.lang.Integer;\n\ninterface IPojoClassDao {\n\n\tpublic void insert(PojoClass entity) throws DaoException;\n\n\tpublic void find(PojoClass entity) throws DaoException;\n\n\tpublic void findAll() throws DaoException;\n\n\tpublic void findById(Integer id) throws DaoException;\n\n\tpublic void update(PojoClass entity) throws DaoException;\n\n\tpublic void delete(PojoClass entity) throws DaoException;\n}"
+        val expected = "package com.city.guide.dao;\n\nimport com.guide.city.model.PojoClass;\nimport com.city.guide.errors.DaoException;\nimport java.lang.Integer;\n\ninterface IPojoClassDao {\n\n\tpublic void insert(PojoClass entity) throws DaoException;\n\n\tpublic void find(PojoClass entity) throws DaoException;\n\n\tpublic void findAll() throws DaoException;\n\n\tpublic void findById(Integer id) throws DaoException;\n\n\tpublic void update(PojoClass entity) throws DaoException;\n\n\tpublic void delete(PojoClass entity) throws DaoException;\n}"
         //println(available)
         Assert.assertEquals(expected, available)
       case Failure(e) => Assert.fail(e.getMessage)
@@ -89,11 +89,14 @@ class MongoAdapterTest {
   @Test def factoryClassGeneration() {
     val entity = createPojo
     val adapter = new MongoAdapter(entity, basePackage)
-    val config = DBConfig("guidedb", "127.0.0.1", 27017)
+    val config = ConnectionConfig("guidedb", "127.0.0.1", 27017)
     adapter.createDao
     val factoryCreator = adapter.getFactoryCreator
     val factory = factoryCreator.createDaoFactory(config, List(adapter.getDaoCreationFunction.get))
 
-    //println(factory)
+    val expected = "package com.city.guide.common;\n\nimport com.city.guide.dao.IPojoClassDao;\nimport com.city.guide.dao.PojoClassDao;\nimport com.google.code.morphia.Datastore;\nimport com.google.code.morphia.Morphia;\nimport com.mongodb.Mongo;\nimport java.lang.Integer;\nimport java.lang.String;\nimport java.net.UnknownHostException;\n\nclass DaoFactory {\n\tprivate static String DATABASE_URL = \"127.0.0.1\";\n\tprivate static Integer DATABASE_PORT = 27017;\n\tprivate static String DATABASE_NAME = \"guidedb\";\n\tprivate static Datastore datastore = null;\n\n\tstatic {\n\t\ttry {\n\t\t\tMongo mongo = new Mongo(DATABASE_URL, DATABASE_PORT);\n\t\t\tMorphia morphia = new Morphia();\n\t\t\tdatastore = morphia.createDatastore(mongo, DATABASE_NAME);\n\t\t} catch(UnknownHostException e){\n\t\t\tSystem.err.println(e.getMessage());\n\t\t}\n\t}\n\n\tpublic static IPojoClassDao getPojoClassDao(){\n\t\treturn new PojoClassDao(datastore);\n\t}\n}"
+    val available = factory.toString
+    //println(available)
+    Assert.assertEquals(expected, available)
   }
 }

@@ -1,7 +1,7 @@
 package com.liberty.generators.adapters
 
 import com.liberty.builders.{ClassBuilder, FunctionBuilder}
-import com.liberty.common.DBConfig
+import com.liberty.common.ConnectionConfig
 import com.liberty.common.Implicits._
 import com.liberty.exceptions.IdMissedException
 import com.liberty.model._
@@ -28,6 +28,12 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
   def getAccessible: JavaClass = getAccessible(javaClass)
 
   def addAccessors() = super.addAccessors(javaClass)
+
+  def createEntity: JavaClass = {
+    addAccessors()
+    annotateClass()
+    javaClass
+  }
 
   def getDatastoreAnnotation: JavaAnnotation = {
     JavaAnnotation("Entity", JavaPackage(morphiaPackage, "Entity"))("value", datastoreName)("noClassnameStored", "true")
@@ -162,7 +168,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
      * @param config
      * @return
      */
-    override def createDaoFactory(config: DBConfig, daos: List[JavaFunction]): JavaClass = {
+    override def createDaoFactory(config: ConnectionConfig, creationFunctions: List[JavaFunction]): JavaClass = {
       import com.liberty.types.primitives._
       val builder = ClassBuilder(DAO_FACTORY_NAME)
       builder.addPackage(basePackage.nested("common"))
@@ -182,7 +188,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
         }.printError(StandardExceptions.UnknownHostException)
       }
 
-      builder.addFunctions(daos)
+      builder.addFunctions(creationFunctions)
       builder.getJavaClass
     }
 

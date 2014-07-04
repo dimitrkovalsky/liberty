@@ -2,7 +2,7 @@ package com.liberty.generators.adapters
 
 import com.liberty.common.DBConfig
 import com.liberty.model.{JavaFunction, JavaAnnotation, JavaClass, JavaField}
-import com.liberty.traits.{NoPackage, JavaPackage}
+import com.liberty.traits.{LocationNoPackage, LocationPackage, NoPackage, JavaPackage}
 import com.liberty.traits.persistance.DaoAdapter
 
 import scala.util.Try
@@ -15,7 +15,7 @@ import scala.util.Try
 case class StubAdapter() extends DaoAdapter {
   var javaClass: JavaClass = _
   var datastoreName: String = _
-  val basePackage : JavaPackage = new NoPackage
+  val basePackage : LocationPackage = new LocationNoPackage
 
 
   def getDatastoreAnnotation: JavaAnnotation = ???
@@ -51,5 +51,11 @@ case class StubAdapter() extends DaoAdapter {
   override def getDaoName: String = ???
 
   override def getDaoCreationFunction: Option[JavaFunction] = ???
+
+  /**
+   * Returns marked entity for appropriate database
+   * @return
+   */
+  override def createEntity: JavaClass = ???
 }
 
