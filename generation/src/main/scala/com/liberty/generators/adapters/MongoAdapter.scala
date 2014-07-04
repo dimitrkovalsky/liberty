@@ -62,7 +62,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
    */
   override protected def createDaoClass(): Try[JavaClass] = {
     daoBuilder.setName(getDaoName)
-    daoBuilder.addPackage(basePackage.nested("dao"))
+    daoBuilder.addPackage(basePackage.nested("dao", getDaoName))
     val extension = new JavaClass("BasicDAO", JavaPackage("com.google.code.morphia.dao", "BasicDAO"))
     getIdField.map {
       idField =>

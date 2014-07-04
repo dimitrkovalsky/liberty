@@ -4,6 +4,8 @@ import com.liberty.patterns
 import com.liberty.traits._
 import com.liberty.types.{ConstructedType, DataType, primitives}
 
+import scala.collection.SortedSet
+
 /**
  * User: Dimitr
  * Date: 15.09.13
@@ -69,7 +71,8 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
     functions.foreach(f => set = set ++ f.getPackages)
     blocks.foreach(b => set = set ++ b.getPackages)
     annotations.map(ann => ann.javaPackage).filter(p => !p.isInstanceOf[NoPackage]).foreach(p => set += p)
-    set.filter(p => !p.isEmpty).filterNot(_.packagePath == javaPackage.packagePath).map(jp => jp.getImport).mkString("\n")
+    val imports = set.filter(p => !p.isEmpty).filterNot(_.packagePath == javaPackage.packagePath).map(jp => jp.getImport)
+    (SortedSet[String]() ++ imports).mkString("\n")
   }
 
   private def getPackages: Set[JavaPackage] = {

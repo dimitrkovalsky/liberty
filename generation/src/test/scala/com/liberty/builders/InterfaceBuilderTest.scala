@@ -45,7 +45,7 @@ class InterfaceBuilderTest {
 
   @Test def withFunctions() {
     val interface = createWithFunctionsInterface()
-    val expect = "interface TestInterface {\n\tvoid test();\n\tBoolean validate();\n\tBoolean validate(List<String> names);\n\tBoolean validate(ArrayList<Integer> costs) throws CostException, ValidationException;\n\tList<String> getData();\n}"
+    val expect = "import java.lang.Boolean;\nimport java.util.List;\nimport java.util.ArrayList;\n\ninterface TestInterface {\n\n\tvoid test();\n\n\tBoolean validate();\n\n\tBoolean validate(List<String> names);\n\n\tBoolean validate(ArrayList<Integer> costs) throws CostException, ValidationException;\n\n\tList<String> getData();\n}"
     //println(interface)
     Assert.assertEquals(expect, interface.toString)
   }

@@ -3,7 +3,7 @@ package com.liberty.traits.persistance
 import com.liberty.builders.{ClassBuilder, InterfaceBuilder}
 import com.liberty.common.DBConfig
 import com.liberty.model._
-import com.liberty.traits.{Accessible, JavaPackage}
+import com.liberty.traits.{Accessible, LocationPackage}
 
 import scala.util.{Success, Try}
 
@@ -14,7 +14,7 @@ import scala.util.{Success, Try}
  */
 trait DaoAdapter extends Annotator with CRUDable with Accessible {
   this: {var javaClass: JavaClass
-    val basePackage: JavaPackage} =>
+    val basePackage: LocationPackage} =>
 
   trait FactoryCreator {
     def createDaoFactory(config: DBConfig, daos: List[JavaFunction]): JavaClass
@@ -77,6 +77,7 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
 
   def createDaoInterface: Try[JavaInterface] = {
     val builder = InterfaceBuilder("I" + getDaoName, createMethods())
+    builder.addPackage(basePackage.nested("dao", builder.getName))
     val interface = builder.getInterface
     daoInterface = Some(interface)
     Success(interface)

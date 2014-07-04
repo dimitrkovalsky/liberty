@@ -34,6 +34,8 @@ class InterfaceBuilder {
   }
 
   def getInterface = javaInterface
+
+  def getName = javaInterface.name
 }
 
 object InterfaceBuilder {

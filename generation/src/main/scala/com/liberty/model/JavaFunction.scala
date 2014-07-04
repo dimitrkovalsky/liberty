@@ -34,8 +34,8 @@ class JavaFunction extends ClassPart with Annotatable {
   }
 
   def getPackages: Set[JavaPackage] = {
-    val set: Set[JavaPackage] = signature.getPackages
-    set ++ body.getPackages
+    var set: Set[JavaPackage] = signature.getPackages
+    set = set ++ body.getPackages
     set.filter(p => !p.isInstanceOf[NoPackage])
   }
 

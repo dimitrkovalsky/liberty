@@ -2,9 +2,10 @@ package com.liberty.builders
 
 import com.liberty.StubType
 import com.liberty.common.Implicits._
-import com.liberty.model.{JavaAnnotation, JavaField, _}
+import com.liberty.model._
 import com.liberty.traits.JavaPackage
 import com.liberty.types.primitives._
+import com.liberty.types.standardTypes.DateType
 import org.junit.{Assert, Test}
 
 /**
@@ -32,7 +33,7 @@ class ClassBuilderTest {
     builder.addField(JavaField("position", StringType, ProtectedModifier))
     val clazz = builder.getJavaClass
 
-    val expected = "import java.lang.String;\nimport java.lang.Integer;\n\nclass SomeClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n}"
+    val expected = "import java.lang.Integer;\nimport java.lang.String;\n\nclass SomeClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n}"
     val available = clazz.toString
     //println(available)
     Assert.assertEquals(expected, available)
@@ -47,7 +48,7 @@ class ClassBuilderTest {
     builder.addGeneric(StubType("GenericClass"))
     val clazz = builder.getJavaClass
 
-    val expected = "import java.lang.String;\nimport java.lang.Integer;\n\nclass SomeClass<GenericClass> {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n}"
+    val expected = "import java.lang.Integer;\nimport java.lang.String;\n\nclass SomeClass<GenericClass> {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n}"
     val available = clazz.toString
     //println(available)
     Assert.assertEquals(expected, available)
@@ -56,7 +57,7 @@ class ClassBuilderTest {
   @Test def genericWithInheritanceClass() {
     val clazz = createGenericInheritClass
 
-    val expected = "package my.test.package;\n\nimport javax.persistence.Entity;\nimport java.lang.String;\nimport javax.persistence.Id;\nimport javax.persistence.Column;\nimport java.util.List;\nimport javax.persistence.NamedQuery;\nimport java.lang.Integer;\n\n@Entity(table = \"simple_table\")\n@NamedQuery(name = \"findAll\", query = \"SELECT * FROM simple_table\")\nclass FullClass extends AnotherClass implements GenericInterface<SomeType> {\n\t@Id\n\tprivate String id = \"\";\n\t@Column(name = \"fc_name\")\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\t@Override\n\tpublic String toString(){\n\t\treturn \"toString invoked\";\n\t}\n}"
+    val expected = "package my.test.package;\n\nimport java.lang.Integer;\nimport java.lang.String;\nimport java.util.ArrayList;\nimport java.util.List;\nimport javax.persistence.Column;\nimport javax.persistence.Entity;\nimport javax.persistence.Id;\nimport javax.persistence.NamedQuery;\n\n@Entity(table = \"simple_table\")\n@NamedQuery(name = \"findAll\", query = \"SELECT * FROM simple_table\")\nclass FullClass extends AnotherClass implements GenericInterface<SomeType> {\n\t@Id\n\tprivate String id = \"\";\n\t@Column(name = \"fc_name\")\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\t@Override\n\tpublic String toString(){\n\t\treturn \"toString invoked\";\n\t}\n}"
     val available = clazz.toString
     //println(available)
     Assert.assertEquals(expected, available)
@@ -65,7 +66,7 @@ class ClassBuilderTest {
 
   @Test def functionsClass() {
     val clazz = createAnotherClass
-    val expected = "import java.util.List;\nimport java.lang.String;\n\nclass AnotherClass {\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n}"
+    val expected = "import java.lang.String;\nimport java.util.ArrayList;\nimport java.util.List;\n\nclass AnotherClass {\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n}"
     val available = clazz.toString
     //println(available)
     Assert.assertEquals(expected, available)
@@ -87,7 +88,7 @@ class ClassBuilderTest {
   @Test def fullClass() {
     val clazz = createFullClass
 
-    val expected = "package com.guide.city.model;\n\nimport java.lang.String;\nimport java.lang.Integer;\nimport java.util.List;\n\nclass FullClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n}"
+    val expected = "package com.guide.city.model;\n\nimport java.lang.Integer;\nimport java.lang.String;\nimport java.util.ArrayList;\nimport java.util.List;\n\nclass FullClass {\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n}"
     val available = clazz.toString
     //  println(available)
     Assert.assertEquals(expected, available)
@@ -96,7 +97,7 @@ class ClassBuilderTest {
   @Test def withAnnotationClass() {
     val clazz = createWithAnnotationClass
 
-    val expected = "package my.test.package;\n\nimport javax.persistence.Entity;\nimport java.lang.String;\nimport javax.persistence.Id;\nimport javax.persistence.Column;\nimport java.util.List;\nimport javax.persistence.NamedQuery;\nimport java.lang.Integer;\n\n@Entity(table = \"simple_table\")\n@NamedQuery(name = \"findAll\", query = \"SELECT * FROM simple_table\")\nclass FullClass {\n\t@Id\n\tprivate String id = \"\";\n\t@Column(name = \"fc_name\")\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\t@Override\n\tpublic String toString(){\n\t\treturn \"toString invoked\";\n\t}\n}"
+    val expected = "package my.test.package;\n\nimport java.lang.Integer;\nimport java.lang.String;\nimport java.util.ArrayList;\nimport java.util.List;\nimport javax.persistence.Column;\nimport javax.persistence.Entity;\nimport javax.persistence.Id;\nimport javax.persistence.NamedQuery;\n\n@Entity(table = \"simple_table\")\n@NamedQuery(name = \"findAll\", query = \"SELECT * FROM simple_table\")\nclass FullClass {\n\t@Id\n\tprivate String id = \"\";\n\t@Column(name = \"fc_name\")\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\t@Override\n\tpublic String toString(){\n\t\treturn \"toString invoked\";\n\t}\n}"
     val available = clazz.toString
     //println(available)
     Assert.assertEquals(expected, available)
@@ -104,7 +105,7 @@ class ClassBuilderTest {
 
   @Test def withInheritanceClass() {
     val clazz = createInheritClass
-    val expected = "package my.test.package;\n\nimport javax.persistence.Entity;\nimport java.lang.String;\nimport javax.persistence.Id;\nimport javax.persistence.Column;\nimport my.test.program.Marker;\nimport java.util.List;\nimport javax.persistence.NamedQuery;\nimport java.lang.Integer;\n\n@Entity(table = \"simple_table\")\n@NamedQuery(name = \"findAll\", query = \"SELECT * FROM simple_table\")\nclass FullClass extends AnotherClass implements Marker, TestInterface {\n\t@Id\n\tprivate String id = \"\";\n\t@Column(name = \"fc_name\")\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\t@Override\n\tpublic String toString(){\n\t\treturn \"toString invoked\";\n\t}\n}"
+    val expected = "package my.test.package;\n\nimport java.lang.Integer;\nimport java.lang.String;\nimport java.util.ArrayList;\nimport java.util.List;\nimport javax.persistence.Column;\nimport javax.persistence.Entity;\nimport javax.persistence.Id;\nimport javax.persistence.NamedQuery;\nimport my.test.program.Marker;\n\n@Entity(table = \"simple_table\")\n@NamedQuery(name = \"findAll\", query = \"SELECT * FROM simple_table\")\nclass FullClass extends AnotherClass implements Marker, TestInterface {\n\t@Id\n\tprivate String id = \"\";\n\t@Column(name = \"fc_name\")\n\tprivate String name = \"\";\n\tprivate Integer age = 0;\n\tprotected String position = \"\";\n\n\tList<String> filter(List<String> list){\n\t\tArrayList<String> result = new ArrayList();\n\t\tvalidate(result);\n\t\treturn split(list, result);\n\t}\n\n\tString invokeAnotherFunction(List<String> list){\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\tString invoke(List<String> list) throws Exception {\n\t\tBoolean result;\n\t\tresult = validate(new ArrayList(), list);\n\t\treturn split(list, result);\n\t}\n\n\t@Override\n\tpublic String toString(){\n\t\treturn \"toString invoked\";\n\t}\n}"
     val available = clazz.toString
     println(available)
     Assert.assertEquals(expected, available)
@@ -128,12 +129,21 @@ class ClassBuilderTest {
   def createPojoClass: JavaClass = {
     val builder = new ClassBuilder
     builder.setName("PojoClass")
-    val functionTest = new FunctionBuilderTest
     builder.addPackage(JavaPackage("com.guide.city.model", "PojoClass"))
     builder.addField(JavaField("id", IntegerType, PrivateModifier))
     builder.addField(JavaField("name", StringType, ProtectedModifier))
     builder.addField(JavaField("age", IntegerType, PrivateModifier))
     builder.addField(JavaField("position", StringType, PrivateModifier))
+    builder.getJavaClass
+  }
+
+  def createAccountClass: JavaClass = {
+    val builder = new ClassBuilder
+    builder.setName("Account")
+    builder.addPackage(JavaPackage("com.guide.city.model", "Account"))
+    builder.addField(JavaField("internalId", IntegerType, PrivateModifier))
+    builder.addField(JavaField("androidId", StringType, PrivateModifier))
+    builder.addField(JavaField("created", DateType, PrivateModifier))
     builder.getJavaClass
   }
 

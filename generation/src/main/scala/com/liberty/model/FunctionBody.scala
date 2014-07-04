@@ -34,7 +34,9 @@ class FunctionBody {
     var set: Set[JavaPackage] = Set()
     operations.foreach {
       case o: CreationOperation => set += o.dataType.javaPackage
-      case ReturnOperation(e: Operation) => getPackages(e, Set()).foreach(set += _)
+      case ReturnOperation(e: CreationOperation) =>
+        val s = ""
+        getPackages(e, Set()).foreach(set += _)
       case o: ChainedOperations => getPackages(o, Set()).foreach(set += _)
       case TryOperation(c: CatchOperation) => set += c.e.javaPackage; c.ops.foreach(o => set = set ++ getPackages(o, Set()))
       case _ =>
