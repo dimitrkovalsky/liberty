@@ -137,10 +137,21 @@ class ClassBuilderTest {
     builder.getJavaClass
   }
 
+  def createLocationClass: JavaClass = {
+    val builder = new ClassBuilder
+    builder.setName("Location")
+    builder.addPackage(JavaPackage("com.test.model", "Location"))
+    builder.addField(JavaField("accountId", IntegerType, PrivateModifier))
+    builder.addField(JavaField("latitude", FloatType, PrivateModifier))
+    builder.addField(JavaField("longitude", FloatType, PrivateModifier))
+    builder.addField(JavaField("mark", StringType, PrivateModifier))
+    builder.getJavaClass
+  }
+
   def createAccountClass: JavaClass = {
     val builder = new ClassBuilder
     builder.setName("Account")
-    builder.addPackage(JavaPackage("com.guide.city.model", "Account"))
+    builder.addPackage(JavaPackage("com.test.model", "Account"))
     builder.addField(JavaField("internalId", IntegerType, PrivateModifier))
     builder.addField(JavaField("androidId", StringType, PrivateModifier))
     builder.addField(JavaField("created", DateType, PrivateModifier))

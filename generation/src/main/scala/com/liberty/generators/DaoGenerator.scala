@@ -26,15 +26,15 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
   /**
    * Factory class for dataCreation
    */
-  var factory: Option[JavaClass] = None
+  private var factory: Option[JavaClass] = None
   /**
    * Marked initial entities for data storing using appropriate DaoAdapter
    */
-  var entities: List[JavaClass] = Nil
+  private var entities: List[JavaClass] = Nil
 
-  var daos: List[JavaClass] = Nil
-  var daoInterfaces: List[JavaClass] = Nil
-  var adapters: List[DaoAdapter] = Nil
+  private var daos: List[JavaClass] = Nil
+  private var daoInterfaces: List[JavaClass] = Nil
+  private var adapters: List[DaoAdapter] = Nil
 
   private def getAdapters(entities: List[JavaClass]): List[DaoAdapter] = {
     entities.map(e => getAdapter(e))

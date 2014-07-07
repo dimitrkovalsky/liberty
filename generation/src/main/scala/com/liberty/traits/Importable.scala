@@ -29,6 +29,11 @@ case class JavaPackage(packagePath: String, packageClass: String) {
     s"import $packagePath.$packageClass;"
   }
 
+  /**
+   * Uses for getting package path. Replace . from package into /
+   */
+  def getPackagePath = packagePath.replace(".", "/")
+
   override def equals(obj: Any): Boolean = {
     if (!obj.isInstanceOf[JavaPackage])
       return false
