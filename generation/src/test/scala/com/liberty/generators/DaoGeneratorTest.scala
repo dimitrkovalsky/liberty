@@ -26,8 +26,8 @@ class DaoGeneratorTest {
     val pojo = createPojo
     val account = createAccount
     val generator = new DaoGenerator(mongoConfig, basePackage)
-    generator.addEntity(pojo)
-    generator.addEntity(account)
+    generator.addModel(pojo)
+    generator.addModel(account)
     val entities: List[JavaClass] = generator.createEntities
     val interfaces = generator.createInterfaces
     val daos = generator.createDaos

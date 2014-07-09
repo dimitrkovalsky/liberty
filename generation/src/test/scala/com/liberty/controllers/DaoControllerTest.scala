@@ -1,7 +1,8 @@
 package com.liberty.controllers
 
 import com.liberty.builders.ClassBuilderTest
-import com.liberty.model.JavaClass
+import com.liberty.model.{JavaClass, JavaField, PrivateModifier}
+import com.liberty.types.primitives.IntegerType
 import org.junit.Test
 
 /**
@@ -15,5 +16,14 @@ class DaoControllerTest {
   @Test def createDao() {
     val controller = new DaoController
     controller.createDao(createAccount)
+  }
+
+  @Test def updateDao() {
+    val controller = new DaoController
+    val account = createAccount
+    controller.createDao(createAccount)
+    controller.createDao(createLocation)
+    account.addField(JavaField("status", IntegerType, PrivateModifier))
+    controller.changed(account)
   }
 }

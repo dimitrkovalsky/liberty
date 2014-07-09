@@ -6,3 +6,5 @@ package com.liberty.exceptions
 abstract class GenerationException(message: String) extends Exception(message)
 
 case class IdMissedException(message: String = "Id is missed") extends GenerationException(message)
+
+case class NotGeneratedException(message: String = "Can't generate entity") extends GenerationException(message)

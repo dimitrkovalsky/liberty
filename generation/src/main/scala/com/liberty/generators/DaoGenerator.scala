@@ -1,12 +1,13 @@
 package com.liberty.generators
 
 import com.liberty.common.{DBConfig, DatabaseType}
+import com.liberty.exceptions.NotGeneratedException
 import com.liberty.generators.adapters.{MongoAdapter, StubAdapter}
 import com.liberty.model.{JavaClass, JavaInterface}
 import com.liberty.traits.LocationPackage
 import com.liberty.traits.persistance.DaoAdapter
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 /**
  * User: Dimitr
@@ -22,7 +23,7 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
   /**
    * Models for daos
    */
-  private var initialEntities: List[JavaClass] = Nil
+  private val initialModels = scala.collection.mutable.Map[String, JavaClass]()
   /**
    * Factory class for dataCreation
    */
@@ -32,9 +33,7 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
    */
   private var entities: List[JavaClass] = Nil
 
-  private var daos: List[JavaClass] = Nil
-  private var daoInterfaces: List[JavaClass] = Nil
-  private var adapters: List[DaoAdapter] = Nil
+  private var adapters = scala.collection.mutable.Map[String, DaoAdapter]()
 
   private def getAdapters(entities: List[JavaClass]): List[DaoAdapter] = {
     entities.map(e => getAdapter(e))
@@ -47,40 +46,69 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
     }
   }
 
-  private def addAdapter(initialEntity: JavaClass) {
-    adapters = adapters :+ getAdapter(initialEntity)
+  private def addAdapter(initialEntity: JavaClass) = {
+    val adapter = getAdapter(initialEntity)
+    adapters += initialEntity.name -> adapter
+    adapter
   }
 
-  def addEntity(entity: JavaClass) {
-    initialEntities = initialEntities :+ entity
-    addAdapter(entity)
+  /**
+   * Adds new model to initialModels and adds new adapter to adapters.
+   * I model with tha same name was added before it removes old model and adapter
+   * @param model JavaClass instance
+   */
+  def addModel(model: JavaClass) = {
+    initialModels += model.name -> model
+    addAdapter(model)
   }
+
 
   def createFactory: Option[JavaClass] = {
     adapters.lastOption.flatMap {
-      adapter =>
+      case (name, adapter) =>
         val creator = adapter.getFactoryCreator
-        val functions = adapters.map(_.getDaoCreationFunction).flatten
-        factory = Some(creator.createDaoFactory(dbConfig.connectionConfig, functions))
+        val functions = adapters.values.map(_.getDaoCreationFunction).flatten
+        factory = Some(creator.createDaoFactory(dbConfig.connectionConfig, functions.toList))
         factory
     }
   }
 
+  private def getFactory: Try[JavaClass] = {
+    createFactory match {
+      case Some(f) => Success(f)
+      case None => Failure(NotGeneratedException("Could not generate factory"))
+    }
+  }
+
   def createDaos: List[Try[JavaClass]] = {
-    adapters.map(_.createDao)
+    adapters.values.map(_.createDao).toList
   }
 
   def createInterfaces: List[Try[JavaInterface]] = {
-    adapters.map(_.createDaoInterface)
+    adapters.values.map(_.createDaoInterface).toList
   }
 
   def createEntities: List[JavaClass] = {
     adapters.map {
-      adapter => adapter.createEntity
-    }
+      case (name, adapter) => adapter.createEntity
+    }.toList
+  }
+
+  def update(model: JavaClass): Try[EntityPacket] = {
+    val adapter = addModel(model)
+    for {
+      entity <- Success(adapter.createEntity)
+      interface <- adapter.createDaoInterface
+      dao <- adapter.createDao
+      factory <- getFactory
+    } yield EntityPacket(entity, interface, dao, factory)
   }
 }
 
+/**
+ * Uses for transferring data after dao updates
+ */
+case class EntityPacket(entity: JavaClass, daoInterface: JavaInterface, dao: JavaClass, factory: JavaClass)
 
 object DaoGenerator {
 
