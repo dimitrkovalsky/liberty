@@ -35,10 +35,10 @@ case class FileClassWriter(basePath: String) extends Writer {
   }
 
   /**
-    * Removes old file if exist and creates new file with data
-    * @param path
-    * @param data
-    */
+   * Removes old file if exist and creates new file with data
+   * @param path
+   * @param data
+   */
   private def writeToFile(path: String, data: String) {
     val pathToFile = Paths.get(path)
     Files.createDirectories(pathToFile.getParent)
@@ -48,8 +48,10 @@ case class FileClassWriter(basePath: String) extends Writer {
     try {
       writer.write(data)
     } finally {
-      if (writer != null)
+      if (writer != null) {
+        writer.flush()
         writer.close()
+      }
     }
   }
 }
