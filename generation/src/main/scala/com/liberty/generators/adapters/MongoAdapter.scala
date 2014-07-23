@@ -8,6 +8,7 @@ import com.liberty.model._
 import com.liberty.operations._
 import com.liberty.traits.persistance.DaoAdapter
 import com.liberty.traits.{JavaPackage, LocationPackage}
+import com.liberty.types.collections.ListType
 import com.liberty.types.{ObjectType, SimpleObjectType}
 
 import scala.util.{Failure, Success, Try}
@@ -85,6 +86,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
   override def createDaoFields(): Unit = {}
 
   private def createEntityParameter = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+  private val getEntityType = ObjectType(javaClass.getTypeName, javaClass.javaPackage)
 
   override def createDaoConstructor() {
     val builder = new FunctionBuilder
@@ -107,7 +109,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
 
   override def createFind() = {
     val param = createEntityParameter
-    val builder = FunctionBuilder(PublicModifier, "find", param)
+    val builder = FunctionBuilder(PublicModifier, "find", Some(param.paramType), param)
     builder.wrapable(daoException) {
       val ret = ReturnOperation(SuperFunctionInvokeOperation("findOne", List("_id", GetValueOperation(param.paramName.name, getIdMethodName))))
       builder.addOperation(ret)
@@ -141,8 +143,9 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
     builder.tryable {
       val chain = ChainedOperations(FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("find",
         List(javaClass.asClassParam)), FunctionInvokeOperation("asList"))
-      builder.addOperation(chain)
+      builder.addOperation(ReturnOperation(chain))
     }.throwWrapped(daoException)
+    builder.addReturn(ListType(getEntityType))
     Some(builder.getFunction)
   }
 
@@ -154,6 +157,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
         builder.tryable {
           builder.addOperation(ReturnOperation(SuperFunctionInvokeOperation("findOne", List("_id", param.paramName.name.asValue))))
         }.throwWrapped(daoException)
+        builder.addReturn(getEntityType)
         Some(builder.getFunction)
     }.getOrElse(None)
   }

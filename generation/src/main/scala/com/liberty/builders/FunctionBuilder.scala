@@ -3,6 +3,7 @@ package com.liberty.builders
 import com.liberty.model._
 import com.liberty.operations._
 import com.liberty.types
+import com.liberty.types.DataType
 
 /**
  * User: Dimitr
@@ -38,6 +39,10 @@ class FunctionBuilder {
     function.signature.modifier = modifier
   }
 
+  def addReturn(output: DataType) {
+    function.signature.output = output
+  }
+
   def getFunction = function
 
   def addOperation(operation: Operation) {
@@ -67,7 +72,6 @@ class FunctionBuilder {
   }
 
 
-
   def wrapable(wrapper: JavaException)(f: => Unit) = {
     tryable(f).throwWrapped(wrapper)
   }
@@ -75,6 +79,15 @@ class FunctionBuilder {
 
 object FunctionBuilder {
   def apply = new FunctionBuilder()
+
+  def apply(modifier: Modifier, functionName: String, returnData: Option[DataType], params: FunctionParameter*) = {
+    val builder = new FunctionBuilder()
+    builder.setName(functionName)
+    builder.addParams(params: _*)
+    builder.addModifier(modifier)
+    returnData.foreach(builder.addReturn)
+    builder
+  }
 
   def apply(modifier: Modifier, functionName: String, params: FunctionParameter*) = {
     val builder = new FunctionBuilder()
