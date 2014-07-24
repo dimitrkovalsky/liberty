@@ -5,6 +5,6 @@ package liberty.errors
  * Date: 15.07.13
  * Time: 16:32
  */
-case class Error {
+case class Error() {
 
 }

@@ -5,6 +5,6 @@ package liberty.generic
  * Date: 15.07.13
  * Time: 16:34
  */
-case class OperationResult {
+case class OperationResult() {
 
 }

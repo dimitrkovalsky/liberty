@@ -1,7 +1,7 @@
 package com.liberty.model
 
 import com.liberty.helpers.StringHelper
-import com.liberty.traits.{Importable, JavaPackage, NoPackage}
+import com.liberty.traits.{Importable, JavaPackage, LocationPackage, NoPackage}
 
 /**
  * User: Dimitr
@@ -55,3 +55,9 @@ case class JavaAnnotation(var name: String = "", pack: JavaPackage = new NoPacka
 }
 
 case class SimpleAnnotation(var name: String = "", pack: String)
+
+object SimpleAnnotation {
+  def apply(name: String, pack: LocationPackage) = {
+    new SimpleAnnotation(name, pack.packagePath)
+  }
+}

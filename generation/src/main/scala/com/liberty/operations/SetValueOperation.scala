@@ -7,6 +7,9 @@ import com.liberty.model.JavaField
  * Date: 07.11.13
  * Time: 10:26
  */
+/**
+ * Uses field.getInternalName invoke for internal fields. If field is internal this. prefix will be added
+ */
 case class SetValueOperation(field: JavaField, expression: Expression) extends Operation {
   def execute(): Option[String] = {
     val result = expression match {

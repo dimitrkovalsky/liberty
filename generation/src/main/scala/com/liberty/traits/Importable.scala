@@ -5,6 +5,9 @@ package com.liberty.traits
  * Date: 10.10.13
  * Time: 18:00
  */
+/**
+ * Uses for import support in code generation
+ */
 trait Importable {
   var javaPackage: JavaPackage = new NoPackage()
 
@@ -21,7 +24,11 @@ trait Importable {
 
 }
 
-
+/**
+ * Represents Java package for imports
+ * @param packagePath path for package something like : javax.persistence
+ * @param packageClass class name : Entity
+ */
 case class JavaPackage(packagePath: String, packageClass: String) {
   def isEmpty = packagePath.isEmpty || packageClass.isEmpty
 
@@ -42,10 +49,33 @@ case class JavaPackage(packagePath: String, packageClass: String) {
   }
 }
 
+/**
+ * Represent base package for another packages
+ * The mail target of this class is to simplify code
+ * @param packagePath path for package something like : javax.persistence
+ */
 class LocationPackage(packagePath: String) extends JavaPackage(packagePath, "") {
+  /**
+   * Creates new nested LocationPackage instance
+   * @param nestedPackage nested path for package
+   * @return  LocationPackage instance
+   */
   def nested(nestedPackage: String) = new LocationPackage(packagePath + "." + nestedPackage)
 
+  /**
+   * Creates package for appropriate class
+   * @param nestedPackage nested path for class
+   * @param className  name of target class
+   * @return JavaPackage instance
+   */
   def nested(nestedPackage: String, className: String) = new JavaPackage(packagePath + "." + nestedPackage, className)
+
+  /**
+   * Creates package for appropriate class
+   * @param className name of target class
+   * @return JavaPackage instance
+   */
+  def nestedClass(className: String) = new JavaPackage(packagePath, className)
 }
 
 object LocationPackage {

@@ -137,7 +137,7 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
 trait ClassPart {
   def toClassPart(shift: String = "\t"): String
 }
-
+ // TODO : change  value: String = "" to Option[String]
 case class JavaField(name: String, dataType: DataType, var modifier: Modifier = DefaultModifier, var value: String = "",
                      var id: Boolean = false)
   extends ClassPart with Annotatable {
@@ -162,6 +162,9 @@ case class JavaField(name: String, dataType: DataType, var modifier: Modifier = 
     }${dataType.toString} $name = $value"
   }
 
+   /**
+     * @return Name with this. prefix
+     */
   def getInternalName = "this." + name
 
   override def toClassPart(shift: String = "\t"): String = toString

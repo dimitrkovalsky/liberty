@@ -16,46 +16,38 @@ case class StubAdapter() extends DaoAdapter {
   var javaClass: JavaClass = _
   var datastoreName: String = _
   val basePackage : LocationPackage = new LocationNoPackage
-
-
-  def getDatastoreAnnotation: JavaAnnotation = ???
-
-  def getIdAnnotation: JavaAnnotation = ???
-
-  def getIdField: Option[JavaField] = ???
-
-  def markField(field: JavaField, annotation: JavaAnnotation): Unit = ???
-
-  def getEntityClass: JavaClass = ???
-
-  def createDaoFields(): Unit = ???
-
-  def createDaoClass(): Try[JavaClass] = ???
-
-  def createDaoConstructor(): Unit = ???
-
-  def createDelete() = ???
-
-  def createFind() = ???
-
-  def createUpdate() = ???
-
-  def createInsert() = ???
-
-  override def createFindAll(): Option[JavaFunction] = ???
-
-  override def createFindById(): Option[JavaFunction] = ???
-
-  override def getFactoryCreator: FactoryCreator = ???
-
-  override def getDaoName: String = ???
-
-  override def getDaoCreationFunction: Option[JavaFunction] = ???
-
   /**
    * Returns marked entity for appropriate database
    * @return
    */
   override def createEntity: JavaClass = ???
+
+  override def getDatastoreAnnotation: JavaAnnotation = ???
+
+  override def getIdAnnotation: JavaAnnotation = ???
+
+  override def createDaoConstructor(): Unit = ???
+
+  override def createDaoFields(): Unit = ???
+
+  override def getEntityClass: JavaClass = ???
+
+  override def getDaoCreationFunction: Option[JavaFunction] = ???
+
+  override protected def createDaoClassBase(): Try[JavaClass] = ???
+
+  override def getFactoryCreator: FactoryCreator = ???
+
+  override def createUpdate(): Option[JavaFunction] = ???
+
+  override def createInsert(): Option[JavaFunction] = ???
+
+  override def createDelete(): Option[JavaFunction] = ???
+
+  override def createFindAll(): Option[JavaFunction] = ???
+
+  override def createFind(): Option[JavaFunction] = ???
+
+  override def createFindById(): Option[JavaFunction] = ???
 }
 

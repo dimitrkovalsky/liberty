@@ -26,10 +26,13 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
     def getDaoCreationFunction: Option[JavaFunction]
   }
 
+  var datastoreName: String
   protected val DAO_FACTORY_NAME = "DaoFactory"
   protected val DB_URL = "DATABASE_URL"
   protected val DB_PORT = "DATABASE_PORT"
   protected val DB_NAME = "DATABASE_NAME"
+  protected val DB_USER = "DATABASE_USER"
+  protected val DB_PASSWORD = "DATABASE_PASSWORD"
   protected var daoBuilder: ClassBuilder = new ClassBuilder()
 
   /**
@@ -38,39 +41,59 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
    */
   def createEntity: JavaClass
 
-  var datastoreName: String
+  def getAccessible: JavaClass = getAccessible(javaClass)
+
+
   private var daoInterface: Option[JavaInterface] = None
 
   def getDatastoreAnnotation: JavaAnnotation
 
   def getIdAnnotation: JavaAnnotation
 
-  def getIdField: Option[JavaField]
-
-  def markField(field: JavaField, annotation: JavaAnnotation)
+  def markField(field: JavaField, annotation: JavaAnnotation): Unit = {
+    field.addAnnotation(annotation)
+  }
 
   def getEntityClass: JavaClass
 
   def createDaoFields()
 
-  protected def createDaoClass(): Try[JavaClass]
+  /**
+   * Creates dao class as instance of JavaClass without interface implementation
+   */
+  protected def createDaoClassBase(): Try[JavaClass]
 
   def createDaoConstructor()
 
   def getFactoryCreator: FactoryCreator
 
-  def getDaoName: String
+  def getDaoName: String = javaClass.name + "Dao"
 
   def getDaoCreationFunction: Option[JavaFunction]
 
   protected def getDaoInterface: Option[JavaInterface] = daoInterface
 
+  def getIdFieldName = getIdField.fold("ERROR")(_.name)
+
+  def getIdMethodName = {
+    // TODO : throws exception instead of ERROR
+    getIdField.map(n => s"get${n.name.capitalize}").getOrElse("ERROR")
+  }
+
   /**
-   * Creates dao class as instance of JavaClass
+   * Returns first field with 'id' or 'Id' in name
+   * @return None if id field is missing and Some[JavaField] if it is exists
+   */
+  def getIdField: Option[JavaField] = {
+    javaClass.fields.find(field => field.id || field.name.startsWith("id") || field.name.contains("Id"))
+  }
+
+  /**
+   * Creates dao class as instance of JavaClass with interface implementation
    * @return  instance of JavaClass
    */
   def createDao: Try[JavaClass] = {
-    createDaoClass().flatMap {
+    createDaoClassBase().flatMap {
       dao => {
         createDaoFields()
         createDaoConstructor()

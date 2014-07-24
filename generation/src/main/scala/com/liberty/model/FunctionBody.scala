@@ -27,7 +27,7 @@ class FunctionBody {
 
   /**
    * Get packages
-   * Search only class creation operation
+   * Search only class creation operation  and pattern operation
    * @return
    */
   def getPackages: Set[JavaPackage] = {
@@ -37,6 +37,7 @@ class FunctionBody {
       case ReturnOperation(e: CreationOperation) =>
         val s = ""
         getPackages(e, Set()).foreach(set += _)
+      case p: PatternOperation => p.packages.foreach(set += _)
       case o: ChainedOperations => getPackages(o, Set()).foreach(set += _)
       case TryOperation(c: CatchOperation) => set += c.e.javaPackage; c.ops.foreach(o => set = set ++ getPackages(o, Set()))
       case _ =>
@@ -48,6 +49,7 @@ class FunctionBody {
     op match {
       case o: CreationOperation => set + o.dataType.javaPackage
       case o: ChainedOperations => set ++ (for (o <- o.operations) yield getPackages(o, set)).flatten
+      case p: PatternOperation => set ++ p.packages
       case _ => set
     }
   }

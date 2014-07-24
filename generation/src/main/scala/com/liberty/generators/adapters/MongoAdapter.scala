@@ -26,8 +26,6 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
   var dao: Option[JavaClass] = None
   private val daoException = JavaException("DaoException", basePackage.nested("errors", "DaoException"))
 
-  def getAccessible: JavaClass = getAccessible(javaClass)
-
   def addAccessors() = super.addAccessors(javaClass)
 
   def createEntity: JavaClass = {
@@ -44,30 +42,14 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
     JavaAnnotation("Id", JavaPackage(morphiaPackage, "Id"))
   }
 
-  def getIdField: Option[JavaField] = {
-    javaClass.fields.find(field => field.id || field.name.startsWith("id") || field.name.contains("Id"))
-  }
-
-  def getIdFieldName = getIdField.fold("ERROR")(_.name)
-
-  private def getIdMethodName = {
-    // TODO : throws exception instead of ERROR
-    getIdField.map(n => s"get${n.name.capitalize}").getOrElse("ERROR")
-  }
-
-  def markField(field: JavaField, annotation: JavaAnnotation): Unit = {
-    field.addAnnotation(annotation)
-  }
-
   def getEntityClass: JavaClass = javaClass
 
-  override def getDaoName: String = javaClass.name + "Dao"
 
   /**
    * Creates Dao class in  basePackage + .dao package
    * @return
    */
-  override protected def createDaoClass(): Try[JavaClass] = {
+  override protected def createDaoClassBase(): Try[JavaClass] = {
     daoBuilder.setName(getDaoName)
     daoBuilder.addPackage(basePackage.nested("dao", getDaoName))
     val extension = new JavaClass("BasicDAO", JavaPackage("com.google.code.morphia.dao", "BasicDAO"))
@@ -86,6 +68,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
   override def createDaoFields(): Unit = {}
 
   private def createEntityParameter = FunctionParameter("entity", ObjectType(javaClass.getTypeName, javaClass.javaPackage))
+
   private val getEntityType = ObjectType(javaClass.getTypeName, javaClass.javaPackage)
 
   override def createDaoConstructor() {
@@ -109,11 +92,12 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
 
   override def createFind() = {
     val param = createEntityParameter
-    val builder = FunctionBuilder(PublicModifier, "find", Some(param.paramType), param)
+    val builder = FunctionBuilder(PublicModifier, "find", param)
     builder.wrapable(daoException) {
       val ret = ReturnOperation(SuperFunctionInvokeOperation("findOne", List("_id", GetValueOperation(param.paramName.name, getIdMethodName))))
       builder.addOperation(ret)
     }
+    builder.addReturn(param.paramType)
     Some(builder.getFunction)
   }
 

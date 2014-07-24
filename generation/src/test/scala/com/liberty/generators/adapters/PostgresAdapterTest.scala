@@ -9,37 +9,35 @@ import org.junit.{Assert, Test}
 import scala.util.{Failure, Success}
 
 /**
- * User: Dimitr
- * Date: 01.11.13
- * Time: 10:12
+ * Created by Dmytro_Kovalskyi on 24.07.2014.
  */
-class MongoAdapterTest {
+class PostgresAdapterTest {
   private val basePackage = LocationPackage("com.city.guide")
 
   @Test def createAccessors() {
     val initialClass = createPojo
     assertInitialClass(initialClass)
-    val adapter = new MongoAdapter(initialClass, basePackage)
+    val adapter = new PostgresAdapter(initialClass, basePackage)
     val accessible = adapter.getAccessible
-    //println(accessible)
+    println(accessible)
     val expected = "package com.guide.city.model;\n\nimport java.lang.Integer;\nimport java.lang.String;\n\nclass PojoClass {\n\tprivate Integer id = 0;\n\tprotected String name = \"\";\n\tprivate Integer age = 0;\n\tprivate String position = \"\";\n\n\tpublic Integer getId(){\n\t\treturn id;\n\t}\n\n\tpublic String getName(){\n\t\treturn name;\n\t}\n\n\tpublic Integer getAge(){\n\t\treturn age;\n\t}\n\n\tpublic String getPosition(){\n\t\treturn position;\n\t}\n\n\tpublic void setId(Integer id){\n\t\tthis.id = id;\n\t}\n\n\tpublic void setName(String name){\n\t\tthis.name = name;\n\t}\n\n\tpublic void setAge(Integer age){\n\t\tthis.age = age;\n\t}\n\n\tpublic void setPosition(String position){\n\t\tthis.position = position;\n\t}\n}"
     Assert.assertEquals(expected, accessible.toString)
     assertInitialClass(initialClass)
 
     // Test add accessors into initial class
     adapter.addAccessors()
-    //  println(initialClass)
+    println(accessible)
     Assert.assertEquals(expected, initialClass.toString)
   }
 
   @Test def createAccessorsAndAnnotations() {
     val clazz = createPojo
     assertInitialClass(clazz)
-    val adapter = new MongoAdapter(clazz, basePackage)
+    val adapter = new PostgresAdapter(clazz, basePackage)
     adapter.addAccessors()
     adapter.annotateClass()
-    val expected = "package com.guide.city.model;\n\nimport com.google.code.morphia.annotations.Entity;\nimport com.google.code.morphia.annotations.Id;\nimport java.lang.Integer;\nimport java.lang.String;\n\n@Entity(value = \"pojoClass\", noClassnameStored = true)\nclass PojoClass {\n\t@Id\n\tprivate Integer id = 0;\n\tprotected String name = \"\";\n\tprivate Integer age = 0;\n\tprivate String position = \"\";\n\n\tpublic Integer getId(){\n\t\treturn id;\n\t}\n\n\tpublic String getName(){\n\t\treturn name;\n\t}\n\n\tpublic Integer getAge(){\n\t\treturn age;\n\t}\n\n\tpublic String getPosition(){\n\t\treturn position;\n\t}\n\n\tpublic void setId(Integer id){\n\t\tthis.id = id;\n\t}\n\n\tpublic void setName(String name){\n\t\tthis.name = name;\n\t}\n\n\tpublic void setAge(Integer age){\n\t\tthis.age = age;\n\t}\n\n\tpublic void setPosition(String position){\n\t\tthis.position = position;\n\t}\n}"
-    //println(clazz)
+    val expected = "package com.guide.city.model;\n\nimport java.lang.Integer;\nimport java.lang.String;\nimport javax.persistence.Entity;\nimport javax.persistence.Id;\n\n@Entity(value = \"pojoClass\")\nclass PojoClass {\n\t@Id\n\tprivate Integer id = 0;\n\tprotected String name = \"\";\n\tprivate Integer age = 0;\n\tprivate String position = \"\";\n\n\tpublic Integer getId(){\n\t\treturn id;\n\t}\n\n\tpublic String getName(){\n\t\treturn name;\n\t}\n\n\tpublic Integer getAge(){\n\t\treturn age;\n\t}\n\n\tpublic String getPosition(){\n\t\treturn position;\n\t}\n\n\tpublic void setId(Integer id){\n\t\tthis.id = id;\n\t}\n\n\tpublic void setName(String name){\n\t\tthis.name = name;\n\t}\n\n\tpublic void setAge(Integer age){\n\t\tthis.age = age;\n\t}\n\n\tpublic void setPosition(String position){\n\t\tthis.position = position;\n\t}\n}"
+    println(clazz)
     Assert.assertEquals(expected, adapter.createEntity.toString)
   }
 
@@ -51,18 +49,16 @@ class MongoAdapterTest {
     Assert.assertEquals(expected, available)
   }
 
-  private def createPojo: JavaClass = new ClassBuilderTest().createPojoClass
-
   @Test def daoClassGeneration() {
     val entity = createPojo
-    val adapter = new MongoAdapter(entity, basePackage)
+    val adapter = new PostgresAdapter(entity, basePackage)
     adapter.addAccessors()
     adapter.annotateClass()
 
     adapter.createDao match {
       case Success(dao) =>
         val available = dao.toString
-        val expected = "package com.city.guide.dao;\n\nimport com.city.guide.errors.DaoException;\nimport com.google.code.morphia.Datastore;\nimport com.google.code.morphia.dao.BasicDAO;\nimport com.guide.city.model.PojoClass;\nimport java.lang.Exception;\nimport java.lang.Integer;\nimport java.util.List;\n\nclass PojoClassDao extends BasicDAO<PojoClass, Integer> implements IPojoClassDao {\n\tpublic void PojoClassDao(Datastore datastore){\n\t\tsuper(datastore);\n\t}\n\n\tpublic void insert(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic PojoClass find(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", entity.getId());\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic List<PojoClass> findAll() throws DaoException {\n\t\ttry {\n\t\t\treturn getCollection().find(PojoClass.class).asList();\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic PojoClass findById(Integer id) throws DaoException {\n\t\ttry {\n\t\t\treturn super.findOne(\"_id\", id);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void update(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tsuper.save(entity);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void delete(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tgetCollection().remove(new BasicDBObject().append(\"id\", entity.getId()));\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n}"
+        val expected = "package com.city.guide.dao;\n\nimport com.city.guide.errors.DaoException;\nimport com.guide.city.model.PojoClass;\nimport java.lang.Exception;\nimport java.lang.Integer;\nimport java.util.List;\nimport javax.persistence.EntityManager;\nimport javax.persistence.criteria.CriteriaQuery;\n\nclass PojoClassDao implements IPojoClassDao {\n\tprivate EntityManager entityManager = null;\n\n\tpublic void PojoClassDao(EntityManager em){\n\t\tthis.entityManager = em;\n\t}\n\n\tpublic void insert(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tentityManager.getTransaction().begin();\n\t\t\tentityManager.persist(entity);\n\t\t\tentityManager.getTransaction().commit();\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic PojoClass find(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\treturn entityManager.find(PojoClass.class, entity.getId());\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic List<PojoClass> findAll() throws DaoException {\n\t\ttry {\n\t\t\tCriteriaQuery<PojoClass> criteria = entityManager.getCriteriaBuilder().createQuery(PojoClass.class);\n\t\t\tcriteria.select(criteria.from(PojoClass.class));\n\t\t\treturn entityManager.createQuery(criteria).getResultList();\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic PojoClass findById(Integer id) throws DaoException {\n\t\ttry {\n\t\t\treturn entityManager.find(PojoClass.class, id);\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void update(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tentityManager.getTransaction().begin();\n\t\t\tentityManager.merge(entity);\n\t\t\tentityManager.getTransaction().commit();\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n\n\tpublic void delete(PojoClass entity) throws DaoException {\n\t\ttry {\n\t\t\tentityManager.getTransaction().begin();\n\t\t\tentityManager.remove(entity);\n\t\t\tentityManager.getTransaction().commit();\n\t\t} catch(Exception e){\n\t\t\tthrow new DaoException(e);\n\t\t}\n\t}\n}"
         println(available)
         Assert.assertEquals(expected, available)
       case Failure(e) => Assert.fail(e.getMessage)
@@ -71,7 +67,7 @@ class MongoAdapterTest {
 
   @Test def interfaceCreation() {
     val entity = createPojo
-    val adapter = new MongoAdapter(entity, basePackage)
+    val adapter = new PostgresAdapter(entity, basePackage)
     adapter.addAccessors()
     adapter.annotateClass()
 
@@ -79,7 +75,7 @@ class MongoAdapterTest {
       case Success(inter) =>
         val available = inter.toString
         val expected = "package com.city.guide.dao;\n\nimport java.util.List;\nimport java.lang.Integer;\nimport com.guide.city.model.PojoClass;\nimport com.city.guide.errors.DaoException;\n\ninterface IPojoClassDao {\n\n\tpublic void insert(PojoClass entity) throws DaoException;\n\n\tpublic PojoClass find(PojoClass entity) throws DaoException;\n\n\tpublic List<PojoClass> findAll() throws DaoException;\n\n\tpublic PojoClass findById(Integer id) throws DaoException;\n\n\tpublic void update(PojoClass entity) throws DaoException;\n\n\tpublic void delete(PojoClass entity) throws DaoException;\n}"
-        //println(available)
+        println(available)
         Assert.assertEquals(expected, available)
       case Failure(e) => Assert.fail(e.getMessage)
     }
@@ -88,7 +84,7 @@ class MongoAdapterTest {
 
   @Test def factoryClassGeneration() {
     val entity = createPojo
-    val adapter = new MongoAdapter(entity, basePackage)
+    val adapter = new PostgresAdapter(entity, basePackage)
     val config = ConnectionConfig("guidedb", "127.0.0.1", 27017)
     adapter.createDao
     val factoryCreator = adapter.getFactoryCreator
@@ -99,4 +95,6 @@ class MongoAdapterTest {
     //println(available)
     Assert.assertEquals(expected, available)
   }
+
+  private def createPojo: JavaClass = new ClassBuilderTest().createPojoClass
 }
