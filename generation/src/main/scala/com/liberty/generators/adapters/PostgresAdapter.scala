@@ -1,6 +1,7 @@
 package com.liberty.generators.adapters
 
-import com.liberty.builders.FunctionBuilder
+import com.liberty.builders.{ClassBuilder, FunctionBuilder}
+import com.liberty.common.ConnectionConfig
 import com.liberty.common.Implicits._
 import com.liberty.model._
 import com.liberty.operations._
@@ -73,10 +74,6 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
 
   private val getEntityType = ObjectType(javaClass.getTypeName, javaClass.javaPackage)
 
-  override def getDaoCreationFunction: Option[JavaFunction] = ???
-
-  override def getFactoryCreator: FactoryCreator = ???
-
   override def createUpdate(): Option[JavaFunction] = {
     val param = createEntityParameter
     val builder = FunctionBuilder(PublicModifier, "update", param)
@@ -100,11 +97,11 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
   }
 
   private def startTransaction = {
-    ChainedOperations(GetValueOperation(entityManagerField, "getTransaction"), FunctionInvokeOperation("begin"))
+    ChainedOperations(None, GetValueOperation(entityManagerField, "getTransaction"), FunctionInvokeOperation("begin"))
   }
 
   private def commitTransaction = {
-    ChainedOperations(GetValueOperation(entityManagerField, "getTransaction"), FunctionInvokeOperation("commit"))
+    ChainedOperations(None, GetValueOperation(entityManagerField, "getTransaction"), FunctionInvokeOperation("commit"))
   }
 
   override def createDelete(): Option[JavaFunction] = {
@@ -156,4 +153,48 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
         Some(builder.getFunction)
     }.getOrElse(None)
   }
+
+  override def getDatabaseName: String = "Postgres"
+
+  override def getFactoryCreator: FactoryCreator = new FactoryCreator {
+    private val em = JavaField("em", entityManager, PrivateStaticModifier)
+    private val PERSISTENT_UNIT = "PERSISTENT_UNIT"
+
+    private val getPersistentUnitName = getDatabaseName + "Unit"
+
+    /**
+     * Creates factory class in  basePackage + .common package
+     */
+    override def createDaoFactory(config: ConnectionConfig, creationFunctions: List[JavaFunction]): JavaClass = {
+      import com.liberty.types.primitives._
+      val builder = ClassBuilder(DAO_FACTORY_NAME)
+      builder.addPackage(basePackage.nested("common"))
+      builder.addField(JavaField(PERSISTENT_UNIT, StringType, PrivateStaticModifier, getPersistentUnitName))
+      builder.addField(em)
+      builder.static {
+          val persistence = ObjectType("Persistence", persistencePackage.nestedClass("Persistence"))
+          val op1 = StaticFunctionInvokeOperation(persistence, "createEntityManagerFactory", List(PERSISTENT_UNIT.asValue))
+          val op2 = FunctionInvokeOperation("createEntityManager")
+          builder addOperation ChainedOperations(em, op1, op2)
+      }
+
+      builder.addFunctions(creationFunctions)
+      builder.getJavaClass
+    }
+
+
+    def getDaoCreationFunction: Option[JavaFunction] = {
+      dao.flatMap {
+        dao =>
+          val builder = FunctionBuilder(PublicStaticModifier, "get" + getDaoName)
+          builder.setOutputType(getDaoInterface.get)
+          builder.addOperation(ReturnOperation(CreationOperation(dao, None, List(Variable(em)))))
+          Some(builder.getFunction)
+      }
+    }
+
+  }
+
+  override def getDaoCreationFunction: Option[JavaFunction] = getFactoryCreator.getDaoCreationFunction
+
 }

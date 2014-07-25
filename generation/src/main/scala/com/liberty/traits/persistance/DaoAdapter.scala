@@ -12,11 +12,22 @@ import scala.util.{Success, Try}
  * Date: 27.10.13
  * Time: 12:05
  */
+/**
+ * Represents adapter for appropriate database support
+ */
 trait DaoAdapter extends Annotator with CRUDable with Accessible {
   this: {var javaClass: JavaClass
     val basePackage: LocationPackage} =>
 
+  /**
+   * Uses for creation of factory class
+   */
   trait FactoryCreator {
+    /**
+     * Creates factory dao class for appropriate database.
+     * Different databases has different FactoryCreators
+     * @return FactoryDao class represented as JavaClass instance
+     */
     def createDaoFactory(config: ConnectionConfig, creationFunctions: List[JavaFunction]): JavaClass
 
     /**
@@ -111,4 +122,6 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
     daoInterface = Some(interface)
     Success(interface)
   }
+
+  def getDatabaseName: String
 }

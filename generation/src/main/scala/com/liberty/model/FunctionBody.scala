@@ -38,6 +38,7 @@ class FunctionBody {
         val s = ""
         getPackages(e, Set()).foreach(set += _)
       case p: PatternOperation => p.packages.foreach(set += _)
+      case s: StaticFunctionInvokeOperation => set += s.obj.jPackage
       case o: ChainedOperations => getPackages(o, Set()).foreach(set += _)
       case TryOperation(c: CatchOperation) => set += c.e.javaPackage; c.ops.foreach(o => set = set ++ getPackages(o, Set()))
       case _ =>
@@ -50,6 +51,7 @@ class FunctionBody {
       case o: CreationOperation => set + o.dataType.javaPackage
       case o: ChainedOperations => set ++ (for (o <- o.operations) yield getPackages(o, set)).flatten
       case p: PatternOperation => set ++ p.packages
+      case s: StaticFunctionInvokeOperation => set + s.obj.jPackage
       case _ => set
     }
   }

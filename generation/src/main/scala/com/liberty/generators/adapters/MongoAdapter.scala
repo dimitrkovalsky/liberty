@@ -115,9 +115,9 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
     val builder = FunctionBuilder(PublicModifier, "delete", param)
     builder.tryable {
       val basicDBObject = SimpleObjectType("BasicDBObject", "com.mongodb")
-      val removeParam = ChainedOperations(CreationOperation(basicDBObject), FunctionInvokeOperation("append",
+      val removeParam = ChainedOperations(None, CreationOperation(basicDBObject), FunctionInvokeOperation("append",
         List(getIdFieldName, GetValueOperation(param.paramName.name, getIdMethodName))))
-      builder.addOperation(ChainedOperations(FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("remove", List(removeParam))))
+      builder.addOperation(ChainedOperations(None, FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("remove", List(removeParam))))
     }.throwWrapped(daoException)
     Some(builder.getFunction)
   }
@@ -125,7 +125,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
   override def createFindAll(): Option[JavaFunction] = {
     val builder = FunctionBuilder(PublicModifier, "findAll")
     builder.tryable {
-      val chain = ChainedOperations(FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("find",
+      val chain = ChainedOperations(None, FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("find",
         List(javaClass.asClassParam)), FunctionInvokeOperation("asList"))
       builder.addOperation(ReturnOperation(chain))
     }.throwWrapped(daoException)
@@ -191,5 +191,5 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
     }
   }
 
-
+  override def getDatabaseName: String = "Mongo"
 }

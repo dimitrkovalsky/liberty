@@ -49,5 +49,7 @@ case class StubAdapter() extends DaoAdapter {
   override def createFind(): Option[JavaFunction] = ???
 
   override def createFindById(): Option[JavaFunction] = ???
+
+  override def getDatabaseName: String = ???
 }
 

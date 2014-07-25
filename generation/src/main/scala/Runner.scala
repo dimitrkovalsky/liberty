@@ -1,12 +1,13 @@
-import com.liberty.model.JavaInterface
+import com.liberty.model.{ConnectionSettings, PersistenceXml}
+
+import scala.xml.XML
 
 object Runner {
   def main(args: Array[String]) {
-    val in = new JavaInterface
-    in.name = "some"
-    val other = new JavaInterface
-    other.name = "some"
-    println(in.equals(other))
+    val xml = PersistenceXml("chapter04PU", ConnectionSettings("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/my",
+      "postgres", "Admin111"),  List("Account", "User")).eclipseLinkXml
+
+   println(xml)
   }
 }
 

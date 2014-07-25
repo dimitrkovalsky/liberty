@@ -90,9 +90,9 @@ class PostgresAdapterTest {
     val factoryCreator = adapter.getFactoryCreator
     val factory = factoryCreator.createDaoFactory(config, List(adapter.getDaoCreationFunction.get))
 
-    val expected = "package com.city.guide.common;\n\nimport com.city.guide.dao.IPojoClassDao;\nimport com.city.guide.dao.PojoClassDao;\nimport com.google.code.morphia.Datastore;\nimport com.google.code.morphia.Morphia;\nimport com.mongodb.Mongo;\nimport java.lang.Integer;\nimport java.lang.String;\nimport java.net.UnknownHostException;\n\nclass DaoFactory {\n\tprivate static String DATABASE_URL = \"127.0.0.1\";\n\tprivate static Integer DATABASE_PORT = 27017;\n\tprivate static String DATABASE_NAME = \"guidedb\";\n\tprivate static Datastore datastore = null;\n\n\tstatic {\n\t\ttry {\n\t\t\tMongo mongo = new Mongo(DATABASE_URL, DATABASE_PORT);\n\t\t\tMorphia morphia = new Morphia();\n\t\t\tdatastore = morphia.createDatastore(mongo, DATABASE_NAME);\n\t\t} catch(UnknownHostException e){\n\t\t\tSystem.err.println(e.getMessage());\n\t\t}\n\t}\n\n\tpublic static IPojoClassDao getPojoClassDao(){\n\t\treturn new PojoClassDao(datastore);\n\t}\n}"
+    val expected = "package com.city.guide.common;\n\nimport com.city.guide.dao.IPojoClassDao;\nimport com.city.guide.dao.PojoClassDao;\nimport java.lang.String;\nimport javax.persistence.EntityManager;\nimport javax.persistence.Persistence;\n\nclass DaoFactory {\n\tprivate static String PERSISTENT_UNIT = \"PostgresUnit\";\n\tprivate static EntityManager em = null;\n\n\tstatic {\n\t\tem = Persistence.createEntityManagerFactory(PERSISTENT_UNIT).createEntityManager();\n\t}\n\n\tpublic static IPojoClassDao getPojoClassDao(){\n\t\treturn new PojoClassDao(em);\n\t}\n}"
     val available = factory.toString
-    //println(available)
+    println(available)
     Assert.assertEquals(expected, available)
   }
 

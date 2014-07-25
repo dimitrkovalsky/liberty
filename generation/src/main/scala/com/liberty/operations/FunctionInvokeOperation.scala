@@ -1,5 +1,7 @@
 package com.liberty.operations
 
+import com.liberty.types.ObjectType
+
 /**
  * User: Dimitr
  * Date: 07.11.13
@@ -7,7 +9,7 @@ package com.liberty.operations
  */
 // TODO: creation variables without expressions like :<<< List<Integer> list; >>>
 case class FunctionInvokeOperation(functionName: String, var params: List[Expression] = Nil,
-                              result: Option[Variable] = None) extends Operation {
+                                   result: Option[Variable] = None) extends Operation {
   override def execute(): Option[String] = {
     executeNamed(functionName)
   }
@@ -36,4 +38,3 @@ object ObjectFunctionInvokeOperation {
     new FunctionInvokeOperation(v.name + "." + functionName, params, result)
   }
 }
-
