@@ -39,6 +39,9 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
     entities.map(e => getAdapter(e))
   }
 
+  /**
+   * Creates adapter for appropriate DatabaseType
+   */
   private def getAdapter(initialEntity: JavaClass) = {
     dbConfig.databaseType match {
       case DatabaseType.MONGO_DB => new MongoAdapter(initialEntity.clone().asInstanceOf[JavaClass], basePackage)
@@ -68,7 +71,7 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
       case (name, adapter) =>
         val creator = adapter.getFactoryCreator
         val functions = adapters.values.map(_.getDaoCreationFunction).flatten
-        factory = Some(creator.createDaoFactory(dbConfig.connectionConfig, functions.toList))
+        factory = creator.createDaoFactory(dbConfig.databaseConfig, functions.toList)
         factory
     }
   }

@@ -1,17 +1,19 @@
 package com.liberty.generators.adapters
 
 import com.liberty.builders.{ClassBuilder, FunctionBuilder}
-import com.liberty.common.ConnectionConfig
 import com.liberty.common.Implicits._
+import com.liberty.common.{ProjectConfig, NoSQLConfig}
 import com.liberty.exceptions.IdMissedException
 import com.liberty.model._
 import com.liberty.operations._
 import com.liberty.traits.persistance.DaoAdapter
 import com.liberty.traits.{JavaPackage, LocationPackage}
 import com.liberty.types.collections.ListType
+import com.liberty.types.primitives.{IntegerType, StringType}
 import com.liberty.types.{ObjectType, SimpleObjectType}
 
 import scala.util.{Failure, Success, Try}
+import scala.xml.Elem
 
 /**
  * User: Dimitr
@@ -19,6 +21,7 @@ import scala.util.{Failure, Success, Try}
  * Time: 9:45
  */
 class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends DaoAdapter {
+  ProjectConfig.addEntity(javaClass.name)
   val basePackage = bPackage
   private val morphiaPackage: String = "com.google.code.morphia.annotations"
   var datastoreName: String = javaClass.name.firstToLowerCase
@@ -148,16 +151,26 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
 
   override def getDaoCreationFunction: Option[JavaFunction] = getFactoryCreator.getDaoCreationFunction
 
-  override def getFactoryCreator: FactoryCreator = new FactoryCreator {
+  override def getFactoryCreator: FactoryCreator = new NoSQLFactoryCreator {
     private val datastoreVariable = JavaField("datastore", datastore, PrivateStaticModifier)
+
+    override def getDaoCreationFunction: Option[JavaFunction] = {
+      dao.flatMap {
+        dao =>
+          val builder = FunctionBuilder(PublicStaticModifier, "get" + getDaoName)
+          builder.setOutputType(getDaoInterface.get)
+          builder.addOperation(ReturnOperation(CreationOperation(dao, None, List(Variable(datastoreVariable)))))
+          Some(builder.getFunction)
+      }
+    }
 
     /**
      * Creates factory class in  basePackage + .common package
      * @param config
+     * @param creationFunctions
      * @return
      */
-    override def createDaoFactory(config: ConnectionConfig, creationFunctions: List[JavaFunction]): JavaClass = {
-      import com.liberty.types.primitives._
+    override def createDaoFactory(config: NoSQLConfig, creationFunctions: List[JavaFunction]): JavaClass = {
       val builder = ClassBuilder(DAO_FACTORY_NAME)
       builder.addPackage(basePackage.nested("common"))
       builder.addField(JavaField(DB_URL, StringType, PrivateStaticModifier, config.url))
@@ -180,16 +193,9 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
       builder.getJavaClass
     }
 
-    override def getDaoCreationFunction: Option[JavaFunction] = {
-      dao.flatMap {
-        dao =>
-          val builder = FunctionBuilder(PublicStaticModifier, "get" + getDaoName)
-          builder.setOutputType(getDaoInterface.get)
-          builder.addOperation(ReturnOperation(CreationOperation(dao, None, List(Variable(datastoreVariable)))))
-          Some(builder.getFunction)
-      }
-    }
+    override def createWebInfFiles(config: NoSQLConfig): List[Elem] = Nil
   }
 
   override def getDatabaseName: String = "Mongo"
+
 }

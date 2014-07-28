@@ -1,8 +1,8 @@
 package com.liberty.generators.adapters
 
 import com.liberty.builders.{ClassBuilder, FunctionBuilder}
-import com.liberty.common.ConnectionConfig
 import com.liberty.common.Implicits._
+import com.liberty.common.{ProjectConfig, RelationalConfig}
 import com.liberty.model._
 import com.liberty.operations._
 import com.liberty.traits.persistance.DaoAdapter
@@ -11,11 +11,13 @@ import com.liberty.types.ObjectType
 import com.liberty.types.collections.ListType
 
 import scala.util.{Success, Try}
+import scala.xml.Elem
 
 /**
  * Created by Dmytro_Kovalskyi on 24.07.2014.
  */
 class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends DaoAdapter {
+  ProjectConfig.addEntity(javaClass.name)
   val basePackage = bPackage
   val persistencePackage = LocationPackage("javax.persistence")
   var dao: Option[JavaClass] = None
@@ -156,7 +158,7 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
 
   override def getDatabaseName: String = "Postgres"
 
-  override def getFactoryCreator: FactoryCreator = new FactoryCreator {
+  override def getFactoryCreator: FactoryCreator = new RelationalFactoryCreator {
     private val em = JavaField("em", entityManager, PrivateStaticModifier)
     private val PERSISTENT_UNIT = "PERSISTENT_UNIT"
 
@@ -165,17 +167,18 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
     /**
      * Creates factory class in  basePackage + .common package
      */
-    override def createDaoFactory(config: ConnectionConfig, creationFunctions: List[JavaFunction]): JavaClass = {
+    override def createDaoFactory(config: RelationalConfig, creationFunctions: List[JavaFunction]): JavaClass = {
       import com.liberty.types.primitives._
+
       val builder = ClassBuilder(DAO_FACTORY_NAME)
       builder.addPackage(basePackage.nested("common"))
       builder.addField(JavaField(PERSISTENT_UNIT, StringType, PrivateStaticModifier, getPersistentUnitName))
       builder.addField(em)
       builder.static {
-          val persistence = ObjectType("Persistence", persistencePackage.nestedClass("Persistence"))
-          val op1 = StaticFunctionInvokeOperation(persistence, "createEntityManagerFactory", List(PERSISTENT_UNIT.asValue))
-          val op2 = FunctionInvokeOperation("createEntityManager")
-          builder addOperation ChainedOperations(em, op1, op2)
+        val persistence = ObjectType("Persistence", persistencePackage.nestedClass("Persistence"))
+        val op1 = StaticFunctionInvokeOperation(persistence, "createEntityManagerFactory", List(PERSISTENT_UNIT.asValue))
+        val op2 = FunctionInvokeOperation("createEntityManager")
+        builder addOperation ChainedOperations(em, op1, op2)
       }
 
       builder.addFunctions(creationFunctions)
@@ -193,8 +196,14 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
       }
     }
 
+
+    override def createWebInfFiles(config: RelationalConfig): List[Elem] = {
+      val xml = PersistenceXml(getPersistentUnitName, config, ProjectConfig.entityClasses.toList)
+      List(xml.eclipseLinkXml)
+    }
   }
 
   override def getDaoCreationFunction: Option[JavaFunction] = getFactoryCreator.getDaoCreationFunction
+
 
 }

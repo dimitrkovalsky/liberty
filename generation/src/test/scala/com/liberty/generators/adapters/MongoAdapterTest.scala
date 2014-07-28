@@ -1,7 +1,7 @@
 package com.liberty.generators.adapters
 
 import com.liberty.builders.ClassBuilderTest
-import com.liberty.common.ConnectionConfig
+import com.liberty.common.NoSQLConfig
 import com.liberty.model.JavaClass
 import com.liberty.traits.LocationPackage
 import org.junit.{Assert, Test}
@@ -89,10 +89,10 @@ class MongoAdapterTest {
   @Test def factoryClassGeneration() {
     val entity = createPojo
     val adapter = new MongoAdapter(entity, basePackage)
-    val config = ConnectionConfig("guidedb", "127.0.0.1", 27017)
+    val config = NoSQLConfig("guidedb", "127.0.0.1", 27017)
     adapter.createDao
     val factoryCreator = adapter.getFactoryCreator
-    val factory = factoryCreator.createDaoFactory(config, List(adapter.getDaoCreationFunction.get))
+    val factory = factoryCreator.createDaoFactory(config, List(adapter.getDaoCreationFunction.get)).get
 
     val expected = "package com.city.guide.common;\n\nimport com.city.guide.dao.IPojoClassDao;\nimport com.city.guide.dao.PojoClassDao;\nimport com.google.code.morphia.Datastore;\nimport com.google.code.morphia.Morphia;\nimport com.mongodb.Mongo;\nimport java.lang.Integer;\nimport java.lang.String;\nimport java.net.UnknownHostException;\n\nclass DaoFactory {\n\tprivate static String DATABASE_URL = \"127.0.0.1\";\n\tprivate static Integer DATABASE_PORT = 27017;\n\tprivate static String DATABASE_NAME = \"guidedb\";\n\tprivate static Datastore datastore = null;\n\n\tstatic {\n\t\ttry {\n\t\t\tMongo mongo = new Mongo(DATABASE_URL, DATABASE_PORT);\n\t\t\tMorphia morphia = new Morphia();\n\t\t\tdatastore = morphia.createDatastore(mongo, DATABASE_NAME);\n\t\t} catch(UnknownHostException e){\n\t\t\tSystem.err.println(e.getMessage());\n\t\t}\n\t}\n\n\tpublic static IPojoClassDao getPojoClassDao(){\n\t\treturn new PojoClassDao(datastore);\n\t}\n}"
     val available = factory.toString

@@ -1,11 +1,12 @@
 package com.liberty.traits.persistance
 
 import com.liberty.builders.{ClassBuilder, InterfaceBuilder}
-import com.liberty.common.ConnectionConfig
+import com.liberty.common.{DatabaseConfig, NoSQLConfig, RelationalConfig}
 import com.liberty.model._
 import com.liberty.traits.{Accessible, LocationPackage}
 
 import scala.util.{Success, Try}
+import scala.xml.Elem
 
 /**
  * User: Dimitr
@@ -28,13 +29,59 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
      * Different databases has different FactoryCreators
      * @return FactoryDao class represented as JavaClass instance
      */
-    def createDaoFactory(config: ConnectionConfig, creationFunctions: List[JavaFunction]): JavaClass
+    def createDaoFactory(config: DatabaseConfig, creationFunctions: List[JavaFunction]): Option[JavaClass]
 
     /**
      * Returns function for creation appropriate Dao class in DaoFactory
      * @return None if can't create function (Dao class wasn't created or some else errors)
      */
     def getDaoCreationFunction: Option[JavaFunction]
+
+    /**
+     * Creates files tha will be located in WEB-INF folder
+     * @return Files in XML format
+     */
+    def createWebInfFiles(config: DatabaseConfig): List[Elem]
+  }
+
+  abstract class RelationalFactoryCreator extends FactoryCreator {
+    def createDaoFactory(config: RelationalConfig, creationFunctions: List[JavaFunction]): JavaClass
+
+    def createWebInfFiles(config: RelationalConfig): List[Elem]
+
+    override def createDaoFactory(config: DatabaseConfig, creationFunctions: List[JavaFunction]): Option[JavaClass] = {
+      config match {
+        case c: RelationalConfig => Some(createDaoFactory(c, creationFunctions))
+        case _ => None
+      }
+    }
+
+    def createWebInfFiles(config: DatabaseConfig): List[Elem] = {
+      config match {
+        case c: RelationalConfig => createWebInfFiles(c)
+        case _ => Nil
+      }
+    }
+  }
+
+  abstract class NoSQLFactoryCreator extends FactoryCreator {
+    def createDaoFactory(config: NoSQLConfig, creationFunctions: List[JavaFunction]): JavaClass
+
+    def createWebInfFiles(config: NoSQLConfig): List[Elem]
+
+    override def createDaoFactory(config: DatabaseConfig, creationFunctions: List[JavaFunction]): Option[JavaClass] = {
+      config match {
+        case c: NoSQLConfig => Some(createDaoFactory(c, creationFunctions))
+        case _ => None
+      }
+    }
+
+    def createWebInfFiles(config: DatabaseConfig): List[Elem] = {
+      config match {
+        case c: NoSQLConfig => createWebInfFiles(c)
+        case _ => Nil
+      }
+    }
   }
 
   var datastoreName: String
@@ -124,4 +171,5 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
   }
 
   def getDatabaseName: String
+
 }

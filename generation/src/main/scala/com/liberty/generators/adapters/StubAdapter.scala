@@ -6,6 +6,7 @@ import com.liberty.traits.{LocationNoPackage, LocationPackage, NoPackage, JavaPa
 import com.liberty.traits.persistance.DaoAdapter
 
 import scala.util.Try
+import scala.xml.Elem
 
 /**
  * User: Dimitr
@@ -51,5 +52,7 @@ case class StubAdapter() extends DaoAdapter {
   override def createFindById(): Option[JavaFunction] = ???
 
   override def getDatabaseName: String = ???
+
+
 }
 
