@@ -13,7 +13,7 @@ import scala.util.{Failure, Success}
  */
 class PostgresAdapterTest {
   private val basePackage = LocationPackage("com.city.guide")
-
+  private val config = ProjectConfig.dbStandardPostgres
   @Test def createAccessors() {
     val initialClass = createPojo
     assertInitialClass(initialClass)
@@ -81,7 +81,7 @@ class PostgresAdapterTest {
     }
   }
 
-  private val config = ProjectConfig.dbStandardPostgres
+
 
   @Test def factoryClassGeneration() {
     val entity = createPojo

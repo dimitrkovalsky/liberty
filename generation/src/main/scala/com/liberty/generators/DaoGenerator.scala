@@ -2,12 +2,13 @@ package com.liberty.generators
 
 import com.liberty.common.{DBConfig, DatabaseType}
 import com.liberty.exceptions.NotGeneratedException
-import com.liberty.generators.adapters.{MongoAdapter, StubAdapter}
+import com.liberty.generators.adapters.{MongoAdapter, PostgresAdapter, StubAdapter}
 import com.liberty.model.{JavaClass, JavaInterface}
 import com.liberty.traits.LocationPackage
 import com.liberty.traits.persistance.DaoAdapter
 
 import scala.util.{Failure, Success, Try}
+import scala.xml.Elem
 
 /**
  * User: Dimitr
@@ -18,12 +19,14 @@ import scala.util.{Failure, Success, Try}
  * Generate daos for appropriate entities. Includes entity class marking, interface generation,
  * dao generation and factory class creation
  * Mutable class
+ * getAdapter method should be updated for appropriate database
  */
 class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
   /**
    * Models for daos
    */
   private val initialModels = scala.collection.mutable.Map[String, JavaClass]()
+  // TODO: Optimize reuse some objects like factory instead of generation new instances
   /**
    * Factory class for dataCreation
    */
@@ -40,11 +43,13 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
   }
 
   /**
-   * Creates adapter for appropriate DatabaseType
+   * Creates adapter for appropriate DatabaseType.
+   * Should be updated for appropriate database.
    */
   private def getAdapter(initialEntity: JavaClass) = {
     dbConfig.databaseType match {
       case DatabaseType.MONGO_DB => new MongoAdapter(initialEntity.clone().asInstanceOf[JavaClass], basePackage)
+      case DatabaseType.POSTGRESQL_DB => new PostgresAdapter(initialEntity.clone().asInstanceOf[JavaClass], basePackage)
       case _ => new StubAdapter()
     }
   }
@@ -73,6 +78,15 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
         val functions = adapters.values.map(_.getDaoCreationFunction).flatten
         factory = creator.createDaoFactory(dbConfig.databaseConfig, functions.toList)
         factory
+    }
+  }
+
+  def createWebInfFiles: List[Elem] = {
+    adapters.lastOption match {
+      case Some((_, adapter)) =>
+        val creator = adapter.getFactoryCreator
+        creator.createWebInfFiles(dbConfig.databaseConfig)
+      case _ => Nil
     }
   }
 
