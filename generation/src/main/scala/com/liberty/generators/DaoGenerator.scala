@@ -3,7 +3,7 @@ package com.liberty.generators
 import com.liberty.common.{DBConfig, DatabaseType}
 import com.liberty.exceptions.NotGeneratedException
 import com.liberty.generators.adapters.{MongoAdapter, PostgresAdapter, StubAdapter}
-import com.liberty.model.{JavaClass, JavaInterface}
+import com.liberty.model.{XmlFile, JavaClass, JavaInterface}
 import com.liberty.traits.LocationPackage
 import com.liberty.traits.persistance.DaoAdapter
 
@@ -21,11 +21,11 @@ import scala.xml.Elem
  * Mutable class
  * getAdapter method should be updated for appropriate database
  */
-class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
+class DaoGenerator(var dbConfig: DBConfig, basePackage: LocationPackage) {
   /**
    * Models for daos
    */
-  private val initialModels = scala.collection.mutable.Map[String, JavaClass]()
+  val initialModels = scala.collection.mutable.Map[String, JavaClass]()
   // TODO: Optimize reuse some objects like factory instead of generation new instances
   /**
    * Factory class for dataCreation
@@ -34,9 +34,16 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
   /**
    * Marked initial entities for data storing using appropriate DaoAdapter
    */
-  private var entities: List[JavaClass] = Nil
+  private var entities: Set[JavaClass] = Set.empty
+
+  private var metaInf: List[XmlFile] = Nil
+
+  private var interfaces: Set[JavaInterface] = Set.empty
+
+  private var daos: Set[JavaClass] = Set.empty
 
   private var adapters = scala.collection.mutable.Map[String, DaoAdapter]()
+
 
   private def getAdapters(entities: List[JavaClass]): List[DaoAdapter] = {
     entities.map(e => getAdapter(e))
@@ -49,7 +56,7 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
   private def getAdapter(initialEntity: JavaClass) = {
     dbConfig.databaseType match {
       case DatabaseType.MONGO_DB => new MongoAdapter(initialEntity.clone().asInstanceOf[JavaClass], basePackage)
-      case DatabaseType.POSTGRESQL_DB => new PostgresAdapter(initialEntity.clone().asInstanceOf[JavaClass], basePackage)
+      case DatabaseType.POSTGRES_DB => new PostgresAdapter(initialEntity.clone().asInstanceOf[JavaClass], basePackage)
       case _ => new StubAdapter()
     }
   }
@@ -81,11 +88,12 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
     }
   }
 
-  def createWebInfFiles: List[Elem] = {
+  def createMetaInfFiles: List[XmlFile] = {
     adapters.lastOption match {
       case Some((_, adapter)) =>
         val creator = adapter.getFactoryCreator
-        creator.createWebInfFiles(dbConfig.databaseConfig)
+        metaInf = creator.createMetaInfFiles(dbConfig.databaseConfig)
+        metaInf
       case _ => Nil
     }
   }
@@ -98,16 +106,22 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
   }
 
   def createDaos: List[Try[JavaClass]] = {
-    adapters.values.map(_.createDao).toList
+    val created = adapters.values.map(_.createDao)
+    created.map(d => d.foreach(daos += _))
+    created.toList
   }
 
   def createInterfaces: List[Try[JavaInterface]] = {
-    adapters.values.map(_.createDaoInterface).toList
+    val created = adapters.values.map(_.createDaoInterface)
+    created.map(i => i.foreach(interfaces += _))
+    created.toList
   }
 
   def createEntities: List[JavaClass] = {
     adapters.map {
-      case (name, adapter) => adapter.createEntity
+      case (name, adapter) => val entity = adapter.createEntity
+        entities += entity
+        entity
     }.toList
   }
 
@@ -120,12 +134,38 @@ class DaoGenerator(dbConfig: DBConfig, basePackage: LocationPackage) {
       factory <- getFactory
     } yield EntityPacket(entity, interface, dao, factory)
   }
+
+  /**
+   * Retrieve all generated files
+   * @return DaoPacket instance
+   */
+  def getGenerated: DaoPacket = {
+    DaoPacket(entities, interfaces, daos, factory, metaInf)
+  }
 }
 
 /**
  * Uses for transferring data after dao updates
  */
+// TODO: process META-INF files
 case class EntityPacket(entity: JavaClass, daoInterface: JavaInterface, dao: JavaClass, factory: JavaClass)
+
+/**
+ * Uses for transferring data after databse change
+ */
+case class DaoPacket(entities: Set[JavaClass], interfaces: Set[JavaInterface], daos: Set[JavaClass], factory: Option[JavaClass],
+                     metaInf: List[XmlFile]) {
+  def filesAmount: Int = {
+    var count = 0
+    count += entities.size
+    count += interfaces.size
+    count += daos.size
+    count += metaInf.size
+    if (factory.isDefined)
+      count += 1
+    count
+  }
+}
 
 object DaoGenerator {
 

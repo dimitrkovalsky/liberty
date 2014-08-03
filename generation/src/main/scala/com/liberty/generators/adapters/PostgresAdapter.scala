@@ -197,9 +197,9 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
     }
 
 
-    override def createWebInfFiles(config: RelationalConfig): List[Elem] = {
+    override def createWebInfFiles(config: RelationalConfig): List[XmlFile] = {
       val xml = PersistenceXml(getPersistentUnitName, config, ProjectConfig.entityClasses.toList)
-      List(xml.eclipseLinkXml)
+      List(XmlFile("persistence.xml", xml.eclipseLinkXml))
     }
   }
 

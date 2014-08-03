@@ -15,9 +15,10 @@ object ProjectConfig {
   def basePackage = LocationPackage(basePackageString)
 
   var dbStandardMongo = DBConfig(DatabaseType.MONGO_DB, NoSQLConfig("liberty-database", "localhost", 27017))
-  var dbStandardPostgres = DBConfig(DatabaseType.POSTGRESQL_DB, RelationalConfig("org.postgresql.Driver",
+  var dbStandardPostgres = DBConfig(DatabaseType.POSTGRES_DB, RelationalConfig("org.postgresql.Driver",
     "jdbc:postgresql://localhost", 5432, "liberty-database", "postgres", "Admin111"))
 
+  var defaultDatabase: DBConfig = dbStandardMongo
   /**
    * Uses to get list of managed entities for DAO
    */

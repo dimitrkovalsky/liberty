@@ -193,7 +193,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
       builder.getJavaClass
     }
 
-    override def createWebInfFiles(config: NoSQLConfig): List[Elem] = Nil
+    override def createWebInfFiles(config: NoSQLConfig): List[XmlFile] = Nil
   }
 
   override def getDatabaseName: String = "Mongo"

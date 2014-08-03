@@ -103,7 +103,7 @@ class PostgresAdapterTest {
 
     adapter.createDao
     val factoryCreator = adapter.getFactoryCreator
-    val persist = factoryCreator.createWebInfFiles(config.databaseConfig)
+    val persist = factoryCreator.createMetaInfFiles(config.databaseConfig)
 
     val expected = "<persistence xsi:schemaLocation=\"http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd\" version=\"2.1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://xmlns.jcp.org/xml/ns/persistence\">\n      <persistence-unit name=\"PostgresUnit\" transaction-type=\"RESOURCE_LOCAL\">\n        <provider>\n          org.eclipse.persistence.jpa.PersistenceProvider\n        </provider><class>\n          PojoClass\n        </class><properties>\n        <property name=\"javax.persistence.jdbc.driver\" value=\"org.postgresql.Driver\"/>\n        <property name=\"javax.persistence.jdbc.url\" value=\"jdbc:postgresql://localhost:5432/liberty-database\"/>\n        <property name=\"javax.persistence.jdbc.user\" value=\"postgres\"/>\n        <property name=\"javax.persistence.jdbc.password\" value=\"Admin111\"/><property name=\"eclipselink.ddl-generation\" value=\"create-tables\"/><property name=\"eclipselink.create-ddl-jdbc-file-name\" value=\"createDDL_ddlGeneration.jdbc\"/><property name=\"eclipselink.ddl-generation.output-mode\" value=\"both\"/><property name=\"eclipselink.logging.level\" value=\"INFO\"/><property name=\"eclipselink.drop-ddl-jdbc-file-name\" value=\"dropDDL_ddlGeneration.jdbc\"/>\n      </properties>\n      </persistence-unit>\n    </persistence>"
     val available = persist.head.toString()

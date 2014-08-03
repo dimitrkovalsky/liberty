@@ -49,4 +49,6 @@ case class PersistenceXml(persistenceUnit: String, settings: RelationalConfig, c
   }
 }
 
+case class XmlFile(filename: String, xml: Elem)
+
 

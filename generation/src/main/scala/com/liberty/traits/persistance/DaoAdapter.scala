@@ -41,13 +41,13 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
      * Creates files tha will be located in WEB-INF folder
      * @return Files in XML format
      */
-    def createWebInfFiles(config: DatabaseConfig): List[Elem]
+    def createMetaInfFiles(config: DatabaseConfig): List[XmlFile]
   }
 
   abstract class RelationalFactoryCreator extends FactoryCreator {
     def createDaoFactory(config: RelationalConfig, creationFunctions: List[JavaFunction]): JavaClass
 
-    def createWebInfFiles(config: RelationalConfig): List[Elem]
+    def createWebInfFiles(config: RelationalConfig): List[XmlFile]
 
     override def createDaoFactory(config: DatabaseConfig, creationFunctions: List[JavaFunction]): Option[JavaClass] = {
       config match {
@@ -56,7 +56,7 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
       }
     }
 
-    def createWebInfFiles(config: DatabaseConfig): List[Elem] = {
+    def createMetaInfFiles(config: DatabaseConfig): List[XmlFile] = {
       config match {
         case c: RelationalConfig => createWebInfFiles(c)
         case _ => Nil
@@ -67,7 +67,7 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
   abstract class NoSQLFactoryCreator extends FactoryCreator {
     def createDaoFactory(config: NoSQLConfig, creationFunctions: List[JavaFunction]): JavaClass
 
-    def createWebInfFiles(config: NoSQLConfig): List[Elem]
+    def createWebInfFiles(config: NoSQLConfig): List[XmlFile]
 
     override def createDaoFactory(config: DatabaseConfig, creationFunctions: List[JavaFunction]): Option[JavaClass] = {
       config match {
@@ -76,7 +76,7 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
       }
     }
 
-    def createWebInfFiles(config: DatabaseConfig): List[Elem] = {
+    def createMetaInfFiles(config: DatabaseConfig): List[XmlFile] = {
       config match {
         case c: NoSQLConfig => createWebInfFiles(c)
         case _ => Nil

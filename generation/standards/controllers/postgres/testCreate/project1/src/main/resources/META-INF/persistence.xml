@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<persistence version="2.1" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/persistence">
+    <persistence-unit transaction-type="RESOURCE_LOCAL" name="PostgresUnit">
+        <provider> org.eclipse.persistence.jpa.PersistenceProvider </provider>
+        <class> Account </class>
+        <properties>
+            <property value="org.postgresql.Driver" name="javax.persistence.jdbc.driver"/>
+            <property value="jdbc:postgresql://localhost:5432/liberty-database" name="javax.persistence.jdbc.url"/>
+            <property value="postgres" name="javax.persistence.jdbc.user"/>
+            <property value="Admin111" name="javax.persistence.jdbc.password"/>
+            <property value="create-tables" name="eclipselink.ddl-generation"/>
+            <property value="createDDL_ddlGeneration.jdbc" name="eclipselink.create-ddl-jdbc-file-name"/>
+            <property value="both" name="eclipselink.ddl-generation.output-mode"/>
+            <property value="INFO" name="eclipselink.logging.level"/>
+            <property value="dropDDL_ddlGeneration.jdbc" name="eclipselink.drop-ddl-jdbc-file-name"/>
+        </properties>
+    </persistence-unit>
+</persistence>

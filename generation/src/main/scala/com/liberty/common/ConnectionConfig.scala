@@ -24,7 +24,7 @@ case class RelationalConfig(driver: String, url: String, port: Int, database: St
 
 object DatabaseType extends Enumeration {
   type DatabaseType = Value
-  val MONGO_DB, POSTGRESQL_DB = Value
+  val MONGO_DB, POSTGRES_DB = Value
 }
 
 case class DBConfig(databaseType: DatabaseType, databaseConfig: DatabaseConfig)
