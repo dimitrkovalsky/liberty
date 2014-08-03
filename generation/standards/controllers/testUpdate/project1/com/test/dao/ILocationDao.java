@@ -1,18 +1,19 @@
 package com.test.dao;
 
 import com.test.model.Location;
-import com.test.errors.DaoException;
+import java.util.List;
 import java.lang.Integer;
+import com.test.errors.DaoException;
 
 interface ILocationDao {
 
 	public void insert(Location entity) throws DaoException;
 
-	public void find(Location entity) throws DaoException;
+	public Location find(Location entity) throws DaoException;
 
-	public void findAll() throws DaoException;
+	public List<Location> findAll() throws DaoException;
 
-	public void findByAccountId(Integer accountId) throws DaoException;
+	public Location findByAccountId(Integer accountId) throws DaoException;
 
 	public void update(Location entity) throws DaoException;
 

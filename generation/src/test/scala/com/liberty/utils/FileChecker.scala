@@ -24,6 +24,7 @@ object FileChecker {
 
   /**
    * Fails if directories are different. Checks file amount, file type and content.
+   * Fails on first different file
    */
   def checkDirectories(expectedPath: String, availablePath: String) {
     val expected = recursiveListFiles(new File(expectedPath)).toList
@@ -57,7 +58,7 @@ object FileChecker {
       if (exp.isFile && !av.isFile)
         Assert.fail(s"Available file : ${av.getCanonicalPath} is not file should be tha same as ${exp.getCanonicalPath}")
       if (exp.isFile) {
-        Assert.assertEquals("File content are different", Source.fromFile(exp).mkString, Source.fromFile(av).mkString)
+        Assert.assertEquals(s"${exp.getCanonicalPath} file content are different", Source.fromFile(exp).mkString, Source.fromFile(av).mkString)
       }
     }
   }
@@ -83,7 +84,7 @@ object FileChecker {
         if (Source.fromFile(exp).mkString != Source.fromFile(av).mkString)
           return
       }
-      Assert.fail("Files are equals")
+      Assert.fail(s"${exp.getCanonicalPath} files are equals")
     }
   }
 

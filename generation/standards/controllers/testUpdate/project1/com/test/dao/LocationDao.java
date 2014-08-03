@@ -6,6 +6,7 @@ import com.test.errors.DaoException;
 import com.test.model.Location;
 import java.lang.Exception;
 import java.lang.Integer;
+import java.util.List;
 
 class LocationDao extends BasicDAO<Location, Integer> implements ILocationDao {
 	public void LocationDao(Datastore datastore){
@@ -20,7 +21,7 @@ class LocationDao extends BasicDAO<Location, Integer> implements ILocationDao {
 		}
 	}
 
-	public void find(Location entity) throws DaoException {
+	public Location find(Location entity) throws DaoException {
 		try {
 			return super.findOne("_id", entity.getAccountId());
 		} catch(Exception e){
@@ -28,15 +29,15 @@ class LocationDao extends BasicDAO<Location, Integer> implements ILocationDao {
 		}
 	}
 
-	public void findAll() throws DaoException {
+	public List<Location> findAll() throws DaoException {
 		try {
-			getCollection().find(Location.class).asList();
+			return getCollection().find(Location.class).asList();
 		} catch(Exception e){
 			throw new DaoException(e);
 		}
 	}
 
-	public void findByAccountId(Integer accountId) throws DaoException {
+	public Location findByAccountId(Integer accountId) throws DaoException {
 		try {
 			return super.findOne("_id", accountId);
 		} catch(Exception e){
