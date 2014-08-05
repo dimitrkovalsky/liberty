@@ -22,6 +22,8 @@ object Implicits {
 
   implicit def javaFieldToVariableOption(field: JavaField): Option[Variable] = Some(Variable(field))
 
+  implicit def stringToOption(string: String): Option[String] = Some(string)
+
   implicit def javaFieldToString(field: JavaField): String = field.name
 
   implicit def interfaceToObjectType(interface: JavaInterface): ObjectType = ObjectType(interface.name, interface.javaPackage)

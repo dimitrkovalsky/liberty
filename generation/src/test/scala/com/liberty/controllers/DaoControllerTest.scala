@@ -1,19 +1,20 @@
 package com.liberty.controllers
 
 import com.liberty.builders.ClassBuilderTest
+import com.liberty.common.{DatabaseType, ProjectConfig}
 import com.liberty.model.{JavaClass, JavaField, PrivateModifier}
 import com.liberty.types.primitives.IntegerType
-import org.junit.{BeforeClass, Before, Test}
-import java.io.File
 import com.liberty.utils.FileChecker
-import com.liberty.common.ProjectConfig
-import java.nio.file.{Path, Files}
-import java.nio.charset.Charset
+import org.junit.{Before, Test}
+import org.scalatest.junit.AssertionsForJUnit
 
 /**
  * Created by Dmytro_Kovalskyi on 07.07.2014.
  */
-class DaoControllerTest {
+/**
+ * For work with files extends AssertionsForJUnit for annotation processing
+ */
+class DaoControllerTest extends AssertionsForJUnit {
   private val STANDARDS_FOLDER = FileChecker.PROJECT_PATH + "generation\\standards\\"
   private val TEST_MONGO_CREATE_FOLDER = STANDARDS_FOLDER + "controllers\\mongo\\testCreate\\project1"
   private val TEST_POSTGRES_CREATE_FOLDER = STANDARDS_FOLDER + "controllers\\postgres\\testCreate\\project1"
@@ -67,11 +68,35 @@ class DaoControllerTest {
     FileChecker.checkDirectories(TEST_POSTGRES_UPDATE_FOLDER, ProjectConfig.projectPath)
     FileChecker.removeDirectory(ProjectConfig.projectPath)
   }
-}
 
-object DaoControllerTest{
-  @BeforeClass private def clean(){
+  @Test def changeFromMongoToPostgres() {
+    ProjectConfig.defaultDatabase = ProjectConfig.dbStandardMongo
+    val controller = new DaoController
+    controller.createDao(createAccount)
+
+    controller.changeDatabase(DatabaseType.POSTGRES_DB)
+    FileChecker.checkDirectories(TEST_POSTGRES_CREATE_FOLDER, ProjectConfig.projectPath)
     FileChecker.removeDirectory(ProjectConfig.projectPath)
+
   }
 
+  @Test def changeFromPostgresToMongo() {
+    ProjectConfig.defaultDatabase = ProjectConfig.dbStandardPostgres
+    val controller = new DaoController
+    val account = createAccount
+    controller.createDao(account)
+    controller.createDao(createLocation)
+
+    account.addField(JavaField("status", IntegerType, PrivateModifier))
+    controller.changed(account)
+    controller.changeDatabase(DatabaseType.MONGO_DB)
+
+    FileChecker.checkDirectoriesIgnoresFolders(TEST_MONGO_UPDATE_FOLDER, ProjectConfig.projectPath)
+    //  FileChecker.removeDirectory(ProjectConfig.projectPath)
+  }
+
+  @Before def clean() {
+    FileChecker.removeDirectory(ProjectConfig.projectPath)
+  }
 }
+

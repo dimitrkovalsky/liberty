@@ -116,7 +116,7 @@ class ClassBuilderTest {
     builder.setName("FullClass")
     val functionTest = new FunctionBuilderTest
     builder.addPackage(JavaPackage("com.guide.city.model", "BasicDAO"))
-    builder.addField(JavaField("name", StringType, PrivateModifier, id = true))
+    builder.addField(JavaField("name", StringType, PrivateModifier))
     builder.addField(JavaField("age", IntegerType, PrivateModifier))
     builder.addField(JavaField("position", StringType, ProtectedModifier))
     builder.addFunction(functionTest.createFilterFunction)

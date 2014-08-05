@@ -1,14 +1,14 @@
 package com.liberty.controllers
 
+import com.liberty.common.DatabaseType.DatabaseType
 import com.liberty.common.{DatabaseType, ProjectConfig}
-import com.liberty.generators.{DaoPacket, DaoGenerator}
+import com.liberty.generators.{DaoGenerator, DaoPacket}
+import com.liberty.helpers.FileHelper
 import com.liberty.model.JavaClass
 import com.liberty.traits.{Changeable, Writer}
 import com.liberty.writers.FileClassWriter
 
 import scala.util.{Failure, Success, Try}
-import com.liberty.common.DatabaseType.DatabaseType
-import com.liberty.common.DatabaseType.DatabaseType
 
 /**
  * Created by Dmytro_Kovalskyi on 07.07.2014.
@@ -16,12 +16,14 @@ import com.liberty.common.DatabaseType.DatabaseType
 class DaoController extends Changeable {
   private val writer: Writer = new FileClassWriter(ProjectConfig.projectPath)
   private var generator = createGenerator
-  private val entities = scala.collection.mutable.Map[String, JavaClass]()
+  /**
+   * List of managed models
+   */
+  private val models = scala.collection.mutable.Map[String, JavaClass]()
 
   def changeDatabase(db: DatabaseType): Either[String, String] = {
     if (generator.dbConfig.databaseType != db) {
       val generated = generator.getGenerated
-      val models = generator.initialModels
       clean(generated)
       // For removing previous dao files ned remove files and recreate generator
       changeConfig(db)
@@ -47,15 +49,22 @@ class DaoController extends Changeable {
    * @param generated
    */
   private def clean(generated: DaoPacket) {
-
+    val helper = new FileHelper(ProjectConfig.projectPath)
+    generated.daos.foreach(helper.deleteFile)
+    generated.entities.foreach(helper.deleteFile)
+    generated.interfaces.foreach(helper.deleteFile)
+    generated.factory.foreach(helper.deleteFile)
+    generated.metaInf.foreach(helper.deleteFile)
   }
 
   def createDao(model: JavaClass): Try[String] = {
-    entities += model.name -> model
+//    println(model.toString)
+    val copy = model.deepCopy
+    models += model.name -> copy
+
     generator.addModel(model)
     for (e <- generator.createEntities)
       writer.write(e)
-
     for (interface <- generator.createInterfaces) {
       interface match {
         case Failure(t) => return Failure(t)

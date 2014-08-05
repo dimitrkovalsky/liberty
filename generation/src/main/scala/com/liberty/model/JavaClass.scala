@@ -1,5 +1,6 @@
 package com.liberty.model
 
+import com.liberty.common.Implicits._
 import com.liberty.patterns
 import com.liberty.traits._
 import com.liberty.types.{ConstructedType, DataType, primitives}
@@ -15,12 +16,23 @@ import scala.collection.SortedSet
 // TODO: Add constructor support
 // TODO: Add name validation
 case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackage)
-  extends DataType(name) with Annotatable with Importable with Cloneable with Generalizable with ConstructedType {
+  extends DataType(name) with Annotatable with Importable with Cloneable with Generalizable with ConstructedType with Serializable {
   def this(jPackage: JavaPackage) = this("", jPackage)
 
   this.javaPackage = jPackage
 
   override def clone(): AnyRef = super.clone()
+
+  def deepCopy: JavaClass = {
+    val result = new JavaClass(name, jPackage)
+    result.javaPackage = this.javaPackage
+    result.blocks = this.blocks
+    result.extendClass = this.extendClass
+    result.fields = this.fields.map(f => f.deepCopy())
+    result.functions = this.functions
+    result.implementList = this.implementList
+    result
+  }
 
   var extendClass: Option[JavaClass] = None
   var functions: List[JavaFunction] = Nil
@@ -137,34 +149,46 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
 trait ClassPart {
   def toClassPart(shift: String = "\t"): String
 }
- // TODO : change  value: String = "" to Option[String]
-case class JavaField(name: String, dataType: DataType, var modifier: Modifier = DefaultModifier, var value: String = "",
-                     var id: Boolean = false)
-  extends ClassPart with Annotatable {
 
-  import com.liberty.common.Implicits._
+// TODO : change  value: String = "" to Option[String]
+case class JavaField(name: String, dataType: DataType, modifier: Modifier = DefaultModifier, value: Option[String] = None)
+  extends ClassPart with Annotatable {
+  def deepCopy(): JavaField = {
+    val field = new JavaField(name, dataType, modifier, value)
+    field.annotations = this.annotations.map(a => a)
+    field
+  }
 
   def apply(annotation: JavaAnnotation): JavaField = {
     addAnnotation(annotation)
     this
   }
 
-  if (value.isEmpty)
-    value = dataType.getDefaultValue
-  else if (dataType == primitives.StringType)
-    value = value.quotes
 
   override def toString: String = {
+    val defVal =
+      if (value.isDefined && dataType == primitives.StringType)
+        Some(value.get.quotes)
+      else if (value.isDefined)
+        value
+      else if (!value.isDefined)
+        Some(dataType.getDefaultValue)
+      else None
+
     s"${
       annotationToPostShiftedString("\t")
     }${
       if (modifier.toString.isEmpty) "" else modifier.toString + " "
-    }${dataType.toString} $name = $value"
+    }${dataType.toString} $name${
+      if (defVal.isDefined) {
+        " = " + defVal.get
+      } else ""
+    }"
   }
 
-   /**
-     * @return Name with this. prefix
-     */
+  /**
+   * @return Name with this. prefix
+   */
   def getInternalName = "this." + name
 
   override def toClassPart(shift: String = "\t"): String = toString

@@ -174,7 +174,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
       val builder = ClassBuilder(DAO_FACTORY_NAME)
       builder.addPackage(basePackage.nested("common"))
       builder.addField(JavaField(DB_URL, StringType, PrivateStaticModifier, config.url))
-      builder.addField(JavaField(DB_PORT, IntegerType, PrivateStaticModifier, config.port.toString))
+      builder.addField(JavaField(DB_PORT, IntegerType, PrivateStaticModifier, Some(config.port.toString)))
       builder.addField(JavaField(DB_NAME, StringType, PrivateStaticModifier, config.database))
       builder.addField(datastoreVariable)
       builder.static {

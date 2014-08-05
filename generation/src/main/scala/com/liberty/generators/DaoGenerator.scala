@@ -73,7 +73,7 @@ class DaoGenerator(var dbConfig: DBConfig, basePackage: LocationPackage) {
    * @param model JavaClass instance
    */
   def addModel(model: JavaClass) = {
-    initialModels += model.name -> model
+    initialModels += model.name -> model.clone().asInstanceOf[JavaClass]
     addAdapter(model)
   }
 

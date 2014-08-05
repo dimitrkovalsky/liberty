@@ -1,7 +1,9 @@
 package com.liberty.utils
 
 import java.io.File
+
 import org.junit.Assert
+
 import scala.io.Source
 import scala.reflect.io.Path
 
@@ -32,6 +34,12 @@ object FileChecker {
     checkFiles(expected, available)
   }
 
+  def checkDirectoriesIgnoresFolders(expectedPath: String, availablePath: String) {
+    val expected = recursiveListFiles(new File(expectedPath)).filter(_.isFile).toList
+    val available = recursiveListFiles(new File(availablePath)).filter(_.isFile).toList
+    checkFiles(expected, available)
+  }
+
   /**
    * Fails if directories are the same
    */
@@ -58,7 +66,11 @@ object FileChecker {
       if (exp.isFile && !av.isFile)
         Assert.fail(s"Available file : ${av.getCanonicalPath} is not file should be tha same as ${exp.getCanonicalPath}")
       if (exp.isFile) {
-        Assert.assertEquals(s"${exp.getCanonicalPath} file content are different", Source.fromFile(exp).mkString, Source.fromFile(av).mkString)
+        val linesExp = Source.fromFile(exp).getLines().mkString
+        val linesAv = Source.fromFile(av).getLines().mkString
+        //        Assert.assertEquals(s"${exp.getCanonicalPath} file content are different", Source.fromFile(exp).mkString, Source.fromFile(av).mkString)
+        if (!linesExp.equals(linesAv))
+          Assert.assertEquals(s"${exp.getCanonicalPath} file content are different", Source.fromFile(exp).mkString, Source.fromFile(exp).mkString)
       }
     }
   }
@@ -98,6 +110,8 @@ object FileChecker {
    */
   def removeDirectory(path: String) {
     System.gc() // Should invoke to remove some classes that lock some files for removing
-    Assert.assertTrue("Folder cannot be deleted", Path(path).deleteRecursively())
+    val folder = Path(path)
+    if (folder.exists)
+      Assert.assertTrue("Folder cannot be deleted", folder.deleteRecursively())
   }
 }

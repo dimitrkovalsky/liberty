@@ -3,6 +3,7 @@ package com.liberty.writers
 import java.io.FileWriter
 import java.nio.file.{Files, Paths}
 
+import com.liberty.helpers.ProjectPaths
 import com.liberty.model.{XmlFile, JavaClass, JavaInterface}
 import com.liberty.traits.{JavaPackage, NoPackage, Writer}
 import scala.xml.{XML, Elem}
@@ -14,7 +15,7 @@ import scala.xml.{XML, Elem}
  * Class for file writing
  * @param basePath base part of path (C:/project_name/[another path])
  */
-case class FileClassWriter(basePath: String) extends Writer {
+case class FileClassWriter(basePath: String) extends Writer with ProjectPaths{
 
   import FileClassWriter._
 
@@ -77,7 +78,3 @@ case class FileClassWriter(basePath: String) extends Writer {
   }
 }
 
-object FileClassWriter {
-  val SOURCE_PATH = "src\\main\\java\\"
-  val META_INF_PATH = "src\\main\\resources\\META-INF\\"
-}

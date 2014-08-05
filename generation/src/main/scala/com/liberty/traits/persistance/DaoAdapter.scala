@@ -143,7 +143,7 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
    * @return None if id field is missing and Some[JavaField] if it is exists
    */
   def getIdField: Option[JavaField] = {
-    javaClass.fields.find(field => field.id || field.name.startsWith("id") || field.name.contains("Id"))
+    javaClass.fields.find(field =>  field.name.startsWith("id") || field.name.contains("Id"))
   }
 
   /**
