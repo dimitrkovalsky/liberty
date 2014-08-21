@@ -35,7 +35,7 @@ package object primitives {
   }
 
   case object LongType extends PrimitiveType("Long") {
-    override def getDefaultValue: String = "0"
+    override def getDefaultValue: String = "0L"
   }
 
   case object FloatType extends PrimitiveType("Float") {

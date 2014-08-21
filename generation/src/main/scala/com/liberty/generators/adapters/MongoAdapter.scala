@@ -81,7 +81,7 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
     val variable = new Variable("datastore")
     builder.addParam(FunctionParameter(variable, datastore))
     builder.addOperation(new SelfFunctionInvokeOperation(FunctionType.SUPER_CONSTRUCTOR, parameters = List(variable)))
-    daoBuilder.addFunction(builder.getFunction)
+    daoBuilder.addFunction(ConstructorFunction(builder.getFunction))
   }
 
   override def createInsert() = {

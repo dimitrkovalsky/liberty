@@ -113,9 +113,30 @@ case class FunctionSignature(var name: String, var output: DataType, var modifie
     set
   }
 
+  def toConstructorString: String = {
+    patterns.JavaConstructorSignaturePattern(modifier.toString, name, input.mkString(", "), functionThrows.map(_.name))
+  }
+
   override def toString: String = {
 
     patterns.JavaFunctionSignaturePattern(modifier.toString, output, name, input.mkString(", "), functionThrows.map(_.name))
+  }
+}
+
+
+class ConstructorFunction extends JavaFunction {
+  override def toString: String = {
+    patterns.JavaFunctionPattern(signature.toConstructorString, body.toString)
+  }
+}
+
+object ConstructorFunction {
+  def apply(f: JavaFunction): ConstructorFunction = {
+    val c = new ConstructorFunction
+    c.body = f.body
+    c.signature = f.signature
+    c.annotations = f.annotations
+    c
   }
 }
 

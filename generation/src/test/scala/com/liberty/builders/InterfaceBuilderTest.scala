@@ -18,7 +18,7 @@ class InterfaceBuilderTest {
     val builder = new InterfaceBuilder
     builder.setName("Marker")
     val interface = builder.getInterface
-    val expect = "interface Marker {}"
+    val expect = "public interface Marker {}"
     //println(interface)
     Assert.assertEquals(expect, interface.toString)
   }
@@ -31,21 +31,21 @@ class InterfaceBuilderTest {
     // Need to ignore the same type
 //    builder.addGeneric(StubType("AnotherType"))
     val interface = builder.getInterface
-    val expect = "interface Marker<SomeType, AnotherType> {}"
+    val expect = "public interface Marker<SomeType, AnotherType> {}"
     println(interface)
     Assert.assertEquals(expect, interface.toString)
   }
 
   @Test def withPackageInterface() {
     val interface = createWithPackageInterface()
-    val expect = "package my.test.program;\n\ninterface Marker {}"
+    val expect = "package my.test.program;\n\npublic interface Marker {}"
     //  println(interface)
     Assert.assertEquals(expect, interface.toString)
   }
 
   @Test def withFunctions() {
     val interface = createWithFunctionsInterface()
-    val expect = "import java.lang.Boolean;\nimport java.util.List;\nimport java.util.ArrayList;\n\ninterface TestInterface {\n\n\tvoid test();\n\n\tBoolean validate();\n\n\tBoolean validate(List<String> names);\n\n\tBoolean validate(ArrayList<Integer> costs) throws CostException, ValidationException;\n\n\tList<String> getData();\n}"
+    val expect = "import java.lang.Boolean;\nimport java.util.List;\nimport java.util.ArrayList;\n\npublic interface TestInterface {\n\n\tvoid test();\n\n\tBoolean validate();\n\n\tBoolean validate(List<String> names);\n\n\tBoolean validate(ArrayList<Integer> costs) throws CostException, ValidationException;\n\n\tList<String> getData();\n}"
     //println(interface)
     Assert.assertEquals(expect, interface.toString)
   }

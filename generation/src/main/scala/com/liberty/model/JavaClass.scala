@@ -15,7 +15,7 @@ import scala.collection.SortedSet
 // TODO: Add support of function and field changing and removing
 // TODO: Add constructor support
 // TODO: Add name validation
-case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackage)
+case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackage, modifier: Modifier = PublicModifier)
   extends DataType(name) with Annotatable with Importable with Cloneable with Generalizable with ConstructedType with Serializable {
   def this(jPackage: JavaPackage) = this("", jPackage)
 
@@ -137,8 +137,8 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
       case Nil => ""
       case list: List[String] => list.mkString("\n\n")
     }
-
-    patterns.JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), name,
+    val mod = modifier.toString
+    patterns.JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), mod, name,
       getGenericString, getInheritanceString, fieldsString, staticBlocks, functionsString)
   }
 

@@ -1,21 +1,27 @@
 import com.liberty.builders.ClassBuilder
-import com.liberty.helpers.Cloner
+import com.liberty.generators.adapters.PostgresAdapter
 import com.liberty.model.{JavaField, PrivateModifier}
-import com.liberty.traits.JavaPackage
-import com.liberty.types.primitives.{IntegerType, StringType}
-import com.liberty.types.standardTypes.DateType
+import com.liberty.traits.{JavaPackage, LocationPackage}
+import com.liberty.types.primitives.{LongType, StringType}
 
 object Runner {
   def main(args: Array[String]) {
+    val basePackage = LocationPackage("standard")
     val builder = new ClassBuilder
-    builder.setName("Account")
-    builder.addPackage(JavaPackage("com.test.model", "Account"))
-    builder.addField(JavaField("internalId", IntegerType, PrivateModifier))
-    builder.addField(JavaField("androidId", StringType, PrivateModifier))
-    builder.addField(JavaField("created", DateType, PrivateModifier))
-    val c = builder.getJavaClass
+    builder.setName("Student")
+    builder.addField(JavaField("id", LongType, PrivateModifier))
+    builder.addField(JavaField("firstName", StringType, PrivateModifier))
+    builder.addField(JavaField("lastName", StringType, PrivateModifier))
+    builder.addField(JavaField("department", StringType, PrivateModifier))
+    builder.addPackage(JavaPackage("standard.models", "Student"))
+    val student = builder.getJavaClass
 
-    println(c.deepCopy)
+    val adapter = new PostgresAdapter(student, basePackage)
+    adapter.addAccessors()
+    adapter.annotateClass()
+
+    println(adapter.createEntity)
+    //println(adapter.createDaoInterface.get)
   }
 }
 

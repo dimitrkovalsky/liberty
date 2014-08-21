@@ -10,7 +10,7 @@ import com.liberty.traits.{Generalizable, Importable, JavaPackage, NoPackage}
  */
 // TODO: Prohibit the creation of two identical interfaces
 // TODO: Add possibility constand addition
-class JavaInterface(jPackage: JavaPackage = new NoPackage) extends Importable with Generalizable {
+class JavaInterface(jPackage: JavaPackage = new NoPackage, modifier: Modifier = PublicModifier) extends Importable with Generalizable {
   javaPackage = javaPackage
   var name = ""
   var signatures: List[FunctionSignature] = Nil
@@ -26,10 +26,11 @@ class JavaInterface(jPackage: JavaPackage = new NoPackage) extends Importable wi
   }
 
   override def toString: String = {
+    val mod = modifier.toString
     signatures match {
-      case Nil => patterns.JavaMarkerInterfacePattern(getPackageString, name, getGenericString)
+      case Nil => patterns.JavaMarkerInterfacePattern(getPackageString, mod, name, getGenericString)
       case _ => val signs = signatures.map(s => patterns.JavaFunctionInterfacePattern(s.toString)).mkString("\n\n\t")
-        patterns.JavaInterfacePattern(getPackageString, getAllImports, name, getGenericString, signs)
+        patterns.JavaInterfacePattern(getPackageString, getAllImports, mod, name, getGenericString, signs)
     }
   }
 

@@ -11,7 +11,6 @@ import com.liberty.types.ObjectType
 import com.liberty.types.collections.ListType
 
 import scala.util.{Success, Try}
-import scala.xml.Elem
 
 /**
  * Created by Dmytro_Kovalskyi on 24.07.2014.
@@ -39,7 +38,7 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
 
 
   def getDatastoreAnnotation: JavaAnnotation = {
-    SimpleAnnotation("Entity", persistencePackage)("value", datastoreName)
+    SimpleAnnotation("Entity", persistencePackage)("name", datastoreName)
   }
 
   def getIdAnnotation: JavaAnnotation = {
@@ -65,7 +64,7 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
     val variable = new Variable("em")
     builder.addParam(FunctionParameter(variable, entityManager))
     builder.addOperation(SetValueOperation(entityManagerField, variable))
-    daoBuilder.addFunction(builder.getFunction)
+    daoBuilder.addFunction(ConstructorFunction(builder.getFunction))
   }
 
   override def createDaoFields(): Unit = {
