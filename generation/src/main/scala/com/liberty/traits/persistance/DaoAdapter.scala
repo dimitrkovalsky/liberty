@@ -106,7 +106,7 @@ trait DaoAdapter extends Annotator with CRUDable with Accessible {
 
   def getDatastoreAnnotation: JavaAnnotation
 
-  def getIdAnnotation: JavaAnnotation
+  def getIdAnnotations: List[JavaAnnotation]
 
   def markField(field: JavaField, annotation: JavaAnnotation): Unit = {
     field.addAnnotation(annotation)

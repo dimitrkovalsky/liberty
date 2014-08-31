@@ -41,8 +41,8 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
     JavaAnnotation("Entity", JavaPackage(morphiaPackage, "Entity"))("value", datastoreName)("noClassnameStored", "true")
   }
 
-  def getIdAnnotation: JavaAnnotation = {
-    JavaAnnotation("Id", JavaPackage(morphiaPackage, "Id"))
+  def getIdAnnotations: List[JavaAnnotation] = {
+    List(JavaAnnotation("Id", JavaPackage(morphiaPackage, "Id")))
   }
 
   def getEntityClass: JavaClass = javaClass

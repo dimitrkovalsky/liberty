@@ -16,15 +16,15 @@ trait Annotatable {
       annotations = annotations ::: List(annotation)
   }
 
-  protected def annotationToString(inline: Boolean = false): String = {
+  protected def annotationsToString(inline: Boolean = false): String = {
     annotations match {
       case Nil => ""
-      case _ => if (inline) annotations.mkString(" ") else annotations.mkString("\n") + "\n"
+      case _ => if (inline) annotations.mkString(" ") else annotations.mkString("\n\t") + "\n"
     }
   }
 
   protected def annotationToPostShiftedString(shift: String): String = {
-    annotationToString() match {
+    annotationsToString() match {
       case "" => ""
       case s: String => s + shift
     }
