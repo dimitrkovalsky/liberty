@@ -138,7 +138,7 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
       case list: List[String] => list.mkString("\n\n")
     }
     val mod = modifier.toString
-    patterns.JavaClassPattern(getPackageString, getAllImports, annotationToString(inline = false), mod, name,
+    patterns.JavaClassPattern(getPackageString, getAllImports, annotationsToString(inline = false), mod, name,
       getGenericString, getInheritanceString, fieldsString, staticBlocks, functionsString)
   }
 

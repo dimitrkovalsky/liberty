@@ -25,7 +25,7 @@ case class StubAdapter() extends DaoAdapter {
 
   override def getDatastoreAnnotation: JavaAnnotation = ???
 
-  override def getIdAnnotation: JavaAnnotation = ???
+  override def getIdAnnotations = ???
 
   override def createDaoConstructor(): Unit = ???
 

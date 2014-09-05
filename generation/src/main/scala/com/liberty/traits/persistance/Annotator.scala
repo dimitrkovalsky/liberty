@@ -10,7 +10,7 @@ trait Annotator {
 
   def addIdAnnotation() {
     getIdField.map {
-      field => field.addAnnotation(getIdAnnotation)
+      field => getIdAnnotations.foreach(field.addAnnotation)
     }
   }
 

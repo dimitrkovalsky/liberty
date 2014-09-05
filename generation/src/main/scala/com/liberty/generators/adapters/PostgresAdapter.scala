@@ -41,8 +41,8 @@ class PostgresAdapter(var javaClass: JavaClass, bPackage: LocationPackage) exten
     SimpleAnnotation("Entity", persistencePackage)("name", datastoreName)
   }
 
-  def getIdAnnotation: JavaAnnotation = {
-    SimpleAnnotation("Id", persistencePackage)
+  def getIdAnnotations: List[JavaAnnotation] = {
+    List(SimpleAnnotation("Id", persistencePackage),SimpleAnnotation("GeneratedValue", persistencePackage))
   }
 
   override var datastoreName: String = javaClass.name.firstToLowerCase
