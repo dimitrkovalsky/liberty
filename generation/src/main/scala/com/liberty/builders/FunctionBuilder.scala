@@ -35,6 +35,10 @@ class FunctionBuilder {
     function.addAnnotation(annotation)
   }
 
+  def addAnnotations(annotations: List[JavaAnnotation]) {
+    annotations.foreach(function.addAnnotation)
+  }
+
   def addModifier(modifier: Modifier) {
     function.signature.modifier = modifier
   }

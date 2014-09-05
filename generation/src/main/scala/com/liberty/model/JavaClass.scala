@@ -171,8 +171,8 @@ case class JavaField(name: String, dataType: DataType, modifier: Modifier = Defa
         Some(value.get.quotes)
       else if (value.isDefined)
         value
-      else if (!value.isDefined)
-        Some(dataType.getDefaultValue)
+//      else if (!value.isDefined)
+//        Some(dataType.getDefaultValue)
       else None
 
     s"${

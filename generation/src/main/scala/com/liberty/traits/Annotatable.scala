@@ -19,7 +19,7 @@ trait Annotatable {
   protected def annotationToString(inline: Boolean = false): String = {
     annotations match {
       case Nil => ""
-      case _ => if (inline) annotations.mkString(" ") else annotations.mkString("\n") + "\n"
+      case _ => if (inline) annotations.mkString(" ") else annotations.mkString("\n\t") + "\n"
     }
   }
 

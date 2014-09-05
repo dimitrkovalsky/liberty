@@ -43,6 +43,7 @@ object ApplicationBuild extends Build {
       "org.scalatest" % "scalatest_2.11" % "2.2.0" % "test",
       "org.codehaus.jackson" % "jackson-jaxrs" % "1.9.13",
       "org.scala-lang.modules" %% "scala-xml" % "1.0.2",
+      "com.google.code.javaparser" % "javaparser" % "1.0.11",
       "junit" % "junit" % "4.11"
     ),
 
