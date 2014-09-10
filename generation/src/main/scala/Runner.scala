@@ -9,7 +9,7 @@ object Runner {
 
   def main(args: Array[String]): Unit = {
 
-    val clazz = new JavaClassParser("DepartmentResource.tmpl").parse()
+    val clazz = JavaClassParser("DepartmentBean.tmpl").parse()
     println(clazz)
 
   }

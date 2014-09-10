@@ -2,7 +2,7 @@ package com.liberty.builders
 
 import com.liberty.model._
 import com.liberty.operations.Operation
-import com.liberty.traits.JavaPackage
+import com.liberty.traits.{CustomImport, JavaPackage}
 import com.liberty.types.DataType
 
 /**
@@ -12,6 +12,8 @@ import com.liberty.types.DataType
  */
 // TODO : Add abstract class support
 class ClassBuilder(var javaClass: JavaClass = new JavaClass) {
+  def addCustomImport(customImport: CustomImport) = javaClass.addCustomImport(customImport)
+
   private var inStaticSection = false
   private var withStatic: List[Operation] = Nil
   private var inTrySection = false
@@ -100,6 +102,12 @@ object ClassBuilder {
 
   def apply(name: String): ClassBuilder = {
     val b = new ClassBuilder()
+    b.setName(name)
+    b
+  }
+
+  def templateBuilder(name: String): TemplateClassBuilder = {
+    val b = new TemplateClassBuilder()
     b.setName(name)
     b
   }

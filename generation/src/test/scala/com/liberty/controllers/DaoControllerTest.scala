@@ -1,7 +1,7 @@
 package com.liberty.controllers
 
 import com.liberty.builders.ClassBuilderTest
-import com.liberty.common.{DatabaseType, ProjectConfig}
+import com.liberty.common.{DatabaseType, Filable, ProjectConfig}
 import com.liberty.model.{JavaClass, JavaField, PrivateModifier}
 import com.liberty.types.primitives.IntegerType
 import com.liberty.utils.FileChecker
@@ -14,8 +14,7 @@ import org.scalatest.junit.AssertionsForJUnit
 /**
  * For work with files extends AssertionsForJUnit for annotation processing
  */
-class DaoControllerTest extends AssertionsForJUnit {
-  private val STANDARDS_FOLDER = FileChecker.PROJECT_PATH + "generation\\standards\\"
+class DaoControllerTest extends AssertionsForJUnit with Filable {
   private val TEST_MONGO_CREATE_FOLDER = STANDARDS_FOLDER + "controllers\\mongo\\testCreate\\project1"
   private val TEST_POSTGRES_CREATE_FOLDER = STANDARDS_FOLDER + "controllers\\postgres\\testCreate\\project1"
   private val TEST_MONGO_UPDATE_FOLDER = STANDARDS_FOLDER + "controllers\\mongo\\testUpdate\\project1"

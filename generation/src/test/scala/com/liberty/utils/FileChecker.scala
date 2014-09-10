@@ -114,4 +114,8 @@ object FileChecker {
     if (folder.exists)
       Assert.assertTrue("Folder cannot be deleted", folder.deleteRecursively())
   }
+
+  def loadFile(path: String): String = {
+    io.Source.fromFile(path).toString()
+  }
 }

@@ -3,12 +3,11 @@ package com.liberty.generators
 import com.liberty.common.{DBConfig, DatabaseType}
 import com.liberty.exceptions.NotGeneratedException
 import com.liberty.generators.adapters.{MongoAdapter, PostgresAdapter, StubAdapter}
-import com.liberty.model.{XmlFile, JavaClass, JavaInterface}
+import com.liberty.model.{JavaClass, JavaInterface, XmlFile}
 import com.liberty.traits.LocationPackage
 import com.liberty.traits.persistance.DaoAdapter
 
 import scala.util.{Failure, Success, Try}
-import scala.xml.Elem
 
 /**
  * User: Dimitr
@@ -147,7 +146,6 @@ class DaoGenerator(var dbConfig: DBConfig, basePackage: LocationPackage) {
 /**
  * Uses for transferring data after dao updates
  */
-// TODO: process META-INF files
 case class EntityPacket(entity: JavaClass, daoInterface: JavaInterface, dao: JavaClass, factory: JavaClass)
 
 /**

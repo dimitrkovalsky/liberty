@@ -23,6 +23,13 @@ trait Annotatable {
     }
   }
 
+  protected def classAnnotationsToString(inline: Boolean = false): String = {
+    annotations match {
+      case Nil => ""
+      case _ => if (inline) annotations.mkString(" ") else annotations.mkString("\n") + "\n"
+    }
+  }
+
   protected def annotationToPostShiftedString(shift: String): String = {
     annotationsToString() match {
       case "" => ""

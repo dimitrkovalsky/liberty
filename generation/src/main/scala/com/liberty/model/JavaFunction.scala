@@ -58,7 +58,6 @@ object FunctionParameter {
   def apply(paramName: String, paramType: DataType) = new FunctionParameter(Variable(paramName), paramType)
 }
 
-// TODO: Add exception import  support
 case class FunctionSignature(var name: String, var output: DataType, var modifier: Modifier = DefaultModifier,
                              var input: List[FunctionParameter] = Nil, var functionThrows: List[JavaException] = Nil) {
   def this(name: String, output: DataType, input: List[FunctionParameter], functionThrows: List[JavaException]) = this(name,

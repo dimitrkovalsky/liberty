@@ -24,6 +24,9 @@ trait Importable {
 
 }
 
+case class CustomImport(importString:String) {
+  def getImport:String = s"import $importString;"
+}
 /**
  * Represents Java package for imports
  * @param packagePath path for package something like : javax.persistence

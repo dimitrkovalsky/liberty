@@ -58,10 +58,13 @@ case class JavaAnnotation(name: String = "", pack: JavaPackage = new NoPackage()
 /**
  * Represents annotation with one parameter
  */
-class SingleMemberAnnotation(name: String, param: String, pack: JavaPackage) extends JavaAnnotation(name, pack) {
+class SingleMemberAnnotation(name: String, param: String, pack: JavaPackage, notString: Boolean = false) extends JavaAnnotation(name, pack) {
 
   override def toString: String = {
-    s"@$name(${getParam(param)})"
+    if (notString)
+      s"@$name($param)"
+    else
+      s"@$name(${getParam(param)})"
   }
 }
 
