@@ -45,6 +45,10 @@ object Implicits {
     }
 
     def quotes: String = "\"" + s + "\""
+
+    def containsOr(args: List[String]*): Boolean = {
+      args.exists(_.filterNot(str => s.contains(str)) == Nil)
+    }
   }
 
 }

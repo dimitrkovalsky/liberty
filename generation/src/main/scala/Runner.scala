@@ -1,17 +1,28 @@
 import com.liberty.builders.ClassBuilder
+import com.liberty.common.ProjectConfig
+import com.liberty.controllers.BeanController
 import com.liberty.generators.adapters.PostgresAdapter
-import com.liberty.model.{JavaField, PrivateModifier}
-import com.liberty.parsers.JavaClassParser
+import com.liberty.model.{JavaClass, JavaField, PrivateModifier}
 import com.liberty.traits.{JavaPackage, LocationPackage}
-import com.liberty.types.primitives.{LongType, StringType}
+import com.liberty.types.primitives.{IntegerType, LongType, StringType}
 
 object Runner {
 
   def main(args: Array[String]): Unit = {
+    val controller = new BeanController()
+    controller.createBean(getModel)
+  }
 
-    val clazz = JavaClassParser("DepartmentBean.tmpl").parse()
-    println(clazz)
-
+  def getModel: JavaClass = {
+    val basePackage = ProjectConfig.basePackage
+    val builder = new ClassBuilder
+    builder.setName("Subject")
+    builder.addField(JavaField("id", IntegerType, PrivateModifier))
+    builder.addField(JavaField("name", StringType, PrivateModifier))
+    builder.addField(JavaField("lecturer", StringType, PrivateModifier))
+    builder.addField(JavaField("departmentId", StringType, PrivateModifier))
+    builder.addPackage(basePackage.nested("models", "Subject"))
+    builder.getJavaClass
   }
 
   def generate() {

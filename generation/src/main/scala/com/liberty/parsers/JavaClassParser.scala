@@ -25,7 +25,7 @@ import scala.collection.JavaConversions._
 class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectConfig.basePackage) {
   this: Pathable =>
 
-  def parse(): JavaClass = {
+  def parse(): TemplateClass = {
     val in = new FileInputStream(getTemplatePath + fileName)
     val cu = JavaParser.parse(in)
     val imports = cu.getImports
@@ -104,7 +104,6 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
     def addExtendsOrImplements(declaration: TypeDeclaration) {
       declaration match {
         case cl: ClassOrInterfaceDeclaration =>
-          var list: List[String] = Nil
           if (cl.getExtends != null) {
             cl.getExtends.map(_.toString).foreach(builder.addExtendTemplate)
           }
@@ -180,7 +179,7 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
     fields.foreach(builder.addField)
     builder.addFunctions(functions)
     builder.addPackage(getClassPackage(concreteType.getName))
-    builder.getJavaClass
+    builder.getTemplateJavaClass
   }
 
   /**

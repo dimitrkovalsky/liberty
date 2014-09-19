@@ -3,7 +3,7 @@ package com.liberty.model
 import com.liberty.common.Implicits._
 import com.liberty.patterns
 import com.liberty.traits._
-import com.liberty.types.{ConstructedType, DataType, primitives}
+import com.liberty.types.{ConstructedType, DataType, ObjectType, primitives}
 
 import scala.collection.SortedSet
 
@@ -24,6 +24,10 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
 
   override def clone(): AnyRef = super.clone()
 
+  def dataType: DataType = new ObjectType(name, jPackage)
+
+  def getIdField = fields.find(_.toLowerCase.contains("id"))
+
   def deepCopy: JavaClass = {
     val result = new JavaClass(name, jPackage)
     result.javaPackage = this.javaPackage
@@ -33,6 +37,7 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
     result.functions = this.functions
     result.implementList = this.implementList
     result.annotations = this.annotations
+    result.customImports = this.customImports
     result
   }
 

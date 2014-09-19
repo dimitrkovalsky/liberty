@@ -5,6 +5,7 @@ import com.liberty.types.primitives._
 import com.liberty.types.standardTypes.DateType
 import com.liberty.types.{DataType, VoidType}
 
+
 /**
  * Created by Dmytro_Kovalskyi on 03.09.2014.
  */
@@ -49,11 +50,54 @@ object TypeMapper {
     }
   }
 
+  private def changeOneContainedCollectionType(collection: CollectionType, newType: DataType): Option[CollectionType] = {
+    collection match {
+      case ListType(_) => Some(ListType(newType))
+      case ArrayListType(_) => Some(ArrayListType(newType))
+      case LinkedListType(_) => Some(LinkedListType(newType))
+      case SetType(_) => Some(SetType(newType))
+      case TreeSetType(_) => Some(TreeSetType(newType))
+      case HashSetType(_) => Some(HashSetType(newType))
+      case SortedSetType(_) => Some(SortedSetType(newType))
+      case _ => None
+    }
+  }
+
+  private def changeTwoContainedCollectionType(collection: CollectionType, oldType: DataType, newType: DataType): Option[CollectionType] = {
+    collection match {
+      case MapType(key, value) if oldType.equals(key) => Some(MapType(newType, value))
+      case MapType(key, value) if oldType.equals(value) => Some(MapType(key, newType))
+      case MapType(key, value) if oldType.equals(key) & oldType.equals(value) => Some(MapType(newType, newType))
+      case HashMapType(key, value) if oldType.equals(key) => Some(HashMapType(newType, value))
+      case HashMapType(key, value) if oldType.equals(value) => Some(HashMapType(key, newType))
+      case HashMapType(key, value) if oldType.equals(key) & oldType.equals(value) => Some(HashMapType(newType, newType))
+      case _ => None
+    }
+  }
+
+  def isCollection(dataType: DataType): Boolean = {
+    dataType.isInstanceOf[CollectionType]
+  }
+
+  def changeType(collection: CollectionType, oldType: DataType, newType: DataType): Option[CollectionType] = {
+    if (isTwoContainedCollection(collection))
+      changeTwoContainedCollectionType(collection, oldType, newType)
+    else
+      changeOneContainedCollectionType(collection, newType)
+  }
+
   def getStandardTwoContainedCollectionTypes(collectionName: String, key: DataType, value: DataType): Option[DataType] = {
     collectionName match {
       case "Map" => Some(MapType(key, value))
       case "HashMap" => Some(HashMapType(key, value))
       case _ => None
+    }
+  }
+
+  private def isTwoContainedCollection(collection: CollectionType) = {
+    collection match {
+      case MapType(_, _) | HashMapType(_, _) => true
+      case _ => false
     }
   }
 }
