@@ -1,25 +1,19 @@
 package com.liberty.controllers
 
 import com.liberty.common.DatabaseType.DatabaseType
-import com.liberty.common.{DatabaseType, ProjectConfig}
+import com.liberty.common.{DatabaseType, ProjectConfig, Register}
 import com.liberty.generators.{DaoGenerator, DaoPacket}
 import com.liberty.helpers.FileHelper
 import com.liberty.model.JavaClass
-import com.liberty.traits.{Changeable, Writer}
-import com.liberty.writers.FileClassWriter
+import com.liberty.traits.Changeable
 
 import scala.util.{Failure, Success, Try}
 
 /**
  * Created by Dmytro_Kovalskyi on 07.07.2014.
  */
-class DaoController extends Changeable {
-  private val writer: Writer = new FileClassWriter(ProjectConfig.projectPath)
+class DaoController extends Changeable with Controller {
   private var generator = createGenerator
-  /**
-   * List of managed models
-   */
-  private val models = scala.collection.mutable.Map[String, JavaClass]()
 
   def changeDatabase(db: DatabaseType): Either[String, String] = {
     if (generator.dbConfig.databaseType != db) {
@@ -58,7 +52,6 @@ class DaoController extends Changeable {
   }
 
   def createDao(model: JavaClass): Try[String] = {
-//    println(model.toString)
     val copy = model.deepCopy
     models += model.name -> copy
 
@@ -85,7 +78,7 @@ class DaoController extends Changeable {
     }
 
     generator.createMetaInfFiles.foreach(writer.writeToMetaInf)
-
+    Register.getModel(model.name).foreach(m => Register.changeModel(m.copy(daoExists = true)))
 
     Success("Dao created")
   }

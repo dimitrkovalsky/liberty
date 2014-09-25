@@ -35,8 +35,8 @@ package object patterns {
     signature.trim + ";"
   }
 
-  def JavaInterfacePattern(jPackage: String, imports: String, modifier: String, name: String, generics: String, signatures: String): String = {
-    s"${if (!jPackage.isEmpty) jPackage + "\n\n" else ""}$imports\n\n$modifier interface $name$generics {\n\n\t$signatures\n}"
+  def JavaInterfacePattern(jPackage: String, imports: String, annotations:String, modifier: String, name: String, generics: String, signatures: String): String = {
+    s"${if (!jPackage.isEmpty) jPackage + "\n\n" else ""}$imports\n\n${annotations}$modifier interface $name$generics {\n\n\t$signatures\n}"
   }
 
   def JavaMarkerInterfacePattern(jPackage: String, modifier: String, name: String, generics: String): String = {

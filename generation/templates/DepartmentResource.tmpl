@@ -1,3 +1,5 @@
+package standard.rest;
+
 import standard.beans.IDepartmentBean;
 import standard.errors.ApplicationException;
 import standard.models.Department;
@@ -7,7 +9,6 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
-
 /**
  * Created by Dmytro_Kovalskyi on 01.09.2014.
  */
@@ -15,10 +16,7 @@ import java.util.List;
 @Stateless
 public class DepartmentResource {
     @Inject
-    @Entity(value = "deps")
     private IDepartmentBean departmentBean;
-
-    private static String CONSTANT = "SOME DATA";
 
     @GET
     @Path("/list")

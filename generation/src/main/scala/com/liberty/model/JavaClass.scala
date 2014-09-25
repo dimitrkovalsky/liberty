@@ -20,16 +20,16 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
   def this(jPackage: JavaPackage) = this("", jPackage)
 
   this.javaPackage = jPackage
-  private var customImports: List[CustomImport] = Nil
+  var customImports: List[CustomImport] = Nil
 
   override def clone(): AnyRef = super.clone()
 
-  def dataType: DataType = new ObjectType(name, jPackage)
+  def dataType: DataType = new ObjectType(name, javaPackage)
 
   def getIdField = fields.find(_.toLowerCase.contains("id"))
 
   def deepCopy: JavaClass = {
-    val result = new JavaClass(name, jPackage)
+    val result = new JavaClass(name, this.jPackage)
     result.javaPackage = this.javaPackage
     result.blocks = this.blocks
     result.extendClass = this.extendClass

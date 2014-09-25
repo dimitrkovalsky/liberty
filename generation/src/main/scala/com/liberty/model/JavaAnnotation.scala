@@ -66,6 +66,12 @@ class SingleMemberAnnotation(name: String, param: String, pack: JavaPackage, not
     else
       s"@$name(${getParam(param)})"
   }
+
+  def getName = name
+
+  def getParam = param
+
+  def getPackage = pack
 }
 
 case class SimpleAnnotation(var name: String = "", pack: String)

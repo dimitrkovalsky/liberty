@@ -2,7 +2,7 @@ package com.liberty.builders
 
 import com.liberty.StubType
 import com.liberty.model._
-import com.liberty.traits.JavaPackage
+import com.liberty.traits.{CustomImport, JavaPackage}
 import com.liberty.types.DataType
 
 /**
@@ -12,6 +12,8 @@ import com.liberty.types.DataType
  */
 class InterfaceBuilder {
   private val javaInterface = new JavaInterface
+
+  def addCustomImport(customImport: CustomImport) = javaInterface.addCustomImport(customImport)
 
   def setName(name: String) {
     javaInterface.name = name
@@ -36,6 +38,10 @@ class InterfaceBuilder {
   def getInterface = javaInterface
 
   def getName = javaInterface.name
+
+  def addAnnotation(annotation: JavaAnnotation) {
+    javaInterface.addAnnotation(annotation)
+  }
 }
 
 object InterfaceBuilder {

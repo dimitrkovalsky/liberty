@@ -1,15 +1,32 @@
 package com.liberty.common
 
+import com.liberty.traits.JavaPackage
 import com.liberty.types.collections._
 import com.liberty.types.primitives._
 import com.liberty.types.standardTypes.DateType
-import com.liberty.types.{DataType, VoidType}
+import com.liberty.types.{DataType, ObjectType, VoidType}
 
 
 /**
+ * Uses for type mapping
  * Created by Dmytro_Kovalskyi on 03.09.2014.
  */
 object TypeMapper {
+  /**
+   * Changes complex dataTypes
+   * <i>IDepartmentBean [model : Department] => I[newModel]Bean</i>
+   * @param oldModel  Department from previous line
+   */
+  def changeComplexType(oldType: DataType, oldModel: String, newModel: String): DataType = {
+    if (oldType.toString.contains(oldModel)) {
+      val name = oldType.getTypeName.replace(oldModel, newModel)
+      val newPackage = JavaPackage(oldType.javaPackage.packagePath, oldType.javaPackage.packageClass.replace(oldModel, newModel))
+      ObjectType(name, newPackage)
+    }
+    else
+      oldType
+  }
+
 
   def getStandardType(typeName: String): Option[DataType] = {
     typeName match {

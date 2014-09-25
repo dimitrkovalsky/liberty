@@ -22,7 +22,7 @@ import scala.collection.JavaConversions._
 /**
  * Created by Dmytro_Kovalskyi on 02.09.2014.
  */
-class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectConfig.basePackage) {
+class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectConfig.basePackage) extends Parsable {
   this: Pathable =>
 
   def parse(): TemplateClass = {
@@ -138,13 +138,21 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
       case m: MethodDeclaration =>
         val functionBuilder = FunctionBuilder(getModifier(m.getModifiers), m.getName)
         functionBuilder.addAnnotations(getAnnotations(m.getAnnotations))
+
         if (m.getThrows != null)
           m.getThrows.foreach(thr => functionBuilder.addThrow(getJavaException(thr.getName)))
-        //functionBuilder.addReturn()
+
         if (m.getParameters != null)
-          m.getParameters.foreach(param => functionBuilder.addParam(FunctionParameter(param.getId.getName, getDataType(param.getType))))
+          m.getParameters.foreach { param =>
+            val functionParameter = FunctionParameter(param.getId.getName, getDataType(param.getType))
+            if (param.getAnnotations != null)
+              getAnnotations(param.getAnnotations).foreach(functionParameter.addAnnotation)
+            functionBuilder.addParam(functionParameter)
+          }
+
         if (m.getType != null)
           functionBuilder.addReturn(getDataType(m.getType))
+
         m.getBody.getStmts.foreach {
           case expr: TryStmt =>
             val tryable = functionBuilder.tryable {
@@ -178,7 +186,7 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
     imports.foreach(i => builder.addCustomImport(if (i.isAsterisk) CustomImport(i.getName.toString + ".*") else CustomImport(i.getName.toString)))
     fields.foreach(builder.addField)
     builder.addFunctions(functions)
-    builder.addPackage(getClassPackage(concreteType.getName))
+    builder.addPackage(getClassPackage(concreteType.getName)(basePackage))
     builder.getTemplateJavaClass
   }
 
@@ -198,11 +206,53 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
     else None
   }
 
+
+}
+
+object JavaClassParser {
+  def apply(fileName: String, basePackage: LocationPackage = ProjectConfig.basePackage): JavaClassParser = {
+    new JavaClassParser(fileName, basePackage) with InternalPath
+  }
+}
+
+trait Parsable {
+  def getAnnotationValue(initialValue: String) = {
+    if (initialValue.startsWith("\""))
+      initialValue.substring(1, initialValue.size - 1)
+    else
+      initialValue
+  }
+
+  def getValue(variable: VariableDeclarator, dataType: DataType): Option[String] = {
+    if (variable.getInit != null) {
+      val value = variable.getInit.toString
+      dataType match {
+        case StringType => Some(value.substring(1, value.size - 1))
+        case _ => Some(value)
+      }
+    } else
+      None
+  }
+
+  def getModifier(id: Int): Modifier = {
+    id match {
+      case 10 => PrivateStaticModifier
+      case 9 => PublicStaticModifier
+      case 1 => PublicModifier
+      case 2 => PrivateModifier
+      case 4 => ProtectedModifier
+      case 12 => ProtectedStaticModifier
+      case 8 => StaticModifier
+      case 0 => DefaultModifier
+      case _ => DefaultModifier
+    }
+  }
+
   /**
    * Returns JavaPackage instance based on basePackage and class name
    * @param className Class name
    */
-  private def getClassPackage(className: String) = {
+  def getClassPackage(className: String)(basePackage: LocationPackage) = {
     val suffix = className match {
       case s: String if s.toLowerCase.contains("resource") | s.toLowerCase.contains("rest") | s.toLowerCase.contains("rs") => "rest"
       case s: String if s.toLowerCase.contains("bean") => "beans"
@@ -216,43 +266,5 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
       case _ => "common"
     }
     basePackage.nested(suffix).nestedClass(className)
-  }
-
-  private def getAnnotationValue(initialValue: String) = {
-    if (initialValue.startsWith("\""))
-      initialValue.substring(1, initialValue.size - 1)
-    else
-      initialValue
-  }
-
-  private def getValue(variable: VariableDeclarator, dataType: DataType): Option[String] = {
-    if (variable.getInit != null) {
-      val value = variable.getInit.toString
-      dataType match {
-        case StringType => Some(value.substring(1, value.size - 1))
-        case _ => Some(value)
-      }
-    } else
-      None
-  }
-
-  private def getModifier(id: Int): Modifier = {
-    id match {
-      case 10 => PrivateStaticModifier
-      case 9 => PublicStaticModifier
-      case 1 => PublicModifier
-      case 2 => PrivateModifier
-      case 4 => ProtectedModifier
-      case 12 => ProtectedStaticModifier
-      case 8 => StaticModifier
-      case 0 => DefaultModifier
-      case _ => DefaultModifier
-    }
-  }
-}
-
-object JavaClassParser {
-  def apply(fileName: String, basePackage: LocationPackage = ProjectConfig.basePackage): JavaClassParser = {
-    new JavaClassParser(fileName, basePackage) with InternalPath
   }
 }
