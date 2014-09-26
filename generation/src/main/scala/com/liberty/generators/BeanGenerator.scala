@@ -1,6 +1,7 @@
 package com.liberty.generators
 
 import com.liberty.common.{ClassMapper, ProjectConfig}
+import com.liberty.model.xml.{BeansXml, XmlFile}
 import com.liberty.model.{JavaClass, JavaInterface}
 import com.liberty.traits.LocationPackage
 
@@ -13,7 +14,6 @@ class BeanGenerator(basePackage: LocationPackage = ProjectConfig.basePackage.nes
   private val baseModel = loadModel("bean.model")
 
   def createBean(model: JavaClass): Option[BeanPacket] = {
-    val copy = model.deepCopy
     val mapper = ClassMapper(baseModel)
     val bean = mapper.changeModel(template, model, model.name + "Bean", basePackage)
 
@@ -21,6 +21,10 @@ class BeanGenerator(basePackage: LocationPackage = ProjectConfig.basePackage.nes
     bean.addImplements(interface)
 
     Some(BeanPacket(bean, interface))
+  }
+
+  def createBeansXml: XmlFile = {
+    XmlFile("beans.xml", new BeansXml().createXml())
   }
 }
 

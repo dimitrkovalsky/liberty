@@ -1,6 +1,6 @@
 import com.liberty.builders.ClassBuilder
 import com.liberty.common.ProjectConfig
-import com.liberty.controllers.RestController
+import com.liberty.controllers.{BeanController, RestController}
 import com.liberty.generators.adapters.PostgresAdapter
 import com.liberty.model.{JavaClass, JavaField, PrivateModifier}
 import com.liberty.traits.{JavaPackage, LocationPackage}
@@ -8,15 +8,16 @@ import com.liberty.types.primitives.{IntegerType, LongType, StringType}
 
 object Runner {
 
-  def main(args: Array[String]): Unit = {
-//    val controller = new BeanController()
-//    controller.createBean(getModel)
+  def main(args: Array[String]) {
+    val controller = new BeanController()
+    controller.createBean(getModel)
 
-    val controller = new RestController
-    controller.createRest(getModel)
+    val rsController = new RestController
+    rsController.createRest(getModel)
   }
 
-  class Data(data:String){}
+  class Data(data: String) {}
+
   def getModel: JavaClass = {
     val basePackage = ProjectConfig.basePackage
     val builder = new ClassBuilder
@@ -26,7 +27,7 @@ object Runner {
     builder.addField(JavaField("lecturer", StringType, PrivateModifier))
     builder.addField(JavaField("departmentId", StringType, PrivateModifier))
     builder.addPackage(basePackage.nested("models", "Subject"))
-//    println(   builder.getJavaClass)
+    //    println(   builder.getJavaClass)
     builder.getJavaClass
   }
 

@@ -14,7 +14,7 @@ package object patterns {
   def JavaFunctionSignaturePattern(modifier: String, output: String, functionName: String, parameters: String,
                                    functionThrows: List[String]): String = {
     val thr = functionThrows match {
-      case Nil => ""
+      case Nil => " "
       case x :: xs => " throws " + functionThrows.mkString(", ") + " "
     }
     val mod = if (modifier.isEmpty) modifier else modifier + " "

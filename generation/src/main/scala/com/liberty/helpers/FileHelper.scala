@@ -2,7 +2,8 @@ package com.liberty.helpers
 
 import java.io.File
 
-import com.liberty.model.{JavaClass, JavaInterface, XmlFile}
+import com.liberty.model.xml.XmlFile
+import com.liberty.model.{JavaClass, JavaInterface}
 import com.liberty.traits.{JavaPackage, NoPackage}
 
 

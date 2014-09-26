@@ -13,9 +13,9 @@ import com.liberty.types.collections.CollectionType
  * Created by Dmytro_Kovalskyi on 22.09.2014.
  */
 case class ClassMapper(baseModel: JavaClass) {
-  def changeCustomImport(customImport: CustomImport): Option[CustomImport] = {
+  def changeCustomImport(customImport: CustomImport, model: String): Option[CustomImport] = {
     if (customImport.importString.contains(baseModel.name))
-      None
+      Some(CustomImport(customImport.importString.replace(baseModel.name, model)))
     else
       Some(customImport)
   }
@@ -57,7 +57,7 @@ case class ClassMapper(baseModel: JavaClass) {
     val fields = template.fields.map(changeField(_, model))
     val classBuilder = ClassBuilder(newClassName)
     classBuilder.addFunctions(functions)
-    template.customImports.map(changeCustomImport).flatten.foreach(classBuilder.addCustomImport)
+    template.customImports.map(changeCustomImport(_, model.name)).flatten.foreach(classBuilder.addCustomImport)
     fields.foreach(classBuilder.addField)
     classBuilder.addPackage(newPackage)
     annotations.foreach(classBuilder.addAnnotation)
@@ -69,7 +69,7 @@ case class ClassMapper(baseModel: JavaClass) {
     val interfaceSignatures = template.signatures.map(changeSignatureWithFilter(_, model)).flatten
     interfaceSignatures foreach interfaceBuilder.addFunctionSignature
     template.annotations.foreach(interfaceBuilder.addAnnotation)
-    template.customImports.map(changeCustomImport).flatten.foreach(interfaceBuilder.addCustomImport)
+    template.customImports.map(changeCustomImport(_, model.name)).flatten.foreach(interfaceBuilder.addCustomImport)
     interfaceBuilder.addPackage(newPackage)
     interfaceBuilder.getInterface
   }

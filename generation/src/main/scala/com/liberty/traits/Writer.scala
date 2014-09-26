@@ -1,7 +1,7 @@
 package com.liberty.traits
 
-import com.liberty.model.{XmlFile, JavaClass, JavaInterface}
-import scala.xml.Elem
+import com.liberty.model.xml.XmlFile
+import com.liberty.model.{JavaClass, JavaInterface}
 
 /**
  * Created by Dmytro_Kovalskyi on 07.07.2014.

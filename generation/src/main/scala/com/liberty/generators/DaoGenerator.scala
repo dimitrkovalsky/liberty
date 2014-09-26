@@ -3,7 +3,8 @@ package com.liberty.generators
 import com.liberty.common.{DBConfig, DatabaseType}
 import com.liberty.exceptions.NotGeneratedException
 import com.liberty.generators.adapters.{MongoAdapter, PostgresAdapter, StubAdapter}
-import com.liberty.model.{JavaClass, JavaInterface, XmlFile}
+import com.liberty.model.xml.XmlFile
+import com.liberty.model.{JavaClass, JavaInterface}
 import com.liberty.traits.LocationPackage
 import com.liberty.traits.persistance.DaoAdapter
 

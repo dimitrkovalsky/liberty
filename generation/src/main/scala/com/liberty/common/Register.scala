@@ -13,6 +13,8 @@ object Register {
    */
   var wsCreated = false
 
+  var beansXmlCreated = false
+
   def addModel(model: Model) {
     models += model.name -> model
   }

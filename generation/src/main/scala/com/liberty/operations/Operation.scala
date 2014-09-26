@@ -69,7 +69,7 @@ case class CatchOperation(e: JavaException, ops: List[Operation], result: CatchR
       case Throws => ""
       case ThrowWrapped(ex) => s"throw new ${ex.name}(e);"
       case PrintError => s"System.err.println(e.getMessage());"
-      case CatchOperations(operations: List[Operation]) => operations.mkString(";\n\t\t")
+      case CatchOperations(operations: List[Operation]) => operations.mkString(";\n\t\t") + ";"
       case _ => ""
     }
     Some(s"${ops.flatMap(o => o.execute()).map(_ + ";").mkString("\n\t\t")}\n\t} catch(${e.name} e){\n\t\t$body\n\t}")

@@ -1,12 +1,9 @@
-package com.liberty.model
+package com.liberty.model.xml
 
 import com.liberty.common.RelationalConfig
 
 import scala.xml.Elem
 
-/**
- * Created by Dmytro_Kovalskyi on 25.07.2014.
- */
 /**
  *
  * @param persistenceUnit
@@ -48,7 +45,3 @@ case class PersistenceXml(persistenceUnit: String, settings: RelationalConfig, c
     createXml("org.eclipse.persistence.jpa.PersistenceProvider", props)
   }
 }
-
-case class XmlFile(filename: String, xml: Elem)
-
-
