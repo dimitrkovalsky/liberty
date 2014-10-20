@@ -10,7 +10,8 @@ object ProjectConfig {
 
   def projectPath = s"D:/test/$projectName"
 
-  var basePackageString = "com.test"
+//  var basePackageString = "com.test"
+  var basePackageString = "standard"
 
   def basePackage = LocationPackage(basePackageString)
 

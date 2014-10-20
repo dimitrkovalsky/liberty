@@ -1,7 +1,7 @@
 package com.liberty.model
 
 import com.liberty.patterns
-import com.liberty.traits.{Generalizable, Importable, JavaPackage, NoPackage}
+import com.liberty.traits._
 
 /**
  * User: Dimitr
@@ -10,19 +10,24 @@ import com.liberty.traits.{Generalizable, Importable, JavaPackage, NoPackage}
  */
 // TODO: Prohibit the creation of two identical interfaces
 // TODO: Add possibility constand addition
-class JavaInterface(jPackage: JavaPackage = new NoPackage, modifier: Modifier = PublicModifier) extends Importable with Generalizable {
+class JavaInterface(jPackage: JavaPackage = new NoPackage, modifier: Modifier = PublicModifier) extends Importable with Generalizable with Annotatable {
   javaPackage = javaPackage
   var name = ""
   var signatures: List[FunctionSignature] = Nil
+  var customImports: List[CustomImport] = Nil
 
   def addSignature(signature: FunctionSignature) {
     signatures = signatures ::: List(signature)
   }
 
+  def addCustomImport(customImport: CustomImport) {
+    customImports = customImports ::: List(customImport)
+  }
+
   private def getAllImports: String = {
     var set: Set[JavaPackage] = Set()
     signatures.foreach(f => set = set ++ f.getPackages)
-    set.filter(p => !p.isEmpty).filterNot(_.packagePath == javaPackage.packagePath).map(jp => jp.getImport).mkString("\n")
+    set.filter(p => !p.isEmpty).filterNot(_.packagePath == javaPackage.packagePath).map(jp => jp.getImport) ++ customImports.map(_.getImport) mkString "\n"
   }
 
   override def toString: String = {
@@ -30,7 +35,7 @@ class JavaInterface(jPackage: JavaPackage = new NoPackage, modifier: Modifier = 
     signatures match {
       case Nil => patterns.JavaMarkerInterfacePattern(getPackageString, mod, name, getGenericString)
       case _ => val signs = signatures.map(s => patterns.JavaFunctionInterfacePattern(s.toString)).mkString("\n\n\t")
-        patterns.JavaInterfacePattern(getPackageString, getAllImports, mod, name, getGenericString, signs)
+        patterns.JavaInterfacePattern(getPackageString, getAllImports, classAnnotationsToString(inline = false), mod, name, getGenericString, signs)
     }
   }
 

@@ -9,7 +9,7 @@ import com.liberty.traits.JavaPackage
  * Time: 11:45
  */
 class FunctionBody {
-  private var operations: List[Operation] = Nil
+  var operations: List[Operation] = Nil
 
   override def toString: String = operations match {
     case Nil => "// Empty body"

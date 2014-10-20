@@ -14,7 +14,7 @@ package object patterns {
   def JavaFunctionSignaturePattern(modifier: String, output: String, functionName: String, parameters: String,
                                    functionThrows: List[String]): String = {
     val thr = functionThrows match {
-      case Nil => ""
+      case Nil => " "
       case x :: xs => " throws " + functionThrows.mkString(", ") + " "
     }
     val mod = if (modifier.isEmpty) modifier else modifier + " "
@@ -35,8 +35,8 @@ package object patterns {
     signature.trim + ";"
   }
 
-  def JavaInterfacePattern(jPackage: String, imports: String, modifier: String, name: String, generics: String, signatures: String): String = {
-    s"${if (!jPackage.isEmpty) jPackage + "\n\n" else ""}$imports\n\n$modifier interface $name$generics {\n\n\t$signatures\n}"
+  def JavaInterfacePattern(jPackage: String, imports: String, annotations:String, modifier: String, name: String, generics: String, signatures: String): String = {
+    s"${if (!jPackage.isEmpty) jPackage + "\n\n" else ""}$imports\n\n${annotations}$modifier interface $name$generics {\n\n\t$signatures\n}"
   }
 
   def JavaMarkerInterfacePattern(jPackage: String, modifier: String, name: String, generics: String): String = {

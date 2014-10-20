@@ -3,10 +3,10 @@ package com.liberty.traits.persistance
 import com.liberty.builders.{ClassBuilder, InterfaceBuilder}
 import com.liberty.common.{DatabaseConfig, NoSQLConfig, RelationalConfig}
 import com.liberty.model._
+import com.liberty.model.xml.XmlFile
 import com.liberty.traits.{Accessible, LocationPackage}
 
 import scala.util.{Success, Try}
-import scala.xml.Elem
 
 /**
  * User: Dimitr

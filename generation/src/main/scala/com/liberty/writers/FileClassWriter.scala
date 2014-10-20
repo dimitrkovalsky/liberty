@@ -4,7 +4,8 @@ import java.io.FileWriter
 import java.nio.file.{Files, Paths}
 
 import com.liberty.helpers.ProjectPaths
-import com.liberty.model.{XmlFile, JavaClass, JavaInterface}
+import com.liberty.model.xml.XmlFile
+import com.liberty.model.{JavaClass, JavaInterface}
 import com.liberty.traits.{JavaPackage, NoPackage, Writer}
 import scala.xml.{XML, Elem}
 

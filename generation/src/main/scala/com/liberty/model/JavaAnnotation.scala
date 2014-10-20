@@ -8,7 +8,7 @@ import com.liberty.traits.{Importable, JavaPackage, LocationPackage, NoPackage}
  * Date: 10.10.13
  * Time: 10:41
  */
-case class JavaAnnotation(var name: String = "", pack: JavaPackage = new NoPackage()) extends Importable {
+case class JavaAnnotation(name: String = "", pack: JavaPackage = new NoPackage()) extends Importable {
   javaPackage = JavaPackage(pack.packagePath, name)
 
   def apply(name: String, value: String): JavaAnnotation = {
@@ -26,14 +26,15 @@ case class JavaAnnotation(var name: String = "", pack: JavaPackage = new NoPacka
     parameters += name -> value
   }
 
+  def getParam(value: String): String = {
+    if (StringHelper.isNumeric(value))
+      return value
+    if (StringHelper.isBoolean(value))
+      return value
+    "\"" + value + "\""
+  }
+
   override def toString: String = {
-    def getParam(value: String): String = {
-      if (StringHelper.isNumeric(value))
-        return value
-      if (StringHelper.isBoolean(value))
-        return value
-      "\"" + value + "\""
-    }
     val params = if (parameters.isEmpty) ""
     else
       s"(${
@@ -52,6 +53,25 @@ case class JavaAnnotation(var name: String = "", pack: JavaPackage = new NoPacka
 
     this.name.equals(annotation.name) && this.javaPackage.equals(annotation.javaPackage)
   }
+}
+
+/**
+ * Represents annotation with one parameter
+ */
+class SingleMemberAnnotation(name: String, param: String, pack: JavaPackage, notString: Boolean = false) extends JavaAnnotation(name, pack) {
+
+  override def toString: String = {
+    if (notString)
+      s"@$name($param)"
+    else
+      s"@$name(${getParam(param)})"
+  }
+
+  def getName = name
+
+  def getParam = param
+
+  def getPackage = pack
 }
 
 case class SimpleAnnotation(var name: String = "", pack: String)

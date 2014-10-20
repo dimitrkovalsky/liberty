@@ -10,9 +10,8 @@ import com.liberty.traits.JavaPackage
  */
 package object collections {
 
-  abstract class CollectionType(collectionName: String) extends DataType("") {
+  abstract class CollectionType(collectionName: String) extends DataType(collectionName) {
     javaPackage = JavaPackage("java.util", collectionName)
-
     override def getDefaultValue: String = "null"
   }
 
@@ -38,8 +37,21 @@ package object collections {
     def getConstructor(): String = "ArrayList"
   }
 
+  case class LinkedListType(collectionType: DataType)
+    extends ListCollection("LinkedList", collectionType) with ConstructedType {
+    def getConstructor(): String = "LinkedList"
+  }
+
   case class SetType(collectionType: DataType) extends SetCollection("Set", collectionType)
 
+  case class SortedSetType(collectionType: DataType) extends SetCollection("SortedSet", collectionType)
+
+  case class TreeSetType(collectionType: DataType) extends SetCollection("TreeSet", collectionType)
+
+  case class HashSetType(collectionType: DataType) extends SetCollection("HashSet", collectionType)
+
   case class MapType(key: DataType, value: DataType) extends MapCollection("Map", key, value)
+
+  case class HashMapType(key: DataType, value: DataType) extends MapCollection("HashMap", key, value)
 
 }

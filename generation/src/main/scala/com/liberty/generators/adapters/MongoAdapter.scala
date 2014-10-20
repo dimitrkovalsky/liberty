@@ -5,6 +5,7 @@ import com.liberty.common.Implicits._
 import com.liberty.common.{ProjectConfig, NoSQLConfig}
 import com.liberty.exceptions.IdMissedException
 import com.liberty.model._
+import com.liberty.model.xml.XmlFile
 import com.liberty.operations._
 import com.liberty.traits.persistance.DaoAdapter
 import com.liberty.traits.{JavaPackage, LocationPackage}

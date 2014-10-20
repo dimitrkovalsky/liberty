@@ -3,7 +3,7 @@ package com.liberty.model
 import com.liberty.common.Implicits._
 import com.liberty.patterns
 import com.liberty.traits._
-import com.liberty.types.{ConstructedType, DataType, primitives}
+import com.liberty.types.{ConstructedType, DataType, ObjectType, primitives}
 
 import scala.collection.SortedSet
 
@@ -20,17 +20,24 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
   def this(jPackage: JavaPackage) = this("", jPackage)
 
   this.javaPackage = jPackage
+  var customImports: List[CustomImport] = Nil
 
   override def clone(): AnyRef = super.clone()
 
+  def dataType: DataType = new ObjectType(name, javaPackage)
+
+  def getIdField = fields.find(_.toLowerCase.contains("id"))
+
   def deepCopy: JavaClass = {
-    val result = new JavaClass(name, jPackage)
+    val result = new JavaClass(name, this.jPackage)
     result.javaPackage = this.javaPackage
     result.blocks = this.blocks
     result.extendClass = this.extendClass
     result.fields = this.fields.map(f => f.deepCopy())
     result.functions = this.functions
     result.implementList = this.implementList
+    result.annotations = this.annotations
+    result.customImports = this.customImports
     result
   }
 
@@ -44,6 +51,10 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
 
   def addField(field: JavaField) {
     fields = fields ::: List(field)
+  }
+
+  def addCustomImport(customImport: CustomImport) {
+    customImports = customImports ::: List(customImport)
   }
 
   def addBlock(block: StaticBlock) {
@@ -84,7 +95,7 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
     blocks.foreach(b => set = set ++ b.getPackages)
     annotations.map(ann => ann.javaPackage).filter(p => !p.isInstanceOf[NoPackage]).foreach(p => set += p)
     val imports = set.filter(p => !p.isEmpty).filterNot(_.packagePath == javaPackage.packagePath).map(jp => jp.getImport)
-    (SortedSet[String]() ++ imports).mkString("\n")
+    (SortedSet[String]() ++ imports ++ customImports.map(_.getImport)).mkString("\n")
   }
 
   private def getPackages: Set[JavaPackage] = {
@@ -103,7 +114,7 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
     set
   }
 
-  private def getInheritanceString: String = {
+  protected def getInheritanceString: String = {
     val extend = extendClass match {
       case None => ""
       case Some(clazz: JavaClass) => " extends " + clazz.name + clazz.getGenericString
@@ -138,7 +149,7 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
       case list: List[String] => list.mkString("\n\n")
     }
     val mod = modifier.toString
-    patterns.JavaClassPattern(getPackageString, getAllImports, annotationsToString(inline = false), mod, name,
+    patterns.JavaClassPattern(getPackageString, getAllImports, classAnnotationsToString(inline = false), mod, name,
       getGenericString, getInheritanceString, fieldsString, staticBlocks, functionsString)
   }
 
@@ -150,7 +161,6 @@ trait ClassPart {
   def toClassPart(shift: String = "\t"): String
 }
 
-// TODO : change  value: String = "" to Option[String]
 case class JavaField(name: String, dataType: DataType, modifier: Modifier = DefaultModifier, value: Option[String] = None)
   extends ClassPart with Annotatable {
   def deepCopy(): JavaField = {
@@ -171,8 +181,8 @@ case class JavaField(name: String, dataType: DataType, modifier: Modifier = Defa
         Some(value.get.quotes)
       else if (value.isDefined)
         value
-      else if (!value.isDefined)
-        Some(dataType.getDefaultValue)
+      //      else if (!value.isDefined)
+      //        Some(dataType.getDefaultValue)
       else None
 
     s"${

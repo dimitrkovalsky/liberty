@@ -45,6 +45,15 @@ object Implicits {
     }
 
     def quotes: String = "\"" + s + "\""
+
+    /**
+     * Returns true if string contains all elements from one list passer as args
+     * @param args lists
+     * @return
+     */
+    def containsOr(args: List[String]*): Boolean = {
+      args.exists(_.filterNot(str => s.contains(str)) == Nil)
+    }
   }
 
 }

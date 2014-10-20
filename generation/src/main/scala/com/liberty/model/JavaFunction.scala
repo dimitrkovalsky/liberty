@@ -46,10 +46,14 @@ class JavaFunction extends ClassPart with Annotatable {
   }
 }
 
-case class FunctionParameter(paramName: Variable, var paramType: DataType) {
+case class FunctionParameter(paramName: Variable, var paramType: DataType) extends Annotatable {
   def this(paramName: String, paramType: DataType) = this(Variable(paramName), paramType)
 
-  override def toString: String = paramType.toString + " " + paramName.toString
+  override def toString: String = {
+    val annotations = annotationsToString(inline = true)
+    val annString = if (!annotations.isEmpty) annotations + " " else ""
+    annString + paramType.toString + " " + paramName.toString
+  }
 }
 
 object FunctionParameter {
@@ -58,7 +62,6 @@ object FunctionParameter {
   def apply(paramName: String, paramType: DataType) = new FunctionParameter(Variable(paramName), paramType)
 }
 
-// TODO: Add exception import  support
 case class FunctionSignature(var name: String, var output: DataType, var modifier: Modifier = DefaultModifier,
                              var input: List[FunctionParameter] = Nil, var functionThrows: List[JavaException] = Nil) {
   def this(name: String, output: DataType, input: List[FunctionParameter], functionThrows: List[JavaException]) = this(name,
@@ -142,5 +145,12 @@ object ConstructorFunction {
 
 object JavaFunction {
   def apply(functionName: String) = new JavaFunction(functionName)
+
+  def apply(signature: FunctionSignature, body: FunctionBody) = {
+    val f = new JavaFunction
+    f.signature = signature
+    f.body = body
+    f
+  }
 }
 

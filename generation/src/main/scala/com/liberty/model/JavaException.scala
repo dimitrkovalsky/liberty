@@ -34,6 +34,13 @@ class Tryable(builder: FunctionBuilder, withTry: List[Operation]) {
     builder.addOperation(TryOperation(CatchOperation(base, withTry, ThrowWrapped(wrapper))))
     builder.addThrow(wrapper)
   }
+
+  /**
+   * Realize operation in catch block
+   */
+  def catchOperation(operations: List[Operation], base: JavaException = StandardExceptions.Exception) {
+    builder.addOperation(TryOperation(CatchOperation(base, withTry, CatchOperations(operations))))
+  }
 }
 
 /**
@@ -52,6 +59,8 @@ sealed trait CatchResult
 case object Ignore extends CatchResult
 
 case object PrintError extends CatchResult
+
+case class CatchOperations(operations: List[Operation]) extends CatchResult
 
 case object Throws extends CatchResult
 

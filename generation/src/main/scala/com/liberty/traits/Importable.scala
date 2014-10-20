@@ -24,6 +24,9 @@ trait Importable {
 
 }
 
+case class CustomImport(importString:String) {
+  def getImport:String = s"import $importString;"
+}
 /**
  * Represents Java package for imports
  * @param packagePath path for package something like : javax.persistence
@@ -49,6 +52,17 @@ case class JavaPackage(packagePath: String, packageClass: String) {
   }
 }
 
+object JavaPackage {
+  def parse(importString: String): JavaPackage = {
+    val lastIndex = importString.lastIndexOf(".")
+    val dataType = importString.substring(lastIndex + 1)
+    val path = importString.substring(0, lastIndex)
+    JavaPackage(path, dataType)
+  }
+}
+
+class AsteriskPackage(packagePath: String) extends JavaPackage(packagePath, "*")
+
 /**
  * Represent base package for another packages
  * The mail target of this class is to simplify code
@@ -60,7 +74,10 @@ class LocationPackage(packagePath: String) extends JavaPackage(packagePath, "") 
    * @param nestedPackage nested path for package
    * @return  LocationPackage instance
    */
-  def nested(nestedPackage: String) = new LocationPackage(packagePath + "." + nestedPackage)
+  def nested(nestedPackage: String) = {
+    if (nestedPackage.isEmpty) this
+    else new LocationPackage(packagePath + "." + nestedPackage)
+  }
 
   /**
    * Creates package for appropriate class

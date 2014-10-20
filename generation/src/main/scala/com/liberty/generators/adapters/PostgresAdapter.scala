@@ -4,6 +4,7 @@ import com.liberty.builders.{ClassBuilder, FunctionBuilder}
 import com.liberty.common.Implicits._
 import com.liberty.common.{ProjectConfig, RelationalConfig}
 import com.liberty.model._
+import com.liberty.model.xml.{XmlFile, PersistenceXml}
 import com.liberty.operations._
 import com.liberty.traits.persistance.DaoAdapter
 import com.liberty.traits.{JavaPackage, LocationPackage}
