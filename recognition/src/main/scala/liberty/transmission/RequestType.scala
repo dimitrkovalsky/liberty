@@ -10,9 +10,10 @@ case class DataPacket(@BeanProperty var requestType: Int, @BeanProperty var data
 
 object RequestType {
   final val CLIENT_CONNECTED = 1
-  final val LOAD_DICTIONARY: Int = 10
-  final val ADD_TO_DICTIONARY: Int = 11
-  final val START_RECOGNITION: Int = 15
-  final val RECOGNITION_RESULT: Int = 20
+  final val LOAD_DICTIONARY = 10
+  final val ADD_TO_DICTIONARY = 11
+  final val START_RECOGNITION = 15
+  final val RECOGNITION_RESULT = 20
+  final val SYNTHESIZE = 30
 }
 

@@ -5,6 +5,7 @@ import java.net.InetSocketAddress
 
 import akka.actor.{ActorRef, Props, ActorSystem}
 import akka.util.ByteString
+import liberty.entities.{RecognitionGrammar, Dictionary}
 import liberty.helpers.JsonMapper
 import liberty.loaders.DictionaryLoader
 import liberty.logic.VoiceHandler
@@ -27,8 +28,16 @@ object TransmissionManager {
       Thread.sleep(10)
     }
 
-    //  DictionaryLoader.loadDictionary()
+    val dictionary = new Dictionary()
+    dictionary.setGrammar(List(RecognitionGrammar(1,"Sample"),RecognitionGrammar(1,"Example"),
+      RecognitionGrammar(2,"Another"), RecognitionGrammar(2,"Else")))
+    dictionary
+    //DictionaryLoader.loadDictionary()
+    TransmissionManager.sendData(new DataPacket(RequestType.LOAD_DICTIONARY, dictionary))
+
     TransmissionManager.sendData(DataPacket(RequestType.START_RECOGNITION))
+   // Thread.sleep(1000)
+    synthesize("Recognition started")
     println("Recognition started...")
   }
 
@@ -58,6 +67,11 @@ object TransmissionManager {
       case e: IllegalArgumentException => System.err.println("Can't deserialize data : " + data)
     }
   }
+  
+  def synthesize(phrase:String): Unit ={
+    sendData(DataPacket(RequestType.SYNTHESIZE, phrase))
+  }
+  
 
   def sendData(data: DataPacket) {
     try {
