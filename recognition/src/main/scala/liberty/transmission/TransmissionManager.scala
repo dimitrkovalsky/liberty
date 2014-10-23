@@ -12,8 +12,9 @@ import liberty.logic.VoiceHandler
 
 
 object TransmissionManager {
-  final val DATA_PORT = 5555
-  final val LOCALHOST = "localhost"
+  private final val DATA_PORT = 5555
+  private final val LOCALHOST = "localhost"
+  private final val PACKET_END = "EEENNNDDD"
   var connected = false
   private val voiceHandler = new VoiceHandler()
   private val jsonMapper = JsonMapper.getMapper
@@ -76,7 +77,7 @@ object TransmissionManager {
   def sendData(data: DataPacket) {
     try {
       val string = jsonMapper.writeValueAsString(data)
-      worker ! ByteString(string)
+      worker ! ByteString(string + PACKET_END)
       println("SENT: " + string)
     } catch {
       case e: Exception => onException(e)

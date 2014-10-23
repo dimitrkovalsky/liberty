@@ -24,14 +24,10 @@ class DataWorker(remote: InetSocketAddress, dataHandler: String => Unit, onError
       val connection = sender()
       connection ! Register(self)
       context become {
-        case data: ByteString =>
-          connection ! Write(data)
-        case CommandFailed(w: Write) =>
-          onError("Write failed")
-        case Received(data) =>
-          dataHandler(new String(data.toArray))
-        case "close" =>
-          connection ! Close
+        case data: ByteString => connection ! Write(data)
+        case CommandFailed(w: Write) => onError("Write failed")
+        case Received(data) => dataHandler(new String(data.toArray))
+        case "close" => connection ! Close
         case _: ConnectionClosed =>
           onError("Connection closed")
           context stop self
