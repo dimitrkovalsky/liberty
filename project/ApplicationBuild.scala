@@ -23,14 +23,14 @@ object ApplicationBuild extends Build {
   val SCALAC_JVM_VERSION = "jvm-1.7"
   val JAVAC_JVM_VERSION = "1.7"
 
-  lazy val root = Project("com.liberty", file("."), settings = rootSettings) aggregate (allProjects: _*)
+  lazy val root = Project("liberty", file("."), settings = rootSettings) aggregate (allProjects: _*)
   lazy val recognition = Project("recognition", file("recognition"), settings = recognitionSettings)
   lazy val generation = Project("generation", file("generation"), settings = generationSettings)
 
   lazy val allProjects = Seq[ProjectReference](recognition, generation)
 
   def sharedSettings = Defaults.defaultSettings ++ Seq(
-    organization := "com.com.liberty",
+    organization := "com.liberty",
     version := "0.1.0",
     scalaVersion := "2.11.1",
 
@@ -59,7 +59,7 @@ object ApplicationBuild extends Build {
   )
 
   def recognitionSettings = sharedSettings ++ Seq(
-    name := "com.liberty-recognition",
+    name := "liberty-recognition",
     unmanagedSourceDirectories in Compile <++= baseDirectory {
       base =>
         Seq(
@@ -69,7 +69,7 @@ object ApplicationBuild extends Build {
   )
 
   def generationSettings = sharedSettings ++ Seq(
-    name := "com.liberty-generaion",
+    name := "liberty-generation",
     unmanagedSourceDirectories in Compile <++= baseDirectory {
       base =>
         Seq(
