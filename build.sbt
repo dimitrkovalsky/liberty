@@ -1,4 +1,4 @@
-name := "liberty"
+name := "com/liberty"
 
 version := "1.0"
 

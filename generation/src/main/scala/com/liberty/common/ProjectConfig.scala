@@ -15,9 +15,9 @@ object ProjectConfig {
 
   def basePackage = LocationPackage(basePackageString)
 
-  var dbStandardMongo = DBConfig(DatabaseType.MONGO_DB, NoSQLConfig("liberty-database", "localhost", 27017))
+  var dbStandardMongo = DBConfig(DatabaseType.MONGO_DB, NoSQLConfig("com.liberty-database", "localhost", 27017))
   var dbStandardPostgres = DBConfig(DatabaseType.POSTGRES_DB, RelationalConfig("org.postgresql.Driver",
-    "jdbc:postgresql://localhost", 5432, "liberty-database", "postgres", "Admin111"))
+    "jdbc:postgresql://localhost", 5432, "com.liberty-database", "postgres", "Admin111"))
 
   var defaultDatabase: DBConfig = dbStandardMongo
   /**

@@ -1,6 +1,6 @@
 import java.net.Socket
 
-import liberty.transmission.TransmissionManager
+import com.liberty.transmission.TransmissionManager
 
 /**
  * User: dimitr

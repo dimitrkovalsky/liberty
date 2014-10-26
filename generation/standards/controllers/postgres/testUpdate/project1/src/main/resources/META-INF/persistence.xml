@@ -6,7 +6,7 @@
         <class> Location </class>
         <properties>
             <property value="org.postgresql.Driver" name="javax.persistence.jdbc.driver"/>
-            <property value="jdbc:postgresql://localhost:5432/liberty-database" name="javax.persistence.jdbc.url"/>
+            <property value="jdbc:postgresql://localhost:5432/com.liberty-database" name="javax.persistence.jdbc.url"/>
             <property value="postgres" name="javax.persistence.jdbc.user"/>
             <property value="Admin111" name="javax.persistence.jdbc.password"/>
             <property value="create-tables" name="eclipselink.ddl-generation"/>
