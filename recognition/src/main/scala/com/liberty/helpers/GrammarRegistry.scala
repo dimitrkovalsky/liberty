@@ -11,7 +11,7 @@ object GrammarRegistry {
     grammars += grammar.label -> grammar
   }
 
-  def getGrammar(recognized: RecognitionResult): Grammar = grammars(recognized.label)
+  def getGrammar(recognized: RecognitionResult): Grammar = grammars(recognized.getBest.label)
 
   def addName(name: Grammar) {
     names = names ::: List(name)
@@ -22,7 +22,7 @@ object GrammarRegistry {
   }
 
   def isName(recognized: RecognitionResult): Boolean = {
-    names.foreach(x => if (x.label == recognized.label) return true)
+    names.foreach(x => if (x.label == recognized.getBest.label) return true)
     false
   }
 }

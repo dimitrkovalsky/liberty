@@ -2,9 +2,17 @@ package com.liberty.entities
 
 import scala.beans.BeanProperty
 
-case class RecognitionResult(@BeanProperty var dictation: String = "", @BeanProperty var label: Int = 0, @BeanProperty var confidence: Int = 0) {
-  def this() = this("", 0, 0)
+
+case class RecognitionResult(@BeanProperty timeStamp: Long, @BeanProperty grammar: Int,
+                             @BeanProperty duration: Long, @BeanProperty scores: Array[SingleResult]) {
+  def getBest: SingleResult = {
+    scores.head
+  }
+
+  def this() = this(0, 0, 0, Array.empty)
 }
 
-
-//case class Recognized(timeStamp:)
+case class SingleResult(@BeanProperty label: Int, @BeanProperty confidence: Int,
+                        @BeanProperty sentence: String, @BeanProperty tags: String) {
+  def this() = this(0, 0, "", "")
+}
