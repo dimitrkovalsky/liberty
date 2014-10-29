@@ -1,10 +1,5 @@
 package com.liberty.commands
 
-/**
- * User: dkovalskyi
- * Date: 15.07.13
- * Time: 16:22
- */
 object FunctionCommands {
   final val CREATE_FUNCTION: Int = 201
   final val EDIT_FUNCTION: Int = 202

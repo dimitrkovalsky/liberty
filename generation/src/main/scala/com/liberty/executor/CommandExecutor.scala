@@ -2,6 +2,8 @@ package com.liberty.executor
 
 import java.io.{BufferedReader, File, InputStreamReader}
 
+import com.liberty.common.ProjectConfig
+
 /**
  * User: Maxxis
  * Date: 28.10.13
