@@ -46,7 +46,8 @@ object ApplicationBuild extends Build {
       "com.google.code.javaparser" % "javaparser" % "1.0.11",
       "com.typesafe" % "config" % "1.0.2",
       "com.typesafe.akka" % "akka-actor_2.11" % "2.3.6",
-      "junit" % "junit" % "4.11"
+      "junit" % "junit" % "4.11",
+      "org.apache.commons" % "commons-lang3" % "3.1"
     ),
 
     parallelExecution := true
