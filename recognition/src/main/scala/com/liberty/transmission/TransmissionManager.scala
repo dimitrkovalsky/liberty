@@ -5,7 +5,8 @@ import java.net.InetSocketAddress
 
 import akka.actor.{ActorRef, Props, ActorSystem}
 import akka.util.ByteString
-import com.liberty.entities.{RecognitionGrammar, Dictionary}
+import com.codahale.jerkson.Json
+import com.liberty.entities.{RecognitionResult, RecognitionGrammar, Dictionary}
 import com.liberty.helpers.JsonMapper
 import com.liberty.loaders.DictionaryLoader
 import com.liberty.logic.VoiceHandler
@@ -30,14 +31,13 @@ object TransmissionManager {
     }
 
     val dictionary = new Dictionary()
-    dictionary.setGrammar(List(RecognitionGrammar(1,"Sample"),RecognitionGrammar(1,"Example"),
-      RecognitionGrammar(2,"Another"), RecognitionGrammar(2,"Else")))
-    dictionary
+    dictionary.setGrammar(List(RecognitionGrammar(1, "Sample"), RecognitionGrammar(1, "Example"),
+      RecognitionGrammar(2, "Another"), RecognitionGrammar(2, "Else")))
     //DictionaryLoader.loadDictionary()
     TransmissionManager.sendData(new DataPacket(RequestType.LOAD_DICTIONARY, dictionary))
 
     TransmissionManager.sendData(DataPacket(RequestType.START_RECOGNITION))
-   // Thread.sleep(1000)
+    // Thread.sleep(1000)
     synthesize("Recognition started")
     println("Recognition started...")
   }
@@ -61,18 +61,22 @@ object TransmissionManager {
       val packet = jsonMapper.readValue(data, classOf[DataPacket])
       packet.requestType match {
         case RequestType.CLIENT_CONNECTED => onConnected()
-        case RequestType.RECOGNITION_RESULT => voiceHandler.handleRecognitionResult(packet)
+        case RequestType.RECOGNITION_RESULT =>
+          val recognized = JsonMapper.getMapper.convertValue(packet.getData, classOf[RecognitionResult])
+          voiceHandler.handleRecognitionResult(recognized)
         case _ => println("[TransmissionManager] unknown requestType : " + packet)
       }
     } catch {
-      case e: IllegalArgumentException => System.err.println("Can't deserialize data : " + data)
+      case e: IllegalArgumentException =>
+        System.err.println("Can't deserialize data : " + data)
+        System.err.println("Error: " + e.getMessage)
     }
   }
-  
-  def synthesize(phrase:String): Unit ={
+
+  def synthesize(phrase: String): Unit = {
     sendData(DataPacket(RequestType.SYNTHESIZE, phrase))
   }
-  
+
 
   def sendData(data: DataPacket) {
     try {
