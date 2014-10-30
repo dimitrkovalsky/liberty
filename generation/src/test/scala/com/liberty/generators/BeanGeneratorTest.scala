@@ -11,7 +11,10 @@ class BeanGeneratorTest {
 
   @Test def generateBean() {
     val generator = new BeanGenerator
+    val start = System.currentTimeMillis()
     val result = generator.createBean(TestModels.getSubject)
+    val size =result.get.bean.toString.size + result.get.beanInterface.toString.size
+    print("Time : " + (System.currentTimeMillis() - start) + " size : " + size )
     result match {
       case Some(packet) =>
         val actualBean = packet.bean.toString

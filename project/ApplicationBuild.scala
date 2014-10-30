@@ -26,8 +26,11 @@ object ApplicationBuild extends Build {
   lazy val root = Project("liberty", file("."), settings = rootSettings) aggregate (allProjects: _*)
   lazy val recognition = Project("recognition", file("recognition"), settings = recognitionSettings)
   lazy val generation = Project("generation", file("generation"), settings = generationSettings)
+  lazy val ui = Project("ui", file("ui"), settings = uiSettings)
 
-  lazy val allProjects = Seq[ProjectReference](recognition, generation)
+  lazy val allProjects = Seq[ProjectReference](recognition, generation, ui)
+
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.0" cross CrossVersion.full)
 
   def sharedSettings = Defaults.defaultSettings ++ Seq(
     organization := "com.liberty",
@@ -46,10 +49,18 @@ object ApplicationBuild extends Build {
       "com.google.code.javaparser" % "javaparser" % "1.0.11",
       "com.typesafe" % "config" % "1.0.2",
       "com.typesafe.akka" % "akka-actor_2.11" % "2.3.6",
-      "junit" % "junit" % "4.11"
+      "junit" % "junit" % "4.11",
+      "org.scalafx" % "scalafx_2.10" % "1.0.0-M6",
+      "com.miglayout" % "miglayout-javafx" % "4.2",
+      "commons-lang" % "commons-lang" % "2.6",
+      "org.slf4j" % "slf4j-api" % "1.6.1",
+      "org.slf4j" % "jcl-over-slf4j" % "1.6.1",
+      "org.slf4j" % "slf4j-log4j12" % "1.6.1",
+      "log4j" % "log4j" % "1.2.16"
     ),
 
     parallelExecution := true
+
 
   )
 
@@ -74,6 +85,16 @@ object ApplicationBuild extends Build {
       base =>
         Seq(
           base / "../generation/src/main/scala"
+        )
+    }
+  )
+
+  def uiSettings = sharedSettings ++ Seq(
+    name := "liberty-ui",
+    unmanagedSourceDirectories in Compile <++= baseDirectory {
+      base =>
+        Seq(
+          base / "../ui/src/main/scala"
         )
     }
   )
