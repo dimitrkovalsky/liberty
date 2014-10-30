@@ -7,11 +7,14 @@ import com.liberty.traits.LocationPackage
  */
 object ProjectConfig {
   var projectName = "project1"
+  var path = "H:/System"
+  var targetPath = s"$path/$projectName/"
+  var serverPath = "H:\\Workspace\\wildfly-8.1.0.Final\\standalone\\deployments"
 
   def projectPath = s"D:/test/$projectName"
 
-//  var basePackageString = "com.test"
-  var basePackageString = "standard"
+  var basePackageString = "com.test"
+//  var basePackageString = "standard"
 
   def basePackage = LocationPackage(basePackageString)
 
