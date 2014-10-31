@@ -30,16 +30,18 @@ object TransmissionManager {
       Thread.sleep(10)
     }
 
-    val dictionary = new Dictionary()
-    dictionary.setGrammar(List(RecognitionGrammar(1, "Sample"), RecognitionGrammar(1, "Example"),
-      RecognitionGrammar(2, "Another"), RecognitionGrammar(2, "Else")))
-    //DictionaryLoader.loadDictionary()
+    val gr1 = List(RecognitionGrammar(1, "Sample"), RecognitionGrammar(1, "Example"), RecognitionGrammar(2, "Another"), RecognitionGrammar(2, "Else"))
+    val gr2 = List(RecognitionGrammar(1, "Ok"), RecognitionGrammar(1, "Okay"), RecognitionGrammar(2, "Cool"), RecognitionGrammar(2, "Super"))
+    val dictionary = new Dictionary(Map(1 -> gr1, 2 -> gr2))
+
+    //    DictionaryLoader.loadDictionary()
     TransmissionManager.sendData(new DataPacket(RequestType.LOAD_DICTIONARY, dictionary))
 
     TransmissionManager.sendData(DataPacket(RequestType.START_RECOGNITION))
     // Thread.sleep(1000)
     synthesize("Recognition started")
     println("Recognition started...")
+    activateGrammar(2)
   }
 
   def onConnected() {
@@ -77,12 +79,15 @@ object TransmissionManager {
     sendData(DataPacket(RequestType.SYNTHESIZE, phrase))
   }
 
+  def activateGrammar(grammarId: Int) {
+    sendData(DataPacket(RequestType.CHANGE_ACTIVE_GRAMMAR, grammarId.toString))
+  }
 
   def sendData(data: DataPacket) {
     try {
-      val string = jsonMapper.writeValueAsString(data)
+      val string = Json.generate(data)//jsonMapper.writeValueAsString(data)
       worker ! ByteString(string + PACKET_END)
-      println("SENT: " + string)
+     println("SENT: " + string)
     } catch {
       case e: Exception => onException(e)
     }

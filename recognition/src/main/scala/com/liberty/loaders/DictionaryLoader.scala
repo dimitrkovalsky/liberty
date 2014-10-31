@@ -25,8 +25,8 @@ object DictionaryLoader {
       loadGrammarFile("types", GrammarType.TYPE_GRAMMAR) ::: loadGrammarFile("commands", GrammarType.FUNCTION_GRAMMAR) ::: loadNamesFile("function") ::: Nil
     println("[DictionaryLoader] " + grammars.size + " grammars loaded")
 
-    val dictionary = new Dictionary()
-    dictionary.setGrammar(grammarToRecognitionGrammar(grammars))
+    val dictionary = new Dictionary(null)
+    //    dictionary.setGrammar(grammarToRecognitionGrammar(grammars))
     dictionary
   }
 
