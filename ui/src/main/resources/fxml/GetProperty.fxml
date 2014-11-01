@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="anchorPane" prefHeight="500.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="GetPropertyController">
+    <children>
+        <VBox padding="$x2" prefHeight="500.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#handleButtonAction" text="Click me!" textFill="RED">
+                    <font>
+                        <Font size="16.0" fx:id="x1" />
+                    </font>
+                </Button>
+                <GridPane prefHeight="382.0" prefWidth="565.0">
+                    <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="java.vendor" textAlignment="LEFT" textFill="#0029ff" textOverrun="ELLIPSIS" underline="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="java.vendor.url" textFill="#33ffe7" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="java.home" textFill="#ff9533" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="java.awt.graphicsenv" textFill="#ff66af" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="java.class.version" textFill="#00cc83" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="sun.boot.class.path" textFill="#0c9900" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="java.version" textFill="#1400ff" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="javafx.version" textFill="#66edff" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="java.runtime.version" textFill="#ffb800" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="os.name" textFill="#ff00b8" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="os.arch" textFill="#00e0ff" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                        <Label alignment="CENTER" font="$x1" prefHeight="28.0" prefWidth="280.0" text="os.version" textFill="#00cc21" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+                        <TextField fx:id="tfDelegate1" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="tfDelegate2" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="tfDelegate3" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="tfDelegate4" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="tfDelegate5" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="tfDelegate6" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="tfDelegate7" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <TextField fx:id="tfDelegate8" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <TextField fx:id="tfDelegate9" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <TextField fx:id="tfDelegate10" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                        <TextField fx:id="tfDelegate11" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                        <TextField fx:id="tfDelegate12" prefHeight="32.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" fx:id="x2" />
+                    </VBox.margin>
+                </GridPane>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
