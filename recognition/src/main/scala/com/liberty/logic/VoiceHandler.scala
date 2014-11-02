@@ -2,6 +2,7 @@ package com.liberty.logic
 
 import com.liberty.entities.RecognitionResult
 import com.liberty.generic.VoiceNotifier
+import com.liberty.transmission.GrammarGroups
 
 import scala.collection.immutable.Stack
 
@@ -14,11 +15,15 @@ import scala.collection.immutable.Stack
 class VoiceHandler {
   val subscribers: Stack[VoiceNotifier] = Stack.empty[VoiceNotifier]
   subscribers.push(new FunctionHandler)
+  val handler = new ProjectHandler
 
   def handleRecognitionResult(recognized: RecognitionResult) {
     try {
-
-      println("Recognized : " + recognized.getBest.sentence)
+      recognized.grammar match {
+        case GrammarGroups.PROJECT_CREATION | GrammarGroups.PROJECT_NAMES => handler.onRecognized(recognized)
+        case _ => println("[VoiceHandler] match fail")
+      }
+      println("Recognized : " + recognized.best.sentence)
     } catch {
       case e: Throwable => System.err.println("[VoiceHandler] handleRecognitionResult error : ", e)
     }

@@ -5,7 +5,7 @@ import scala.beans.BeanProperty
 
 case class RecognitionResult(@BeanProperty timeStamp: Long, @BeanProperty grammar: Int,
                              @BeanProperty duration: Long, @BeanProperty scores: Array[SingleResult]) {
-  def getBest: SingleResult = {
+  def best: SingleResult = {
     scores.head
   }
 

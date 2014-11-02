@@ -16,9 +16,9 @@ class FunctionHandler extends VoiceNotifier {
 
 
   override def onRecognized(recognized: RecognitionResult): Option[OperationResult] = {
-    println("[FunctionHandler] onRecognized : " + recognized.getBest.label)
+    println("[FunctionHandler] onRecognized : " + recognized.best.label)
 
-    var result: Option[OperationResult] = recognized.getBest.label match {
+    var result: Option[OperationResult] = recognized.best.label match {
       case FunctionCommands.CREATE_FUNCTION => createFunction()
       case FunctionCommands.RENAME => renameFunction(recognized)
       case FunctionCommands.FUNCTION_PARAMS => previousCommand = FunctionCommands.FUNCTION_PARAMS; Option[OperationResult](OperationResult())
@@ -50,7 +50,7 @@ class FunctionHandler extends VoiceNotifier {
   def renameFunction(recognized: RecognitionResult): Option[OperationResult] = {
     if (!GrammarRegistry.isName(recognized))
       return None
-    currentFunction.name = recognized.getBest.sentence
+    currentFunction.name = recognized.best.sentence
     previousCommand = FunctionCommands.RENAME
     Option(OperationResult())
   }

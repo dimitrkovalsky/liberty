@@ -12,7 +12,28 @@ import com.liberty.loaders.DictionaryLoader
 import com.liberty.logic.VoiceHandler
 
 
+object GrammarGroups {
+  val PROJECT_CREATION = 1
+  val CLASS_EDITING = 2
+  val COMPONENT_CREATION = 3 // create database, create bean ...
+
+
+  val PROJECT_NAMES = 100
+}
+
+object GrammarIds {
+  val CREATE_PROJECT = 1
+  val CREATE_PACKAGE = 2
+  val CREATE_CLASS = 3
+  val ADD_DATABASE = 11
+  val CHANGE_DATABASE = 12
+  val NAME_OF_PROJECT = 100
+}
+
 object TransmissionManager {
+
+  import GrammarIds._
+
   private final val DATA_PORT = 5555
   private final val LOCALHOST = "localhost"
   private final val PACKET_END = "EEENNNDDD"
@@ -30,18 +51,30 @@ object TransmissionManager {
       Thread.sleep(10)
     }
 
-    val gr1 = List(RecognitionGrammar(1, "Sample"), RecognitionGrammar(1, "Example"), RecognitionGrammar(2, "Another"), RecognitionGrammar(2, "Else"))
-    val gr2 = List(RecognitionGrammar(1, "Ok"), RecognitionGrammar(1, "Okay"), RecognitionGrammar(2, "Cool"), RecognitionGrammar(2, "Super"))
-    val dictionary = new Dictionary(Map(1 -> gr1, 2 -> gr2))
+    val gr1 = List(RecognitionGrammar(CREATE_PROJECT, "create project"), RecognitionGrammar(CREATE_PROJECT, "new project"),
+      RecognitionGrammar(CREATE_PACKAGE, "add package"), RecognitionGrammar(CREATE_PACKAGE, "create package"),
+      RecognitionGrammar(CREATE_PACKAGE, "add new package"), RecognitionGrammar(CREATE_PACKAGE, "create new package"),
+      RecognitionGrammar(CREATE_PACKAGE, "create package"), RecognitionGrammar(CREATE_CLASS, "add class"), RecognitionGrammar(CREATE_CLASS, "new class"),
+      RecognitionGrammar(CREATE_CLASS, "create class"), RecognitionGrammar(CREATE_CLASS, "create new class"))
 
-    //    DictionaryLoader.loadDictionary()
+    val gr2 = List(RecognitionGrammar(ADD_DATABASE, "add database"), RecognitionGrammar(ADD_DATABASE, "connect database"),
+      RecognitionGrammar(ADD_DATABASE, "add database support"), RecognitionGrammar(CHANGE_DATABASE, "change database"),
+      RecognitionGrammar(CHANGE_DATABASE, "change current database"))
+
+    val gr3 = List(RecognitionGrammar(NAME_OF_PROJECT, "my project"), RecognitionGrammar(NAME_OF_PROJECT, "sample"),
+      RecognitionGrammar(NAME_OF_PROJECT, "simple project"), RecognitionGrammar(NAME_OF_PROJECT, "test"),
+      RecognitionGrammar(NAME_OF_PROJECT, "test project"))
+
+    val dictionary = new Dictionary(Map(GrammarGroups.PROJECT_CREATION -> gr1, GrammarGroups.COMPONENT_CREATION -> gr2, GrammarGroups.PROJECT_NAMES -> gr3))
+
+    // DictionaryLoader.loadDictionary()
     TransmissionManager.sendData(new DataPacket(RequestType.LOAD_DICTIONARY, dictionary))
 
     TransmissionManager.sendData(DataPacket(RequestType.START_RECOGNITION))
     // Thread.sleep(1000)
     synthesize("Recognition started")
     println("Recognition started...")
-    activateGrammar(2)
+    activateGrammar(1)
   }
 
   def onConnected() {
@@ -85,9 +118,9 @@ object TransmissionManager {
 
   def sendData(data: DataPacket) {
     try {
-      val string = Json.generate(data)//jsonMapper.writeValueAsString(data)
+      val string = Json.generate(data) //jsonMapper.writeValueAsString(data)
       worker ! ByteString(string + PACKET_END)
-     println("SENT: " + string)
+      println("SENT: " + string)
     } catch {
       case e: Exception => onException(e)
     }
