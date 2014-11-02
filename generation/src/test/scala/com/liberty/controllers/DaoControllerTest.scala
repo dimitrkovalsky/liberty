@@ -4,13 +4,10 @@ import com.liberty.builders.ClassBuilderTest
 import com.liberty.common.{DatabaseType, Filable, ProjectConfig}
 import com.liberty.model.{JavaClass, JavaField, PrivateModifier}
 import com.liberty.types.primitives.IntegerType
-import com.liberty.utils.FileChecker
+import com.liberty.helpers.FileChecker
 import org.junit.{Before, Test}
 import org.scalatest.junit.AssertionsForJUnit
 
-/**
- * Created by Dmytro_Kovalskyi on 07.07.2014.
- */
 /**
  * For work with files extends AssertionsForJUnit for annotation processing
  */

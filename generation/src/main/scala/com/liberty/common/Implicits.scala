@@ -5,9 +5,6 @@ import com.liberty.operations.{Expression, StringValue, Value, Variable}
 import com.liberty.traits.JavaPackage
 import com.liberty.types.{ObjectType, SimpleObjectType}
 
-/**
- * Created by Dmytro_Kovalskyi on 20.06.2014.
- */
 object Implicits {
   implicit def functionParameterToExpression(param: FunctionParameter): Expression = param.paramName
 
@@ -53,6 +50,10 @@ object Implicits {
      */
     def containsOr(args: List[String]*): Boolean = {
       args.exists(_.filterNot(str => s.contains(str)) == Nil)
+    }
+
+    def removeSpaces(): String = {
+      s.replace(" ", "")
     }
   }
 

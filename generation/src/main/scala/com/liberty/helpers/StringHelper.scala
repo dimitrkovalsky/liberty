@@ -15,5 +15,9 @@ object StringHelper {
     }
   }
 
+  def getPathByPackageName(packageName: String): String = {
+    packageName.replace(".", "/")
+  }
+
   def isNumeric(input: String): Boolean = input.forall(_.isDigit)
 }

@@ -2,13 +2,10 @@ package com.liberty.common
 
 import com.liberty.traits.LocationPackage
 
-/**
- * Created by Dmytro_Kovalskyi on 07.07.2014.
- */
 object ProjectConfig {
   var projectName = "project1"
-  var path = "H:/System"
-  var targetPath = s"$path/$projectName/"
+  var path = "C:\\System"
+  var targetPath = s"$path\\$projectName"
   var serverPath = "H:\\Workspace\\wildfly-8.1.0.Final\\standalone\\deployments"
 
   def projectPath = s"D:/test/$projectName"

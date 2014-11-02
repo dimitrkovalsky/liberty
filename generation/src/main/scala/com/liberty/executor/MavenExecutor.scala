@@ -12,6 +12,7 @@ class MavenExecutor() {
   def create() : Boolean = {
     if (!ProjectConfig.path.isEmpty && !ProjectConfig.basePackageString.isEmpty && !ProjectConfig.projectName.isEmpty) {
       val command: String = "mvn archetype:generate -DgroupId=" + ProjectConfig.basePackageString + " -DartifactId=" + ProjectConfig.projectName + " -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false"
+      println("Execute command: " + command)
       CommandExecutor.execute(command, ProjectConfig.path)
       true
     } else {

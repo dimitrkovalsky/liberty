@@ -24,9 +24,11 @@ object ApplicationBuild extends Build {
   val JAVAC_JVM_VERSION = "1.7"
 
   lazy val root = Project("liberty", file("."), settings = rootSettings) aggregate (allProjects: _*)
-  lazy val recognition = Project("recognition", file("recognition"), settings = recognitionSettings)
+  lazy val recognition = Project("recognition", file("recognition"), settings = recognitionSettings).dependsOn(generation)
   lazy val generation = Project("generation", file("generation"), settings = generationSettings)
   lazy val ui = Project("ui", file("ui"), settings = uiSettings)
+
+ // generation.dependsOn(generation)
 
   lazy val allProjects = Seq[ProjectReference](recognition, generation, ui)
 
@@ -52,6 +54,7 @@ object ApplicationBuild extends Build {
       "com.google.code.javaparser" % "javaparser" % "1.0.11",
       "com.typesafe" % "config" % "1.0.2",
       "com.typesafe.akka" % "akka-actor_2.11" % "2.3.6",
+      "junit" % "junit" % "4.11",
       "org.apache.commons" % "commons-lang3" % "3.1",
       "org.scalafx" % "scalafx_2.10" % "1.0.0-M6",
       "com.miglayout" % "miglayout-javafx" % "4.2",

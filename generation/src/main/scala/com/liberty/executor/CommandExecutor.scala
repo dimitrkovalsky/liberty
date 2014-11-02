@@ -46,7 +46,7 @@ object CommandExecutor {
 
     while (line != null) {
       line = r.readLine()
-      System.out.println(line)
+      println(line)
     }
   }
 }
