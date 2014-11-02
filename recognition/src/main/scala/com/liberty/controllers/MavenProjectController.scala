@@ -2,10 +2,10 @@ package com.liberty.controllers
 
 import java.io.File
 
-import com.liberty.common.ProjectConfig
+import com.liberty.common.{GrammarGroups, ProjectConfig}
 import com.liberty.executor.MavenExecutor
 import com.liberty.helpers.{StringHelper, SynthesizeHelper}
-import com.liberty.transmission.{GrammarGroups, TransmissionManager}
+import com.liberty.transmission.TransmissionManager
 
 
 /**

@@ -1,8 +1,8 @@
 package com.liberty.logic
 
+import com.liberty.common.GrammarGroups
 import com.liberty.entities.RecognitionResult
 import com.liberty.generic.VoiceNotifier
-import com.liberty.transmission.GrammarGroups
 
 import scala.collection.immutable.Stack
 

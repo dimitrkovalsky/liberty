@@ -1,12 +1,13 @@
 package com.liberty.logic
 
+import com.liberty.common.GrammarGroups
 import com.liberty.controllers.MavenProjectController
 import com.liberty.entities.RecognitionResult
-import com.liberty.transmission.{TransmissionManager, GrammarGroups}
+import com.liberty.transmission.TransmissionManager
 
 class ProjectHandler extends Handler {
 
-  import com.liberty.transmission.GrammarIds._
+  import com.liberty.common.GrammarIds._
 
   private var controller: Option[MavenProjectController] = None
 

@@ -1,6 +1,5 @@
 package com.liberty.executor
 
-import com.liberty.model.MavenEntity
 import org.junit.{Assert, Test}
 
 /**
@@ -14,13 +13,13 @@ class MavenExecutorTest {
 
   @Test
   def test() {
-    val me: MavenEntity = new MavenEntity(projectName = "test", groupId = "com.test", path = "C:\\")
-    val mavenExecutor: MavenExecutor = new MavenExecutor(me)
-
-    mavenExecutor.create()
-    Assert.assertTrue(toBeOrNotToBe)
-    mavenExecutor.clean()
-    mavenExecutor.build()
+ //   val me: MavenEntity = new MavenEntity(projectName = "test", groupId = "com.test", path = "C:\\")
+//    val mavenExecutor: MavenExecutor = new MavenExecutor(me)
+//
+//    mavenExecutor.create()
+//    Assert.assertTrue(toBeOrNotToBe)
+//    mavenExecutor.clean()
+//    mavenExecutor.build()
 
   }
 }

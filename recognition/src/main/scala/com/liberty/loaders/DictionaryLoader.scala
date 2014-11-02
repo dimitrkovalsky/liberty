@@ -1,72 +1,81 @@
 package com.liberty.loaders
 
-import com.liberty.entities.{Dictionary, Grammar, RecognitionGrammar}
-import com.liberty.helpers.GrammarRegistry
-import com.liberty.transmission.{DataPacket, RequestType, TransmissionManager}
-import com.liberty.types.GrammarType
+import java.io.File
+
+import com.liberty.common.GrammarGroups
+import com.liberty.entities.{Dictionary, Grammar}
 
 import scala.io.Source
 
 
 object DictionaryLoader {
-  private final val GRAMMARS_DIRECTORY = "grammars/"
-  private final val GRAMMAR_EXTENSION = ".grammar"
-  private final val NAMES_DIRECTORY = "names/"
-  private final val NAMES_EXTENSION = ".names"
-  private var nameLabel = 10000
 
-  def loadDictionary() {
-    TransmissionManager.sendData(new DataPacket(RequestType.LOAD_DICTIONARY, loadGrammarFiles()))
-    println("[DictionaryLoader] dictionary loaded...")
+  import com.liberty.common.GrammarIds._
+
+  private val PROJECT_PATH = getProjectFolder
+  private val GRAMMARS_DIRECTORY = PROJECT_PATH + "/recognition/grammars/"
+  private val GRAMMAR_EXTENSION = ".grammar"
+  private val NAMES_DIRECTORY = PROJECT_PATH + "/recognition/names/"
+  private val NAMES_EXTENSION = ".names"
+
+  private def getProjectFolder = {
+    val path = new File(".").getAbsolutePath
+    path.substring(0, path.length() - 1)
   }
 
-  private def loadGrammarFiles(): Dictionary = {
-    val grammars: List[Grammar] = loadGrammarFile("functions", GrammarType.FUNCTION_GRAMMAR) :::
-      loadGrammarFile("types", GrammarType.TYPE_GRAMMAR) ::: loadGrammarFile("commands", GrammarType.FUNCTION_GRAMMAR) ::: loadNamesFile("function") ::: Nil
-    println("[DictionaryLoader] " + grammars.size + " grammars loaded")
+  /**
+   * Grammar label in files should be the same as in  GrammarIds
+   * @return Dictionary with grammars loaded from files
+   */
+  def loadDictionary(): Dictionary = {
+    val projectCreation = loadGrammarFile("project_creation")
+    val componentCreation = loadGrammarFile("component_creation")
+    val projectNames = loadNames("project", NAME_OF_PROJECT)
+    val dictionary = new Dictionary(Map(
+      GrammarGroups.PROJECT_CREATION -> projectCreation,
+      GrammarGroups.COMPONENT_CREATION -> componentCreation,
+      GrammarGroups.PROJECT_NAMES -> projectNames))
 
-    val dictionary = new Dictionary(null)
-    //    dictionary.setGrammar(grammarToRecognitionGrammar(grammars))
+    val loaded = dictionary.grammars.values.flatten.size
+    println(s"[DictionaryLoader] loaded $loaded grammars")
+
     dictionary
   }
 
 
-  def nameStringToGrammar(string: String): Grammar = {
-    val grammar = Grammar(nameLabel, string)
-    nameLabel += 1
-    grammar
-  }
-
-  private def loadNamesFile(path: String): List[Grammar] = {
-    var result: List[Grammar] = Nil
-    for (line <- Source.fromFile(NAMES_DIRECTORY + path + NAMES_EXTENSION).getLines())
-      if (!line.isEmpty && !line.startsWith("//"))
-        result = result ::: List(nameStringToGrammar(line))
-    GrammarRegistry.addName(result)
-    result
-  }
-
-  private def loadGrammarFile(path: String, grammarType: Int): List[Grammar] = {
-    var result: List[Grammar] = Nil
-    for (line <- Source.fromFile(GRAMMARS_DIRECTORY + path + GRAMMAR_EXTENSION).getLines())
+  private def loadNames(fileName: String, label: Int) = {
+    var names: List[Grammar] = Nil
+    for (line <- Source.fromFile(NAMES_DIRECTORY + fileName + NAMES_EXTENSION).getLines())
       if (!line.startsWith("//"))
-        result = result ::: List(stringToGrammar(line, grammarType))
+        names = names ::: List(Grammar(label, line))
+    println("[DictionaryLoader] " + names.size + " names loaded from " + fileName)
+    names
+  }
 
-    println("[DictionaryLoader] " + result.size + " elements loaded from " + path)
+  /**
+   * Ignores line that start with "//"
+   * @param fileName
+   * @return
+   */
+  private def loadGrammarFile(fileName: String): List[Grammar] = {
+    var result: List[Grammar] = Nil
+    for (line <- Source.fromFile(GRAMMARS_DIRECTORY + fileName + GRAMMAR_EXTENSION).getLines())
+      if (!line.startsWith("//"))
+        result = result ::: stringToGrammar(line)
+
+    println("[DictionaryLoader] " + result.size + " grammars loaded from " + fileName)
     result
   }
 
-  private def stringToGrammar(line: String, grammarType: Int): Grammar = {
-    val spaceIndex = line.indexOf(" ")
-    Grammar(line.substring(0, spaceIndex).toInt, line.substring(spaceIndex), grammarType)
-  }
-
-  private def grammarToRecognitionGrammar(grammar: Grammar) = RecognitionGrammar(grammar.label, grammar.command)
-
-  private def grammarToRecognitionGrammar(grammars: List[Grammar]): List[RecognitionGrammar] = {
-    var result: List[RecognitionGrammar] = Nil
-    for (grammar <- grammars)
-      result = result ::: List(RecognitionGrammar(grammar.label, grammar.command))
-    result
+  /**
+   * Ignores phrase if it start with '!'
+   * @param line
+   * @return
+   */
+  private def stringToGrammar(line: String): List[Grammar] = {
+    val labelIndex = line.indexOf(":")
+    val label = line.substring(0, labelIndex).trim.toInt
+    val phrases = line.substring(labelIndex + 1).split(",").map(_.trim).filterNot(_.startsWith("!"))
+    phrases.map(Grammar(label, _)).toList
   }
 }
