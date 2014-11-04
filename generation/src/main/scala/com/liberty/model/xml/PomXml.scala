@@ -1,3 +1,7 @@
+package com.liberty.model.xml
+
+import java.io._
+
 import com.liberty.common.ProjectConfig
 
 /**
@@ -6,6 +10,7 @@ import com.liberty.common.ProjectConfig
 * Time: 23:31
 */
 class PomXml {
+
   def createXml() = {
     val xml = <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -83,4 +88,15 @@ class PomXml {
     xml
   }
 
+  def createXmlFile(): Unit ={
+    val xml = createXml()
+    try {
+      val osw: OutputStreamWriter = new OutputStreamWriter(new FileOutputStream(ProjectConfig.projectPath + "\\pom.xml"))
+      val bw: BufferedWriter = new BufferedWriter(osw)
+      bw.write(xml.toString())
+      bw.close()
+    } catch {
+      case e: IOException => e.printStackTrace()
+    }
+  }
 }

@@ -36,7 +36,6 @@ class MavenProjectController {
 
   def createProject(): Unit = {
     val mvnExec: MavenExecutor = new MavenExecutor
-    //TODO: catch exception
     if (mvnExec.create())
       SynthesizeHelper.synthesize("Project created")
     else

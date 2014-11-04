@@ -2,8 +2,6 @@ package com.liberty.executor
 
 import java.io.{BufferedReader, File, InputStreamReader}
 
-import com.liberty.common.ProjectConfig
-
 /**
  * User: Maxxis
  * Date: 28.10.13
@@ -18,6 +16,7 @@ object CommandExecutor {
   }
 
   def execute(command: String, workingDirectory: String) {
+    println("Execute command: " + command)
     startProcess(createBuilder(command, workingDirectory))
   }
 
@@ -29,18 +28,14 @@ object CommandExecutor {
     builder
   }
 
-  //TODO: add start server and test copy jar
-  def deploy(): Unit = {
-    val mvn: MavenExecutor = new MavenExecutor
-    mvn.clean()
-    mvn.build()
-    execute("copy *.jar " + ProjectConfig.serverPath, ProjectConfig.targetPath)
-//    execute("start server")
-//    execute("start " + ProjectConfig.browser + " new " + ProjectConfig.startPage)
-  }
-
   private def startProcess(builder: ProcessBuilder) {
-    val p: Process = builder.start()
+    var p: Process = null
+    try {
+      p = builder.start()
+    } catch {
+      case e: Exception => e.printStackTrace()
+    }
+
     val r: BufferedReader = new BufferedReader(new InputStreamReader(p.getInputStream))
     var line: String = ""
 
