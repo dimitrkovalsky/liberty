@@ -5,8 +5,7 @@ import java.net.InetSocketAddress
 import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.util.ByteString
 import com.codahale.jerkson.Json
-import com.liberty.common.{EventStream, GrammarGroups, GrammarIds}
-import com.liberty.entities.{Dictionary, Grammar, RecognitionResult}
+import com.liberty.entities.RecognitionResult
 import com.liberty.helpers.JsonMapper
 import com.liberty.loaders.DictionaryLoader
 import com.liberty.logic.VoiceHandler
@@ -19,7 +18,7 @@ object TransmissionManager {
   var connected = false
   private val voiceHandler = new VoiceHandler()
   private val jsonMapper = JsonMapper.getMapper
-  private val system = EventStream.system
+  private val system = ActorSystem("LibertyActors")
   private val endpoint = new InetSocketAddress(LOCALHOST, DATA_PORT)
   private var worker: ActorRef = null
 
@@ -34,7 +33,7 @@ object TransmissionManager {
     TransmissionManager.sendData(new DataPacket(RequestType.LOAD_DICTIONARY, dictionary))
 
     TransmissionManager.sendData(DataPacket(RequestType.START_RECOGNITION))
-    // Thread.sleep(1000)
+
     synthesize("Recognition started")
     println("Recognition started...")
     activateGrammar(1)

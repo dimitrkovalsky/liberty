@@ -1,7 +1,7 @@
 package com.liberty.controllers
 
 import com.liberty.common.DatabaseType.DatabaseType
-import com.liberty.common.{DatabaseType, ProjectConfig, Register}
+import com.liberty.common._
 import com.liberty.generators.{DaoGenerator, DaoPacket}
 import com.liberty.helpers.FileHelper
 import com.liberty.model.JavaClass
@@ -12,7 +12,7 @@ import scala.util.{Failure, Success, Try}
 /**
  * Created by Dmytro_Kovalskyi on 07.07.2014.
  */
-class DaoController extends Changeable with Controller {
+class DaoController extends Changeable with Controller with GeneratorSubscriber {
   private var generator = createGenerator
 
   def changeDatabase(db: DatabaseType): Either[String, String] = {
@@ -99,5 +99,9 @@ class DaoController extends Changeable with Controller {
 
   override def changed(clazz: JavaClass): Try[String] = {
     regenerate(clazz)
+  }
+
+  override protected def onActionReceived: Receive = {
+    case CreateDaoAction(model) => println("[DaoController] handling" )
   }
 }

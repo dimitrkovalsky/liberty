@@ -1,6 +1,5 @@
 import com.liberty.builders.ClassBuilder
 import com.liberty.common.ProjectConfig
-import com.liberty.controllers.{BeanController, RestController}
 import com.liberty.generators.adapters.PostgresAdapter
 import com.liberty.model.{JavaClass, JavaField, PrivateModifier}
 import com.liberty.traits.{JavaPackage, LocationPackage}
@@ -9,11 +8,7 @@ import com.liberty.types.primitives.{IntegerType, LongType, StringType}
 object Runner {
 
   def main(args: Array[String]) {
-    val controller = new BeanController()
-    controller.createBean(getModel)
 
-    val rsController = new RestController
-    rsController.createRest(getModel)
   }
 
   class Data(data: String) {}

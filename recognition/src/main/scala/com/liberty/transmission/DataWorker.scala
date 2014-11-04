@@ -1,15 +1,14 @@
 package com.liberty.transmission
 
-import java.io._
-import java.net.{InetSocketAddress, ServerSocket, Socket}
+import java.net.InetSocketAddress
 
-import akka.actor.{ActorRef, Actor}
+import akka.actor.Actor
 import akka.io.{IO, Tcp}
 import akka.util.ByteString
 
 class DataWorker(remote: InetSocketAddress, dataHandler: String => Unit, onError: String => Unit) extends Actor {
 
-  import Tcp._
+  import akka.io.Tcp._
   import context.system
 
   IO(Tcp) ! Connect(remote)

@@ -18,3 +18,6 @@ case class CreateDaoAction(model: JavaClass) extends Action
 case class CreateBeanAction(model: JavaClass) extends Action
 
 case class CreateRestAction(model: JavaClass) extends Action
+
+case class UserNotification(notificationType: Int, message: String) extends Action
+
