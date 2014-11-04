@@ -2,9 +2,9 @@ package com.liberty.controllers
 
 import com.liberty.builders.ClassBuilderTest
 import com.liberty.common.{DatabaseType, Filable, ProjectConfig}
+import com.liberty.helpers.FileChecker
 import com.liberty.model.{JavaClass, JavaField, PrivateModifier}
 import com.liberty.types.primitives.IntegerType
-import com.liberty.helpers.FileChecker
 import org.junit.{Before, Test}
 import org.scalatest.junit.AssertionsForJUnit
 
