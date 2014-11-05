@@ -27,7 +27,7 @@ class RestController extends Controller with GeneratorSubscriber {
           if (!m.beanExists)
             createBeanSend(copy)
         }
-        Some("Rest service was created")
+        Some("Rest service created")
     }
   }
 
@@ -36,6 +36,7 @@ class RestController extends Controller with GeneratorSubscriber {
   }
 
   override protected def onActionReceived: Receive = {
-    case CreateRestAction(model) => createRest(model)
+    case CreateRestAction(model) =>
+      createRest(model).map(Right(_)).getOrElse(Left("Rest creation failed"))
   }
 }

@@ -59,6 +59,14 @@ object JavaPackage {
     val path = importString.substring(0, lastIndex)
     JavaPackage(path, dataType)
   }
+
+  def parse(importString: String, baseTemplatePackage:String, baseProjectPackage:String): JavaPackage = {
+    val lastIndex = importString.lastIndexOf(".")
+    val dataType = importString.substring(lastIndex + 1)
+    val path = importString.substring(0, lastIndex).replace(baseTemplatePackage, baseProjectPackage)
+    println(s"before : $importString after : $path")
+    JavaPackage(path, dataType)
+  }
 }
 
 class AsteriskPackage(packagePath: String) extends JavaPackage(packagePath, "*")

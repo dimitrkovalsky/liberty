@@ -30,6 +30,12 @@ trait HybridGenerator {
     createClassParser(path) parse()
   }
 
+  protected def loadConfig(configName: String): String ={
+    val env = scala.util.Properties.envOrElse("templates", "templates")
+    val config = ConfigFactory.load(env)
+    config.getString(configName)
+  }
+
   /**
    * Uses different path for templates than loadClass
    * @param configName

@@ -102,6 +102,10 @@ class DaoController extends Changeable with Controller with GeneratorSubscriber 
   }
 
   override protected def onActionReceived: Receive = {
-    case CreateDaoAction(model) => println("[DaoController] handling" )
+    case CreateDaoAction(model) =>
+      createDao(model) match {
+        case Success(msg) => Right(msg)
+        case Failure(t) => Left(t.getMessage)
+      }
   }
 }

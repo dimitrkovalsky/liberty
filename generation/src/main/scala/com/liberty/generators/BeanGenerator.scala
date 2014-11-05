@@ -12,6 +12,8 @@ class BeanGenerator(basePackage: LocationPackage = ProjectConfig.basePackage.nes
   private val template = loadClass("bean.template")
   private val baseInterface = loadInterface("bean.interface")
   private val baseModel = loadModel("bean.model")
+  // TODO: use templateBasePackage to change package in generated code
+  private val templateBasePackage = loadConfig("bean.base_package")
 
   def createBean(model: JavaClass): Option[BeanPacket] = {
     val mapper = ClassMapper(baseModel)

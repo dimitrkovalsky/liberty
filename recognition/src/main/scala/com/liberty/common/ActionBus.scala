@@ -18,20 +18,13 @@ object ActionBus {
   }
 
   def publish(topic: String, action: Action) = {
-    println(s"[ActionBus] publish to topic : $topic action >> $action ")
+    println(s"[ActionBus] publish to topic : $topic action >> ${action.getClass.getSimpleName} ")
     topics.get(topic).foreach(_.foreach(_.onAction(action)))
-  }
-
-  def main(args: Array[String]) {
-    val c = new DaoController
-
-    ActionBus.publish(Topics.GENERATION, CreateDaoAction(null))
-    ActionBus.publish(Topics.GENERATION, CreateBeanAction(null))
   }
 }
 
 trait Subscriber {
-  type Receive = PartialFunction[Action, Unit]
+  type Receive = PartialFunction[Action, Either[String, String]]
 
   init()
 
@@ -42,16 +35,18 @@ trait Subscriber {
   protected def onActionReceived: Receive
 
   def onAction(action: Action) {
-    println(s"[${this.getClass.getSimpleName}] received $action}")
+    println(s"[${this.getClass.getSimpleName}] received ${action.getClass.getSimpleName}")
     if (onActionReceived.isDefinedAt(action))
-      onActionReceived(action)
+      notifyOperationCompleted(onActionReceived(action))
   }
 
   def notify(topic: String, action: Action): Unit = {
     ActionBus.publish(topic, action)
   }
 
-  //def notifyUser()
+  def notifyOperationCompleted(result: Either[String, String]) {
+    notify(Topics.USER_NOTIFICATION, UserNotification(NotificationType.GENERATION_COMPLETED, result))
+  }
 
   protected def getSubscriptionTopics: List[String]
 }

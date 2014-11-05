@@ -6,11 +6,10 @@ object ProjectConfig {
 
   //project configs
   var projectName = "project1"
-  var path = "H:\\System"
+  var path = "D:\\test"
   def projectPath = s"$path\\$projectName"
   var targetPath = s"$projectPath\\target"
   var basePackageString = "com.test"
-//  var basePackageString = "standard"
 
   //server configs
   var serverPath = "H:\\Workspace\\wildfly-8.1.0.Final"

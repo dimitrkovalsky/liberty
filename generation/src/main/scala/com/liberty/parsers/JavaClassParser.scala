@@ -183,7 +183,7 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
       JavaException(className, getPackage(className))
     }
 
-    imports.foreach(i => builder.addCustomImport(if (i.isAsterisk) CustomImport(i.getName.toString + ".*") else CustomImport(i.getName.toString)))
+    imports.foreach(i => builder.addCustomImport{if (i.isAsterisk) CustomImport(i.getName.toString + ".*") else CustomImport(i.getName.toString)})
     fields.foreach(builder.addField)
     builder.addFunctions(functions)
     builder.addPackage(getClassPackage(concreteType.getName)(basePackage))

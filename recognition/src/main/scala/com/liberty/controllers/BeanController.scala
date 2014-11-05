@@ -31,7 +31,7 @@ class BeanController extends Controller with GeneratorSubscriber {
           if (!m.daoExists)
             createDaoSend(copy)
         }
-        Some("Bean was created")
+        Some("Bean created")
       case _ => None
     }
   }
@@ -41,7 +41,8 @@ class BeanController extends Controller with GeneratorSubscriber {
   }
 
   override protected def onActionReceived: Receive = {
-    case CreateBeanAction(model) => createBean(model)
+    case CreateBeanAction(model) =>
+      createBean(model).map(Right(_)).getOrElse(Left("Bean creation failed"))
   }
 
 }
