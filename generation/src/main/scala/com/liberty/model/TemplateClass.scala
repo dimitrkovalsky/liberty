@@ -6,6 +6,7 @@ package com.liberty.model
 class TemplateClass extends JavaClass {
   var extendTemplateList: Option[String] = None
   var implementTemplateList: List[String] = Nil
+  var baseTemplatePackage: String = _
 
   def addExtendTemplate(ext: String): Unit = {
     extendTemplateList = Some(ext)

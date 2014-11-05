@@ -27,6 +27,10 @@ object Register {
     models += model.name -> model
   }
 
+  /**
+   * Map of common classes needed for work generated code such as ApplicationException
+   */
+  val commonClasses = scala.collection.mutable.Map[String, Boolean]()
 }
 
 

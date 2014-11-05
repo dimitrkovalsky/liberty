@@ -10,8 +10,8 @@ import com.liberty.traits.{JavaPackage, LocationPackage}
  */
 class RestGenerator(basePackage: LocationPackage = ProjectConfig.basePackage.nested("rest")) extends HybridGenerator {
   private val REST_PATH = "rest"
-  private val template = loadClass("rest.template")
-  private val baseModel = loadModel("rest.model")
+  private val template = loadClass("rest.template", "rest.base_package")
+  private val baseModel = loadModel("rest.model", "rest.base_package")
 
   def createRest(model: JavaClass): Option[JavaClass] = {
     val mapper = ClassMapper(baseModel)

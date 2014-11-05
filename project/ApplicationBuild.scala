@@ -26,9 +26,9 @@ object ApplicationBuild extends Build {
   lazy val root = Project("liberty", file("."), settings = rootSettings) aggregate (allProjects: _*)
   lazy val recognition = Project("recognition", file("recognition"), settings = recognitionSettings).dependsOn(generation)
   lazy val generation = Project("generation", file("generation"), settings = generationSettings)
-  lazy val ui = Project("ui", file("ui"), settings = uiSettings)
+  lazy val ui = Project("ui", file("ui"), settings = uiSettings).dependsOn(recognition)
 
- // generation.dependsOn(generation)
+  // generation.dependsOn(generation)
 
   lazy val allProjects = Seq[ProjectReference](recognition, generation, ui)
 
@@ -37,15 +37,15 @@ object ApplicationBuild extends Build {
   resolvers += "repo.codahale.com" at "http://repo.codahale.com"
 
   def sharedSettings = Defaults.defaultSettings ++ Seq(
-      organization := "com.liberty",
-      version := "0.1.0",
-      scalaVersion := "2.11.1",
+    organization := "com.liberty",
+    version := "0.1.0",
+    scalaVersion := "2.11.1",
 
 
-      // also check the local Maven repository ~/.m2
-      resolvers ++= Seq (Resolver.file("Local Maven Repo", file(Path.userHome + "/.m2/repository"))),
+    // also check the local Maven repository ~/.m2
+    resolvers ++= Seq(Resolver.file("Local Maven Repo", file(Path.userHome + "/.m2/repository"))),
 
-      publishMavenStyle := true,
+    publishMavenStyle := true,
 
     libraryDependencies ++= Seq(
       "org.scalatest" % "scalatest_2.11" % "2.2.0" % "test",

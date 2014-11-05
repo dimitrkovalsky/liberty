@@ -7,7 +7,7 @@ import com.liberty.model.JavaClass
 /**
  * Created by Dmytro_Kovalskyi on 02.09.2014.
  */
-class RestController extends Controller with GeneratorSubscriber {
+class RestController extends GeneratorController with GeneratorSubscriber {
   private val generator = new RestGenerator(ProjectConfig.basePackage.nested("rest"))
 
   def createRest(model: JavaClass): Option[String] = {
@@ -35,7 +35,7 @@ class RestController extends Controller with GeneratorSubscriber {
     notify(CreateBeanAction(model))
   }
 
-  override protected def onActionReceived: Receive = {
+  override protected def onActionReceived: Received = {
     case CreateRestAction(model) =>
       createRest(model).map(Right(_)).getOrElse(Left("Rest creation failed"))
   }

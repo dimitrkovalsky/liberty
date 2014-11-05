@@ -9,17 +9,16 @@ import com.liberty.traits.LocationPackage
  * Created by Dmytro_Kovalskyi on 25.09.2014.
  */
 class BeanGenerator(basePackage: LocationPackage = ProjectConfig.basePackage.nested("beans")) extends HybridGenerator {
-  private val template = loadClass("bean.template")
+  private val template = loadClass("bean.template", "bean.base_package")
   private val baseInterface = loadInterface("bean.interface")
-  private val baseModel = loadModel("bean.model")
+  private val baseModel = loadModel("bean.model", "bean.base_package")
   // TODO: use templateBasePackage to change package in generated code
-  private val templateBasePackage = loadConfig("bean.base_package")
 
   def createBean(model: JavaClass): Option[BeanPacket] = {
     val mapper = ClassMapper(baseModel)
     val bean = mapper.changeModel(template, model, model.name + "Bean", basePackage)
 
-    val interface = mapper.changeModel(baseInterface, model, "I" + model.name + "Bean", basePackage)
+    val interface = mapper.changeModel(baseInterface, model, "I" + model.name + "Bean", basePackage, template.baseTemplatePackage)
     bean.addImplements(interface)
 
     Some(BeanPacket(bean, interface))

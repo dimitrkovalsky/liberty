@@ -23,14 +23,17 @@ trait HybridGenerator {
    * @param configName
    * @return
    */
-  protected def loadClass(configName: String): TemplateClass = {
+  protected def loadClass(configName: String, basePackageConfig: String): TemplateClass = {
     val env = scala.util.Properties.envOrElse("templates", "templates")
     val config = ConfigFactory.load(env)
     val path = config.getString(configName) + ".tmpl"
-    createClassParser(path) parse()
+    val baseTemplatePackage = config.getString(basePackageConfig)
+    val template = createClassParser(path) parse(baseTemplatePackage)
+    template.baseTemplatePackage = baseTemplatePackage
+    template
   }
 
-  protected def loadConfig(configName: String): String ={
+  protected def loadConfig(configName: String): String = {
     val env = scala.util.Properties.envOrElse("templates", "templates")
     val config = ConfigFactory.load(env)
     config.getString(configName)
@@ -41,11 +44,14 @@ trait HybridGenerator {
    * @param configName
    * @return
    */
-  protected def loadModel(configName: String): TemplateClass = {
+  protected def loadModel(configName: String, basePackageConfig: String): TemplateClass = {
     val env = scala.util.Properties.envOrElse("templates", "templates")
     val config = ConfigFactory.load(env)
     val modelPath = "/models/" + config.getString(configName) + ".tmpl"
-    createClassParser(modelPath) parse()
+    val baseTemplatePackage = config.getString(basePackageConfig)
+    val template = createClassParser(modelPath) parse(baseTemplatePackage)
+    template.baseTemplatePackage = baseTemplatePackage
+    template
   }
 
 

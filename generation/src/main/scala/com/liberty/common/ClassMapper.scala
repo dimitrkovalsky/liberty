@@ -57,14 +57,18 @@ case class ClassMapper(baseModel: JavaClass) {
     val fields = template.fields.map(changeField(_, model))
     val classBuilder = ClassBuilder(newClassName)
     classBuilder.addFunctions(functions)
-    template.customImports.map(changeCustomImport(_, model.name)).flatten.foreach(classBuilder.addCustomImport)
+    template.customImports.map(changeCustomImport(_, model.name)).flatten.foreach {
+      i => val imp = CustomImport(i.importString.replace(template.baseTemplatePackage, ProjectConfig.basePackage.packagePath))
+        classBuilder.addCustomImport(imp)
+    }
     fields.foreach(classBuilder.addField)
     classBuilder.addPackage(newPackage)
     annotations.foreach(classBuilder.addAnnotation)
     classBuilder.getJavaClass
   }
 
-  def changeModel(template: JavaInterface, model: JavaClass, newInterfaceName: String, newPackage: JavaPackage): JavaInterface = {
+  def changeModel(template: JavaInterface, model: JavaClass, newInterfaceName: String, newPackage: JavaPackage,
+                  baseTemplatePackage: String): JavaInterface = {
     val interfaceBuilder = InterfaceBuilder(newInterfaceName)
     val interfaceSignatures = template.signatures.map(changeSignatureWithFilter(_, model)).flatten
     interfaceSignatures foreach interfaceBuilder.addFunctionSignature

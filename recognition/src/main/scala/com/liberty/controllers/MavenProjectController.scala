@@ -13,7 +13,7 @@ import com.liberty.transmission.TransmissionManager
  * Date: 22.10.2014
  * Time: 22:26
  */
-class MavenProjectController {
+class MavenProjectController extends Controller {
 
   import com.liberty.common.Implicits._
 

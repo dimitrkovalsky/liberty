@@ -24,7 +24,7 @@ object ActionBus {
 }
 
 trait Subscriber {
-  type Receive = PartialFunction[Action, Either[String, String]]
+  type Received = PartialFunction[Action, Either[String, String]]
 
   init()
 
@@ -32,21 +32,18 @@ trait Subscriber {
     getSubscriptionTopics.foreach(ActionBus.subscribe(_, this))
   }
 
-  protected def onActionReceived: Receive
+  protected def onActionReceived: Received
 
   def onAction(action: Action) {
     println(s"[${this.getClass.getSimpleName}] received ${action.getClass.getSimpleName}")
     if (onActionReceived.isDefinedAt(action))
-      notifyOperationCompleted(onActionReceived(action))
+      onActionReceived(action)
   }
 
   def notify(topic: String, action: Action): Unit = {
     ActionBus.publish(topic, action)
   }
 
-  def notifyOperationCompleted(result: Either[String, String]) {
-    notify(Topics.USER_NOTIFICATION, UserNotification(NotificationType.GENERATION_COMPLETED, result))
-  }
 
   protected def getSubscriptionTopics: List[String]
 }
@@ -60,5 +57,15 @@ trait GeneratorSubscriber extends Subscriber {
    */
   def notify(action: Action): Unit = {
     notify(Topics.GENERATION, action)
+  }
+
+  def notifyOperationCompleted(result: Either[String, String]) {
+    notify(Topics.USER_NOTIFICATION, UserNotificationAction(NotificationType.GENERATION_COMPLETED, result))
+  }
+
+  override def onAction(action: Action) {
+    println(s"[${this.getClass.getSimpleName}] received ${action.getClass.getSimpleName}")
+    if (onActionReceived.isDefinedAt(action))
+      notifyOperationCompleted(onActionReceived(action))
   }
 }

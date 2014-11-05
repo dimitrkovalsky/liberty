@@ -12,7 +12,7 @@ import scala.util.{Failure, Success, Try}
 /**
  * Created by Dmytro_Kovalskyi on 07.07.2014.
  */
-class DaoController extends Changeable with Controller with GeneratorSubscriber {
+class DaoController extends Changeable with GeneratorController with GeneratorSubscriber {
   private var generator = createGenerator
 
   def changeDatabase(db: DatabaseType): Either[String, String] = {
@@ -101,7 +101,7 @@ class DaoController extends Changeable with Controller with GeneratorSubscriber 
     regenerate(clazz)
   }
 
-  override protected def onActionReceived: Receive = {
+  override protected def onActionReceived: Received = {
     case CreateDaoAction(model) =>
       createDao(model) match {
         case Success(msg) => Right(msg)

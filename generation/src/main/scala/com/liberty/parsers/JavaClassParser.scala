@@ -25,14 +25,14 @@ import scala.collection.JavaConversions._
 class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectConfig.basePackage) extends Parsable {
   this: Pathable =>
 
-  def parse(): TemplateClass = {
+  def parse(baseTemplatePackage: String): TemplateClass = {
     val in = new FileInputStream(getTemplatePath + fileName)
     val cu = JavaParser.parse(in)
     val imports = cu.getImports
 
     def getPackage(typeName: String): JavaPackage = {
       imports.map(_.getName.toString).find(_.endsWith(typeName)) match {
-        case Some(s: String) => JavaPackage.parse(s)
+        case Some(s: String) => JavaPackage.parse(s, baseTemplatePackage, ProjectConfig.basePackage.packagePath)
         case _ => new NoPackage
       }
     }
@@ -183,7 +183,9 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
       JavaException(className, getPackage(className))
     }
 
-    imports.foreach(i => builder.addCustomImport{if (i.isAsterisk) CustomImport(i.getName.toString + ".*") else CustomImport(i.getName.toString)})
+    imports.foreach(i => builder.addCustomImport {
+      if (i.isAsterisk) CustomImport(i.getName.toString + ".*") else CustomImport(i.getName.toString)
+    })
     fields.foreach(builder.addField)
     builder.addFunctions(functions)
     builder.addPackage(getClassPackage(concreteType.getName)(basePackage))
