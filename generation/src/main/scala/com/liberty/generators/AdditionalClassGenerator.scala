@@ -11,21 +11,16 @@ import com.liberty.traits.JavaPackage
  * Time: 17:33
  */
 class AdditionalClassGenerator extends HybridGenerator {
-  def createException(name: String, pack: JavaPackage, baseException: String = "Exception"): JavaClass = {
+  def createException(name: String, baseException: String = "Exception",
+                      pack: JavaPackage = ProjectConfig.basePackage.nested("errors")): JavaClass = {
     val templatePath = baseException match {
       case "Exception" => "errors.base_exception_template"
-      case _ => "errors.DaoException"
+      case _ => "errors.base_another_template"
     }
 
     val template = loadClass(templatePath, "errors.base_package")
-
-    null
+    val clazz = ClassMapper.changeSimpleModel(template, name, pack, baseException)
+    clazz
   }
 }
 
-object Run {
-  def main(args: Array[String]) {
-    val g = new AdditionalClassGenerator
-    val r = g.createException("ApplicationException", ProjectConfig.basePackage.nested("errors"))
-  }
-}

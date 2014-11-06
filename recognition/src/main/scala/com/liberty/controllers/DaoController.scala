@@ -79,10 +79,14 @@ class DaoController extends Changeable with GeneratorController with GeneratorSu
 
     generator.createMetaInfFiles.foreach(writer.writeToMetaInf)
     Register.getModel(model.name).foreach(m => Register.changeModel(m.copy(daoExists = true)))
+    checkAdditionalFiles()
 
     Success("Dao created")
   }
 
+  def checkAdditionalFiles(): Unit = {
+    Register.commonClasses.getOrElse("DaoException", notify(Topics.GENERATION, CreateExceptionClassAction("DaoException", "ApplicationException")))
+  }
 
   private def regenerate(model: JavaClass): Try[String] = {
     generator.update(model).flatMap {

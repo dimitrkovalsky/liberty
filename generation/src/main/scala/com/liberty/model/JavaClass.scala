@@ -24,6 +24,8 @@ case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackag
 
   override def clone(): AnyRef = super.clone()
 
+  def fullName = javaPackage.packagePath + "." + name
+
   def dataType: DataType = new ObjectType(name, javaPackage)
 
   def getIdField = fields.find(_.toLowerCase.contains("id"))

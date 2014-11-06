@@ -31,10 +31,14 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
     val imports = cu.getImports
 
     def getPackage(typeName: String): JavaPackage = {
-      imports.map(_.getName.toString).find(_.endsWith(typeName)) match {
-        case Some(s: String) => JavaPackage.parse(s, baseTemplatePackage, ProjectConfig.basePackage.packagePath)
-        case _ => new NoPackage
+      if (imports != null) {
+        imports.map(_.getName.toString).find(_.endsWith(typeName)) match {
+          case Some(s: String) => JavaPackage.parse(s, baseTemplatePackage, ProjectConfig.basePackage.packagePath)
+          case _ => new NoPackage
+        }
       }
+      else
+        new NoPackage
     }
 
     def getDataType(typeDeclaration: Type): DataType = {
@@ -179,13 +183,51 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
       case _ =>
     }
 
+    // Parse constructors
+    members.foreach {
+      case c: ConstructorDeclaration =>
+        val functionBuilder = FunctionBuilder(getModifier(c.getModifiers), c.getName)
+        if (c.getParameters != null) {
+          c.getParameters.foreach { param =>
+            val functionParameter = FunctionParameter(param.getId.getName, getDataType(param.getType))
+            if (param.getAnnotations != null)
+              getAnnotations(param.getAnnotations).foreach(functionParameter.addAnnotation)
+            functionBuilder.addParam(functionParameter)
+          }
+        }
+        if (c.getBlock != null)
+          c.getBlock.getStmts.foreach {
+            case expr: TryStmt =>
+              val tryable = functionBuilder.tryable {
+                expr.getTryBlock.getStmts.foreach(ex => {
+                  val exprTemp = ex.toString
+                  val expression = if (exprTemp.endsWith(";")) exprTemp.substring(0, exprTemp.size - 1) else exprTemp.toString
+                  functionBuilder.addOperation(new PatternOperation(expression, Nil))
+                })
+              }
+              expr.getCatchs.headOption map {
+                c => val ops = c.getCatchBlock.getStmts.map(s => {
+                  val stm = s.toString
+                  val expression = if (stm.endsWith(";")) stm.substring(0, stm.size - 1) else stm.toString
+                  new PatternOperation(expression, Nil)
+                }).toList
+                  val javaException = c.getExcept.getTypes.headOption.map(e => getJavaException(e.toString))
+                  javaException.fold(tryable.catchOperation(ops))(tryable.catchOperation(ops, _))
+              }
+            case e => val exprTemp = e.toString
+              val expression = if (exprTemp.endsWith(";")) exprTemp.substring(0, exprTemp.size - 1) else exprTemp.toString
+              functionBuilder.addOperation(new PatternOperation(expression, Nil))
+          }
+        functions = functions ::: List(functionBuilder.getConstructor)
+    }
     def getJavaException(className: String): JavaException = {
       JavaException(className, getPackage(className))
     }
 
-    imports.foreach(i => builder.addCustomImport {
-      if (i.isAsterisk) CustomImport(i.getName.toString + ".*") else CustomImport(i.getName.toString)
-    })
+    if (imports != null)
+      imports.foreach(i => builder.addCustomImport {
+        if (i.isAsterisk) CustomImport(i.getName.toString + ".*") else CustomImport(i.getName.toString)
+      })
     fields.foreach(builder.addField)
     builder.addFunctions(functions)
     builder.addPackage(getClassPackage(concreteType.getName)(basePackage))

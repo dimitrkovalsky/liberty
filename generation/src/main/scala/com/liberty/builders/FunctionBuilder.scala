@@ -49,6 +49,8 @@ class FunctionBuilder {
 
   def getFunction = function
 
+  def getConstructor = ConstructorFunction(function)
+
   def addOperation(operation: Operation) {
     if (inTrySection) {
       withTry = withTry ::: operation :: Nil

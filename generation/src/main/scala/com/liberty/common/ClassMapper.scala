@@ -203,3 +203,30 @@ case class ClassMapper(baseModel: JavaClass) {
       newType
   }
 }
+
+object ClassMapper {
+  def changeSimpleModel(template: TemplateClass, newClassName: String, newPackage: JavaPackage, baseException: String): JavaClass = {
+    def changeCustomImport(customImport: CustomImport, model: String): Option[CustomImport] = {
+      if (customImport.importString.contains(template.name))
+        Some(CustomImport(customImport.importString.replace(template.name, model)))
+      else
+        Some(customImport)
+    }
+
+    val annotations = template.annotations
+    val functions = template.functions.map { case f: ConstructorFunction => f.signature.name = newClassName; f}
+    val fields = template.fields
+    val classBuilder = ClassBuilder(newClassName)
+    classBuilder.addFunctions(functions)
+    template.customImports.map(changeCustomImport(_, newClassName)).flatten.foreach {
+      i => val imp = CustomImport(i.importString.replace(template.baseTemplatePackage, ProjectConfig.basePackage.packagePath))
+        classBuilder.addCustomImport(imp)
+    }
+    fields.foreach(classBuilder.addField)
+    classBuilder.addPackage(newPackage)
+    annotations.foreach(classBuilder.addAnnotation)
+    classBuilder.addExtend(new JavaClass(baseException))
+    classBuilder.getJavaClass
+  }
+
+}
