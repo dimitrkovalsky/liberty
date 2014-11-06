@@ -219,6 +219,7 @@ class JavaClassParser(fileName: String, basePackage: LocationPackage = ProjectCo
               functionBuilder.addOperation(new PatternOperation(expression, Nil))
           }
         functions = functions ::: List(functionBuilder.getConstructor)
+      case _ =>
     }
     def getJavaException(className: String): JavaException = {
       JavaException(className, getPackage(className))
