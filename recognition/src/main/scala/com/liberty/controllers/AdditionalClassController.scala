@@ -23,6 +23,6 @@ class AdditionalClassController extends GeneratorController with GeneratorSubscr
     writer write clazz
 
     Register.commonClasses.put(clazz.name, true)
-    Register.commonClasses.getOrElse(baseException, CreateException(baseException, "Exception"))
+    Register.commonClasses.getOrElse(baseException, if (baseException != "Exception") CreateException(baseException, "Exception"))
   }
 }

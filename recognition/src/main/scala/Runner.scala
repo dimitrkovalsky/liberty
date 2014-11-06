@@ -2,7 +2,7 @@ import java.net.Socket
 
 import com.liberty.builders.ClassBuilder
 import com.liberty.common.{Model, Register, ProjectConfig}
-import com.liberty.controllers.{DaoController, BeanController, RestController}
+import com.liberty.controllers.{AdditionalClassController, DaoController, BeanController, RestController}
 import com.liberty.model.{PrivateModifier, JavaField, JavaClass}
 import com.liberty.transmission.TransmissionManager
 import com.liberty.types.primitives.{StringType, IntegerType}
@@ -20,6 +20,7 @@ object Runner {
     val rest = new RestController
     val b = new BeanController
     val d = new DaoController
+    new AdditionalClassController
     rest.createRest(model)
   }
 

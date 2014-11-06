@@ -10,7 +10,7 @@ import scalafx.scene.Scene
   */
 object Runner extends JFXApp {
 
-  val resource = getClass.getResource("fxml/workplace.fxml")
+  val resource = getClass.getResource("fxml/ui.fxml")
   if (resource == null) {
     throw new IOException("Cannot load resource: GetProperty.fxml")
   }

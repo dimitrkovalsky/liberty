@@ -5,6 +5,7 @@ import java.net.InetSocketAddress
 import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.util.ByteString
 import com.codahale.jerkson.Json
+import com.liberty.common.Actors
 import com.liberty.entities.RecognitionResult
 import com.liberty.helpers.JsonMapper
 import com.liberty.loaders.DictionaryLoader
@@ -18,7 +19,7 @@ object TransmissionManager {
   var connected = false
   private val voiceHandler = new VoiceHandler()
   private val jsonMapper = JsonMapper.getMapper
-  private val system = ActorSystem("LibertyActors")
+  private val system = Actors.actorSystem
   private val endpoint = new InetSocketAddress(LOCALHOST, DATA_PORT)
   private var worker: ActorRef = null
 

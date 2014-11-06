@@ -15,7 +15,8 @@ class NotificationController(uiActor: ActorRef) extends Controller with Actor wi
   }
 
   override protected def onActionReceived = {
-    case notification: UserNotificationAction => uiActor ! notification
+    case notification: UserNotificationAction =>
+      uiActor ! notification
       Right("UserNotification processed")
   }
 
