@@ -1,4 +1,4 @@
-package com.liberty.logic
+package com.liberty.handlers
 
 import com.liberty.common.GrammarGroups
 import com.liberty.controllers.MavenProjectController
@@ -21,8 +21,10 @@ class ProjectHandler extends Handler {
         }
 
       case GrammarGroups.PROJECT_NAMES =>
-        controller.foreach { c => c.setProjectName(recognized.best.sentence); c.createProject()}
-
+        controller.foreach {
+          c => c.setProjectName(recognized.best.sentence)
+            c.createProject()
+        }
 
     }
   }

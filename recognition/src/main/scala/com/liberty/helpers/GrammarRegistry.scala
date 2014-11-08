@@ -1,28 +1,14 @@
 package com.liberty.helpers
 
-import com.liberty.entities.{Grammar, RecognitionResult}
+import com.liberty.entities.{ComplexGrammar, Grammar, RecognitionResult}
 
 
 object GrammarRegistry {
-  var grammars: Map[Int, Grammar] = Map()
-  var names: List[Grammar] = Nil
+  var grammars: Map[Int, ComplexGrammar] = Map()
 
-  def addGrammar(grammar: Grammar) {
+  def addGrammar(grammar: ComplexGrammar) {
     grammars += grammar.label -> grammar
   }
 
-  def getGrammar(recognized: RecognitionResult): Grammar = grammars(recognized.best.label)
-
-  def addName(name: Grammar) {
-    names = names ::: List(name)
-  }
-
-  def addName(list: List[Grammar]) {
-    list.foreach(addName)
-  }
-
-  def isName(recognized: RecognitionResult): Boolean = {
-    names.foreach(x => if (x.label == recognized.best.label) return true)
-    false
-  }
+  def getGrammar(id: Int) = grammars.get(id)
 }

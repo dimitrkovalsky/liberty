@@ -21,7 +21,7 @@ class MavenExecutor() {
       new PomXml().createXmlFile()
 
       //update dependencies
-      install
+     // install
       true
     } else {
       false
@@ -39,7 +39,7 @@ class MavenExecutor() {
   }
 
   def install() {
-    val command: String = "mvn install"
+    val command: String = "mvn install:install"
     CommandExecutor.execute(command, ProjectConfig.projectPath)
   }
 

@@ -11,4 +11,6 @@ object Controllers {
   val daoController = new DaoController
   val additionalController = new AdditionalClassController
   val mavenController = new MavenProjectController
+  val classController = new ClassController
+  val notificationController = new NotificationController
 }

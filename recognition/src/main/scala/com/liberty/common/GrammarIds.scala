@@ -9,13 +9,16 @@ object GrammarIds {
   // project creation
   val CREATE_PROJECT = 1
   val CREATE_PACKAGE = 2
-  val CREATE_CLASS = 3
   // component creation
-  val ADD_DATABASE = 11
-  val CHANGE_DATABASE = 12
-  val CREATE_BEAN = 13
-  val CREATE_REST = 14
-
+  val CREATE_CLASS = 11
+  val ADD_DATABASE = 12
+  val CHANGE_DATABASE = 13
+  val CREATE_BEAN = 14
+  val CREATE_REST = 15
   // names
   val NAME_OF_PROJECT = 100
+  val NAME_OF_CLASS = 101
+  val NAME_OF_FIELD = 102
+
+  val START_FIELD_CREATION: Int = 400
 }

@@ -1,4 +1,4 @@
-package com.liberty.logic
+package com.liberty.handlers
 
 import com.liberty.entities.RecognitionResult
 

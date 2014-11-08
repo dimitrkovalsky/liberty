@@ -13,7 +13,6 @@ import scala.collection.SortedSet
  * Time: 10:55
  */
 // TODO: Add support of function and field changing and removing
-// TODO: Add constructor support
 // TODO: Add name validation
 case class JavaClass(var name: String = "", jPackage: JavaPackage = new NoPackage, modifier: Modifier = PublicModifier)
   extends DataType(name) with Annotatable with Importable with Cloneable with Generalizable with ConstructedType with Serializable {

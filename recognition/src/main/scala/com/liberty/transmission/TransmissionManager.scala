@@ -5,11 +5,12 @@ import java.net.InetSocketAddress
 import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.util.ByteString
 import com.codahale.jerkson.Json
-import com.liberty.common.Actors
+import com.liberty.common.{GrammarGroups, Actors}
+import com.liberty.controllers.GrammarController
 import com.liberty.entities.RecognitionResult
 import com.liberty.helpers.JsonMapper
 import com.liberty.loaders.DictionaryLoader
-import com.liberty.logic.VoiceHandler
+import com.liberty.handlers.VoiceHandler
 
 
 object TransmissionManager {
@@ -35,9 +36,7 @@ object TransmissionManager {
 
     TransmissionManager.sendData(DataPacket(RequestType.START_RECOGNITION))
 
-    synthesize("Recognition started")
-    println("Recognition started...")
-    activateGrammar(1)
+
   }
 
   def onConnected() {
@@ -62,6 +61,11 @@ object TransmissionManager {
         case RequestType.RECOGNITION_RESULT =>
           val recognized = JsonMapper.getMapper.convertValue(packet.getData, classOf[RecognitionResult])
           voiceHandler.handleRecognitionResult(recognized)
+        case RequestType.RECOGNITION_STARTED =>
+//          GrammarController.changeGrammarGroup(GrammarGroups.CLASS_FIELD_CREATION)
+          GrammarController.changeGrammarGroup(GrammarGroups.PROJECT_CREATION)
+          synthesize("Recognition started")
+          println("Recognition started...")
         case _ => println("[TransmissionManager] unknown requestType : " + packet)
       }
     } catch {

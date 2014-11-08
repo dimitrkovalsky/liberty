@@ -6,7 +6,7 @@ import javafx.scene.{control => jfxsc}
 import javafx.{event => jfxe}
 import javafx.{fxml => jfxf}
 import javafx.fxml.FXML
-import com.liberty.common.{TemperatureBounds, Zone}
+import com.liberty.common._
 import javafx.scene.control.{Label, ListView, Button}
 import com.liberty.processing.{TPModel, DryingBricks, FormingBricks, PrepareCeramicMixture}
 import scalafx.scene.paint.Color
@@ -26,7 +26,13 @@ class UIController extends jfxf.Initializable {
 
   @FXML  private var dataLabel: Label = null
 
+  private val notificator = new UINotifier(onAction)
+//  private
   override def initialize(url: URL, resourceBundle: ResourceBundle): Unit = {
     dataLabel.setText("simple text")
+  }
+
+  def onAction(notification:UserNotificationAction): Unit ={
+
   }
 }

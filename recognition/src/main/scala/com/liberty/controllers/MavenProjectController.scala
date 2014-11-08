@@ -27,7 +27,7 @@ class MavenProjectController extends Controller {
     //TODO: Enter project name dialog
     println("Enter name")
     SynthesizeHelper.synthesize("Give the name for a new project, please")
-    TransmissionManager.activateGrammar(GrammarGroups.PROJECT_NAMES)
+    GrammarController.changeGrammarGroup(GrammarGroups.PROJECT_NAMES)
   }
 
   def setProjectName(name: String): Unit = {
@@ -36,9 +36,11 @@ class MavenProjectController extends Controller {
 
   def createProject(): Unit = {
     val mvnExec: MavenExecutor = new MavenExecutor
-    if (mvnExec.create())
+    if (mvnExec.create()) {
       SynthesizeHelper.synthesize("Project created")
-    else
+      //TODO: Think about place of grammar group activation
+      GrammarController.changeGrammarGroup(GrammarGroups.COMPONENT_CREATION)
+    } else
       SynthesizeHelper.synthesize("Project creation failed")
   }
 

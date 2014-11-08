@@ -30,7 +30,7 @@ object TypeMapper {
 
   def getStandardType(typeName: String): Option[DataType] = {
     typeName match {
-      case "String" => Some(StringType)
+      case "String" | "string" => Some(StringType)
       case "Char" | "char" => Some(CharType)
       case "Byte" | "byte" => Some(ByteType)
       case "Integer" | "int" => Some(IntegerType)
@@ -38,8 +38,8 @@ object TypeMapper {
       case "Boolean" | "boolean" => Some(BooleanType)
       case "Float" | "float" => Some(FloatType)
       case "Double" | "double" => Some(DateType)
-      case "Date" => Some(DateType)
-      case "void" => Some(new VoidType)
+      case "Date" | "date" => Some(DateType)
+      case "Void" | "void" => Some(new VoidType)
       case _ => None
     }
   }

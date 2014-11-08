@@ -1,6 +1,6 @@
-package com.liberty.logic
+package com.liberty.handlers
 
-import com.liberty.commands.{FunctionCommands, GeneralCommands}
+import com.liberty.commands.FunctionCommands
 import com.liberty.entities.{FunctionEntity, RecognitionResult}
 import com.liberty.generic.{OperationResult, VoiceNotifier}
 import com.liberty.helpers.GrammarRegistry
@@ -12,8 +12,7 @@ import com.liberty.helpers.GrammarRegistry
  */
 class FunctionHandler extends VoiceNotifier {
   var currentFunction: FunctionEntity = new FunctionEntity()
-  var previousCommand = GeneralCommands.NO_COMMAND
-
+  var previousCommand = 1
 
   override def onRecognized(recognized: RecognitionResult): Option[OperationResult] = {
     println("[FunctionHandler] onRecognized : " + recognized.best.label)
@@ -48,8 +47,6 @@ class FunctionHandler extends VoiceNotifier {
   }
 
   def renameFunction(recognized: RecognitionResult): Option[OperationResult] = {
-    if (!GrammarRegistry.isName(recognized))
-      return None
     currentFunction.name = recognized.best.sentence
     previousCommand = FunctionCommands.RENAME
     Option(OperationResult())

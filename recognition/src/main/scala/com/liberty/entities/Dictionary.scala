@@ -7,6 +7,6 @@ import scala.beans.BeanProperty
 case class Grammar(@BeanProperty var label: Int, @BeanProperty var command: String)
 
 case class Dictionary(grammars: Map[Int, List[Grammar]]) {
-
-
 }
+
+case class ComplexGrammar(label: Int, grammars: Map[Int, Grammar])

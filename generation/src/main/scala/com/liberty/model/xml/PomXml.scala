@@ -18,17 +18,33 @@ class PomXml {
       <groupId>{ProjectConfig.basePackageString}</groupId>
       <artifactId>{ProjectConfig.projectName}</artifactId>
       <packaging>war</packaging>
+      <repositories>
+        <repository>
+          <id>morphia</id>
+          <url>http://morphia.googlecode.com/svn/mavenrepo/</url>
+        </repository>
+      </repositories>
       <dependencies>
         <!--Rest-->
         <dependency>
+          <groupId>com.google.code.morphia</groupId>
+          <artifactId>morphia</artifactId>
+          <version>0.99.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.mongodb</groupId>
+          <artifactId>mongo-java-driver</artifactId>
+          <version>2.11.3</version>
+        </dependency>
+        <dependency>
           <groupId>org.jboss.resteasy</groupId>
-          <artifactId>resteasy-jaxrs</artifactId>
+          <artifactId>jaxrs-api</artifactId>
           <version>3.0.4.Final</version>
           <scope>provided</scope>
         </dependency>
         <dependency>
           <groupId>org.jboss.resteasy</groupId>
-          <artifactId>jaxrs-api</artifactId>
+          <artifactId>resteasy-jaxrs</artifactId>
           <version>3.0.4.Final</version>
           <scope>provided</scope>
         </dependency>
@@ -77,7 +93,7 @@ class PomXml {
         </dependency>
       </dependencies>
       <build>
-        <finalName>standard</finalName>
+        <finalName>{ProjectConfig.projectName}</finalName>
       </build>
       <properties>
         <maven.compiler.source>1.7</maven.compiler.source>

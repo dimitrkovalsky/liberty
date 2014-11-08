@@ -64,7 +64,6 @@ object JavaPackage {
     val lastIndex = importString.lastIndexOf(".")
     val dataType = importString.substring(lastIndex + 1)
     val path = importString.substring(0, lastIndex).replace(baseTemplatePackage, baseProjectPackage)
-    println(s"before : $importString after : $path")
     JavaPackage(path, dataType)
   }
 }

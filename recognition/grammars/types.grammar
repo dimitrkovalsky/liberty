@@ -1,15 +1,7 @@
-301 void
-302 byte
-303 int
-303 integer
-304 float
-305 double
-306 object
-307 byte object
-308 object byte
-308 object integer
-308 integer object
-309 float object
-309 object float
-310 double object
-310 object double
+301: void
+302: byte
+303: int, Integer
+304: Float
+305: Double
+306: Object
+307: String

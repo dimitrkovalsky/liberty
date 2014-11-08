@@ -48,7 +48,7 @@ object ApplicationBuild extends Build {
     publishMavenStyle := true,
 
     libraryDependencies ++= Seq(
-      "org.scalatest" % "scalatest_2.11" % "2.2.0" % "test",
+      "org.scalatest" % "scalatest_2.11" % "2.2.1",
       "com.gilt" % "jerkson_2.11" % "0.6.6",
       "org.scala-lang.modules" %% "scala-xml" % "1.0.2",
       "com.google.code.javaparser" % "javaparser" % "1.0.11",

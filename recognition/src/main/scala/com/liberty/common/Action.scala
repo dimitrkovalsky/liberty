@@ -23,5 +23,7 @@ case class CreateExceptionClassAction(exception: String, baseException: String) 
 
 case class UserNotificationAction(notificationType: Int, result: Either[String, String]) extends Action
 
+case class ClassEditAction(clazz: JavaClass) extends Action
+
 case class UIAction(uiActionType: Int) extends Action
 
