@@ -84,8 +84,9 @@ class DaoController extends Changeable with GeneratorController with GeneratorSu
     Success("Dao created")
   }
 
-  def checkAdditionalFiles(): Unit = {
+  private def checkAdditionalFiles(): Unit = {
     Register.commonClasses.getOrElse("DaoException", notify(Topics.GENERATION, CreateExceptionClassAction("DaoException", "ApplicationException")))
+    Register.commonClasses.getOrElse("ApplicationException", notify(Topics.GENERATION, CreateExceptionClassAction("ApplicationException")))
   }
 
   private def regenerate(model: JavaClass): Try[String] = {

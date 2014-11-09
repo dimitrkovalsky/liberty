@@ -10,6 +10,10 @@ import com.liberty.model._
 class BeanController extends GeneratorController with GeneratorSubscriber {
   private val generator = new BeanGenerator(ProjectConfig.basePackage.nested("beans"))
 
+  def testNotification(): Unit = {
+    notify(Topics.USER_NOTIFICATION, UserNotificationAction(1, Right("Test notification")))
+  }
+
   def createBean(model: JavaClass): Option[String] = {
     val copy = model.deepCopy
     models += model.name -> copy
@@ -25,15 +29,20 @@ class BeanController extends GeneratorController with GeneratorSubscriber {
           writer.writeToMetaInf(beansXml)
           Register.beansXmlCreated = true
         }
-
+        // Model should be added to register
         Register.getModel(model.name).foreach { m =>
           Register.changeModel(m.copy(beanExists = true))
           if (!m.daoExists)
             createDaoSend(copy)
         }
+        checkAdditionalFiles()
         Some("Bean created")
       case _ => None
     }
+  }
+
+  private def checkAdditionalFiles(): Unit = {
+    Register.commonClasses.getOrElse("ApplicationException", notify(Topics.GENERATION, CreateExceptionClassAction("ApplicationException")))
   }
 
   def createDaoSend(model: JavaClass) {
@@ -42,7 +51,7 @@ class BeanController extends GeneratorController with GeneratorSubscriber {
 
   override protected def onActionReceived: Received = {
     case CreateBeanAction(model) =>
-      createBean(model).map(Right(_)).getOrElse(Left("Bean creation failed"))
+      createBean(model).map(s => Right(s)).getOrElse(Left("Bean creation failed"))
   }
 
 }

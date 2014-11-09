@@ -27,8 +27,13 @@ class RestController extends GeneratorController with GeneratorSubscriber {
           if (!m.beanExists)
             createBeanSend(copy)
         }
+        checkAdditionalFiles()
         Some("Rest service created")
     }
+  }
+
+  private def checkAdditionalFiles(): Unit = {
+    Register.commonClasses.getOrElse("ApplicationException", notify(Topics.GENERATION, CreateExceptionClassAction("ApplicationException")))
   }
 
   private def createBeanSend(model: JavaClass) {

@@ -1,6 +1,6 @@
 package com.liberty.common
 
-import akka.actor.ActorSystem
+import akka.actor.{Props, ActorSystem}
 
 /**
  * User: Dmytro_Kovalskyi
@@ -9,4 +9,8 @@ import akka.actor.ActorSystem
  */
 object Actors {
   val actorSystem = ActorSystem("LibertyActors")
+
+  def createActor(props: Props) = actorSystem.actorOf(props)
+
+  def createActor[T](clazz: Class[T]) = actorSystem.actorOf(Props(clazz))
 }

@@ -1,5 +1,7 @@
 package com.liberty.common
 
+import com.liberty.model.JavaClass
+
 /**
  * Created by Dmytro_Kovalskyi on 24.09.2014.
  */
@@ -17,6 +19,10 @@ object Register {
 
   def addModel(model: Model) {
     models += model.name -> model
+  }
+
+  def addModel(clazz: JavaClass) {
+    models += clazz.name -> Model(clazz.name)
   }
 
   def getModel(name: String) = {

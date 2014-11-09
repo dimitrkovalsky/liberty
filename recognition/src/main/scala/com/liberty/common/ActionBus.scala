@@ -14,7 +14,7 @@ object ActionBus {
     topics.get(topic).fold(topics += topic -> List(subscriber))(l => {
       topics += topic -> l.++(List(subscriber))
     })
-    println(s"[ActionBus] ${subscriber.getClass.getSimpleName} subscribed for $topic}")
+    println(s"[ActionBus] ${subscriber.getClass.getSimpleName} subscribed for $topic")
   }
 
   def publish(topic: String, action: Action) = {

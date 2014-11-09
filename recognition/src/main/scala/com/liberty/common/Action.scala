@@ -19,7 +19,7 @@ case class CreateBeanAction(model: JavaClass) extends Action
 
 case class CreateRestAction(model: JavaClass) extends Action
 
-case class CreateExceptionClassAction(exception: String, baseException: String) extends Action
+case class CreateExceptionClassAction(exception: String, baseException: String = "Exception") extends Action
 
 case class UserNotificationAction(notificationType: Int, result: Either[String, String]) extends Action
 
