@@ -18,6 +18,7 @@ object DictionaryLoader {
   private val GRAMMAR_EXTENSION = ".grammar"
   private val NAMES_DIRECTORY = PROJECT_PATH + "/recognition/names/"
   private val NAMES_EXTENSION = ".names"
+
   /**
    * Grammar label in files should be the same as in  GrammarIds
    * @return Dictionary with grammars loaded from files
@@ -40,6 +41,7 @@ object DictionaryLoader {
 
     dictionary
   }
+
   private def getProjectFolder = {
     val path = new File(".").getAbsolutePath
     path.substring(0, path.length() - 1)
@@ -50,25 +52,10 @@ object DictionaryLoader {
    * @return
    */
   def loadFieldCreationGrammar() = {
-    var result: List[Grammar] = Nil
-    val fieldNames = loadNames("field", NAME_OF_FIELD)
-    val fieldTypes = loadGrammarFile("types")
-    var grammarId = START_FIELD_CREATION
-    fieldNames.foreach { n =>
-      fieldTypes.foreach { t =>
-        val g1 = Grammar(grammarId, t.command + " " + n.command)
-        val g2 = Grammar(grammarId, n.command + " " + t.command)
-        result = result ::: List(g1, g2)
-        val complex = ComplexGrammar(grammarId,Map(1 -> t, 2 -> n))
-        GrammarRegistry.addGrammar(complex)
-        grammarId += 1
-      }
-    }
-    result
+    val gs = loadNames("field", NAME_OF_FIELD) x loadGrammarFile("types") cartesianProduct START_FIELD_CREATION
+    gs.registerGrammars.foreach(GrammarRegistry.addGrammar)
+    gs.grammars
   }
-
-
-
 
   private def loadNames(fileName: String, label: Int) = {
     var names: List[Grammar] = Nil
@@ -77,6 +64,53 @@ object DictionaryLoader {
         names = names ::: List(Grammar(label, line))
     println("[DictionaryLoader] " + names.size + " names loaded from " + fileName)
     names
+  }
+
+
+  /**
+   * Simple DSL for grammar loading
+   * @param ls
+   */
+  private implicit class ComplexGrammarWrapper(ls: List[Grammar]) {
+
+    def x(another: List[Grammar]): ComplexGrammarTemp = {
+      new ComplexGrammarTemp(List(ls, another))
+    }
+  }
+
+  case class ComplexGrammarContainer(grammars: List[Grammar], registerGrammars: List[ComplexGrammar])
+
+  class ComplexGrammarTemp(lists: List[List[Grammar]]) {
+    def x(another: List[Grammar]): ComplexGrammarTemp = {
+      new ComplexGrammarTemp(lists ::: List(another))
+    }
+
+    /**
+     * Cartesian product of two lists
+     * @param startGrammarId Initial id for grammars
+     */
+    def cartesianProduct(startGrammarId: Int) = {
+      var result: List[Grammar] = Nil
+      var grammarId = startGrammarId
+
+      def product(l1: List[Grammar], l2: List[Grammar]): List[ComplexGrammar] = {
+        var complexGrammars: List[ComplexGrammar] = Nil
+        for (e1 <- l1; e2 <- l2) {
+          val g1 = Grammar(grammarId, e2.command + " " + e1.command)
+          val g2 = Grammar(grammarId, e1.command + " " + e2.command)
+          result = result ::: List(g1, g2)
+          grammarId += 1
+          complexGrammars = complexGrammars ::: List(ComplexGrammar(grammarId, Map(1 -> e2, 2 -> e1)))
+        }
+        complexGrammars
+      }
+      //TODO: Work only with 2 elements
+      val complex = lists match {
+        case x :: xs => product(x, xs.head)
+        case _ => Nil
+      }
+      ComplexGrammarContainer(result, complex)
+    }
   }
 
   /**

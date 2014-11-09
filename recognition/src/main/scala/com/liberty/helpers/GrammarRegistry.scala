@@ -7,6 +7,7 @@ object GrammarRegistry {
   var grammars: Map[Int, ComplexGrammar] = Map()
 
   def addGrammar(grammar: ComplexGrammar) {
+    //println("Added : " + grammar)
     grammars += grammar.label -> grammar
   }
 
