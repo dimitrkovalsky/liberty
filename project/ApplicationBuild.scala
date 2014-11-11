@@ -62,7 +62,8 @@ object ApplicationBuild extends Build {
       "org.slf4j" % "slf4j-api" % "1.6.1",
       "org.slf4j" % "jcl-over-slf4j" % "1.6.1",
       "org.slf4j" % "slf4j-log4j12" % "1.6.1",
-      "log4j" % "log4j" % "1.2.16"
+      "log4j" % "log4j" % "1.2.16",
+      "org.fxmisc.richtext" % "richtextfx" % "0.5.1"
     ),
 
     parallelExecution := true
