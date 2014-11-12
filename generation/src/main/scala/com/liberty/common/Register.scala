@@ -9,7 +9,8 @@ import com.liberty.model.JavaClass
  * Stores information about generated models
  */
 object Register {
-  val models = scala.collection.mutable.Map[String, Model]()
+  val componentModels = scala.collection.mutable.Map[String, ComponentModel]()
+  val models = scala.collection.mutable.Map[String, JavaClass]()
   /**
    * Is created WS class that has @ApplicationPath("rest") to change path for rest services
    */
@@ -17,20 +18,40 @@ object Register {
 
   var beansXmlCreated = false
 
-  def addModel(model: Model) {
-    models += model.name -> model
+  /**
+   * Uses to indicate what structures was generated with with model
+   * @param model
+   */
+  def addComponentModel(model: ComponentModel) {
+    componentModels += model.name -> model
   }
 
-  def addModel(clazz: JavaClass) {
-    models += clazz.name -> Model(clazz.name)
+  def addModel(clazz: JavaClass): Unit = {
+    models += clazz.name -> clazz
+  }
+
+  /**
+   * Model will be created if it is missing
+   * @param clazz
+   */
+  def changeModel(clazz: JavaClass): Unit = {
+    models += clazz.name -> clazz
   }
 
   def getModel(name: String) = {
     models.get(name)
   }
 
-  def changeModel(model: Model): Unit = {
-    models += model.name -> model
+  def addComponentModel(clazz: JavaClass) {
+    componentModels += clazz.name -> ComponentModel(clazz.name)
+  }
+
+  def getComponentModel(name: String) = {
+    componentModels.get(name)
+  }
+
+  def changeComponentModel(model: ComponentModel): Unit = {
+    componentModels += model.name -> model
   }
 
   /**
@@ -47,5 +68,5 @@ object Register {
  * @param beanExists  is ${model}Bean generated and I${model}Bean interface generated
  * @param restExists  is rest generated
  */
-case class Model(name: String, daoExists: Boolean = false, beanExists: Boolean = false, restExists: Boolean = false)
+case class ComponentModel(name: String, daoExists: Boolean = false, beanExists: Boolean = false, restExists: Boolean = false)
 
