@@ -22,8 +22,8 @@ class RestController extends GeneratorController with GeneratorSubscriber {
           Register.wsCreated = true
         }
 
-        Register.getModel(model.name).foreach { m =>
-          Register.changeModel(m.copy(restExists = true))
+        Register.getComponentModel(model.name).foreach { m =>
+          Register.changeComponentModel(m.copy(restExists = true))
           if (!m.beanExists)
             createBeanSend(copy)
         }

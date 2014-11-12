@@ -12,6 +12,7 @@ class ComponentHandler extends Handler {
   override def onRecognized(recognized: RecognitionResult) {
     recognized.best.label match {
       case GrammarIds.CREATE_CLASS => Controllers.classController.startClassCreation()
+      case GrammarIds.CREATE_BEAN => Controllers.beanController.startBeanCreation()
      }
   }
 }

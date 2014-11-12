@@ -49,7 +49,7 @@ trait Subscriber {
 }
 
 trait GeneratorSubscriber extends Subscriber {
-  protected def getSubscriptionTopics = List(Topics.GENERATION)
+  protected def getSubscriptionTopics = List(Topics.GENERATION, Topics.MODEL_ACTIVATION)
 
   /**
    * Sent message into GENERATION topic

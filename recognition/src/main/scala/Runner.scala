@@ -1,7 +1,7 @@
 import java.net.Socket
 
 import com.liberty.builders.ClassBuilder
-import com.liberty.common.{Model, Register, ProjectConfig}
+import com.liberty.common.{ComponentModel, Register, ProjectConfig}
 import com.liberty.controllers.{AdditionalClassController, DaoController, BeanController, RestController}
 import com.liberty.model.{PrivateModifier, JavaField, JavaClass}
 import com.liberty.transmission.TransmissionManager

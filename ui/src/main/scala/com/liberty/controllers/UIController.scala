@@ -26,7 +26,7 @@ class UIController extends jfxf.Initializable {
   override def initialize(url: URL, resourceBundle: ResourceBundle): Unit = {
     dataLabel.setText("simple text")
     val m = getModel
-    Register.addModel(m)
+    Register.addComponentModel(m)
     Controllers.restController.createRest(m)
   }
 

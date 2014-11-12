@@ -9,6 +9,24 @@ import com.liberty.model._
  */
 class BeanController extends GeneratorController with GeneratorSubscriber {
   private val generator = new BeanGenerator(ProjectConfig.basePackage.nested("beans"))
+  private var activeModel: Option[String] = None
+
+  /**
+   * Indicates that active model is present in controller and bean can be created use this model
+   * @return
+   */
+  def canCreateBean: Boolean = activeModel.isDefined
+
+  def createBean() = {
+    activeModel match {
+      case Some(modelName) =>
+        Register.getModel(modelName) match {
+          case Some(clazz) => createBean(clazz)
+          case _ => None
+        }
+      case _ => None
+    }
+  }
 
   def testNotification(): Unit = {
     notify(Topics.USER_NOTIFICATION, UserNotificationAction(1, Right("Test notification")))
@@ -30,12 +48,13 @@ class BeanController extends GeneratorController with GeneratorSubscriber {
           Register.beansXmlCreated = true
         }
         // Model should be added to register
-        Register.getModel(model.name).foreach { m =>
-          Register.changeModel(m.copy(beanExists = true))
+        Register.getComponentModel(model.name).foreach { m =>
+          Register.changeComponentModel(m.copy(beanExists = true))
           if (!m.daoExists)
             createDaoSend(copy)
         }
         checkAdditionalFiles()
+        activeModel = None
         Some("Bean created")
       case _ => None
     }
@@ -52,6 +71,8 @@ class BeanController extends GeneratorController with GeneratorSubscriber {
   override protected def onActionReceived: Received = {
     case CreateBeanAction(model) =>
       createBean(model).map(s => Right(s)).getOrElse(Left("Bean creation failed"))
+    case ActivateModel(modelName) => activeModel = Some(modelName)
+      Right("Ok")
   }
 
 }

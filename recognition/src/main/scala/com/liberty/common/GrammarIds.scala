@@ -15,6 +15,10 @@ object GrammarIds {
   val CHANGE_DATABASE = 13
   val CREATE_BEAN = 14
   val CREATE_REST = 15
+
+  val EDIT_CLASS = 20
+  val ADD_FIELD = 21
+  val COMPLETE_CLASS_EDITING = 22
   // names
   val NAME_OF_PROJECT = 100
   val NAME_OF_CLASS = 101

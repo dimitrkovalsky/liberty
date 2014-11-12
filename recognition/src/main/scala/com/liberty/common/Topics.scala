@@ -8,5 +8,7 @@ package com.liberty.common
 object Topics {
   val GENERAL = "general"
   val GENERATION = "generation"
+  // uses to indicate appropriate controller for active model(open model class) in UI
   val USER_NOTIFICATION = "user_notification"
+  val MODEL_ACTIVATION = "model_activation"
 }

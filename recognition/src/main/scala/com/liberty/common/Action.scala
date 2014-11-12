@@ -25,5 +25,11 @@ case class UserNotificationAction(notificationType: Int, result: Either[String, 
 
 case class ClassEditAction(clazz: JavaClass) extends Action
 
+/**
+ * Model should be added to Register.addModel before action sending
+ * @param name
+ */
+case class ActivateModel(name: String) extends Action
+
 case class UIAction(uiActionType: Int) extends Action
 

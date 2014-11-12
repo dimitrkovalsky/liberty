@@ -78,7 +78,7 @@ class DaoController extends Changeable with GeneratorController with GeneratorSu
     }
 
     generator.createMetaInfFiles.foreach(writer.writeToMetaInf)
-    Register.getModel(model.name).foreach(m => Register.changeModel(m.copy(daoExists = true)))
+    Register.getComponentModel(model.name).foreach(m => Register.changeComponentModel(m.copy(daoExists = true)))
     checkAdditionalFiles()
 
     Success("Dao created")

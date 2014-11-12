@@ -14,8 +14,13 @@ class ClassHandler extends Handler {
   override def onRecognized(recognized: RecognitionResult) = recognized.best.label match {
     case GrammarGroups.CLASS_NAMES => Controllers.classController.createClass(recognized.best.sentence.removeSpaces())
     case GrammarGroups.CLASS_FIELD_CREATION =>
-      //TODO: create field return Either[String,String]
-      GrammarRegistry.getGrammar(recognized.best.label).
-        fold(println(s"Can't find grammar id ${recognized.best.label}"))(Controllers.classController.createField)
+      recognized.best.label match {
+        case GrammarIds.COMPLETE_CLASS_EDITING => Controllers.classController.completeCreation()
+        case _ =>
+          GrammarRegistry.getGrammar(recognized.best.label).
+            fold(println(s"Can't find grammar id ${recognized.best.label}"))(Controllers.classController.createField)
+      }
+    //TODO: create field return Either[String,String]
+
   }
 }

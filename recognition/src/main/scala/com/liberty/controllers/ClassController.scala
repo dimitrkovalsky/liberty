@@ -57,7 +57,16 @@ class ClassController extends Subscriber {
   }
 
   def notifyClassChanged(): Unit = {
-    classBuilder.foreach(b => notify(Topics.USER_NOTIFICATION, ClassEditAction(b.getJavaClass)))
+    classBuilder.foreach { b =>
+      val clazz = b.getJavaClass
+      Register.changeModel(clazz)
+      notify(Topics.USER_NOTIFICATION, ClassEditAction(clazz))
+      notify(Topics.MODEL_ACTIVATION, ActivateModel(clazz.name))
+    }
+  }
+
+  def completeCreation(): Unit = {
+    notifyClassChanged()
   }
 
   override protected def onActionReceived: Received = {
