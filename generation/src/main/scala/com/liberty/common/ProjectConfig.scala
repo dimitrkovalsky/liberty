@@ -5,7 +5,7 @@ import com.liberty.traits.LocationPackage
 object ProjectConfig {
 
   //project configs
-  var projectName = "project1"
+  var projectName = "simple"
   var path = "D:\\test"
 //  var path = "C:\\Workspace"
   def projectPath = s"$path\\$projectName"

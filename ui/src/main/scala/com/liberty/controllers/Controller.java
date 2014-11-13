@@ -1,5 +1,6 @@
 package com.liberty.controllers;
 
+import com.liberty.common.ProjectConfig;
 import com.liberty.treeview.*;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -56,7 +57,7 @@ public class Controller {
 //    }
 
     public void scanProjectDirectory(Stage stage) {
-        rootPath = Paths.get("H:\\Workspace\\liberty");
+        rootPath = Paths.get(ProjectConfig.projectPath());
         PathItem pathItem = new PathItem(rootPath);
 //        locationTreeView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 //            @Override

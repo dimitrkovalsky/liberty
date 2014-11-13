@@ -17,7 +17,7 @@ class BeanController extends GeneratorController with GeneratorSubscriber {
    */
   def canCreateBean: Boolean = activeModel.isDefined
 
-  def createBean() = {
+  def createBean():Option[String] = {
     activeModel match {
       case Some(modelName) =>
         Register.getModel(modelName) match {
