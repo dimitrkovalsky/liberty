@@ -1,6 +1,5 @@
 package com.liberty.controllers;
 
-import com.liberty.common.ProjectConfig;
 import com.liberty.treeview.*;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -57,7 +56,7 @@ public class Controller {
 //    }
 
     public void scanProjectDirectory(Stage stage) {
-        rootPath = Paths.get(ProjectConfig.projectPath());
+        rootPath = Paths.get("D:\\test");
         PathItem pathItem = new PathItem(rootPath);
 //        locationTreeView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 //            @Override
@@ -82,7 +81,7 @@ public class Controller {
 
     public void setCodeStyleArea(String sampleCode) {
         CodeArea codeArea = new CodeArea();
-        String stylesheet = getClass().getResource("java-keywords.css").toExternalForm();
+        String stylesheet = getClass().getResource("/styles/java-keywords.css").toExternalForm();
         IntFunction<String> format = (digits -> " %" + digits + "d ");
 
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea, format, stylesheet));

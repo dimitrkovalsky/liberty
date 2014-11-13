@@ -21,7 +21,7 @@ public class Main extends Application {
         // load the scene fxml UI.
         // grabs the UI scenegraph view from the loader.
         // grabs the UI controller for the view from the loader.
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("uipattern.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/uipattern.fxml"));
         this.loader = loader;
         Parent root = (Parent) loader.load();
 
