@@ -9,6 +9,9 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.ClipboardContent;
@@ -22,14 +25,12 @@ import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
 
 import java.io.File;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.IntFunction;
@@ -41,19 +42,36 @@ import java.util.regex.Pattern;
  * Date: 09.11.2014
  * Time: 12:49
  */
-public class Controller {
+public class Controller implements Initializable {
     private Path rootPath;
     private ExecutorService service = Executors.newFixedThreadPool(3);
-    private StringProperty messageProp= new SimpleStringProperty();
+    private StringProperty messageProp = new SimpleStringProperty();
     @FXML
     private TreeView<PathItem> locationTreeView;
     @FXML
     private AnchorPane filesViewer;
 
+    @FXML
+    private Label confidence_lbl;
+
+    @FXML
+    private Label lastCommand_lbl;
+
+    @FXML
+    private ListView history_lv;
+
     // the initialize method is automatically invoked by the FXMLLoader - it's magic
 //    public void initialize() {
 //        scanProjectDirectory();
 //    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        confidence_lbl.setText("53");
+        lastCommand_lbl.setText("Build and Deploy");
+        String[] history = {"Create project", "Simple", "Create rest service", "Build and Deploy"};
+        history_lv.getItems().addAll(history);
+    }
 
     public void scanProjectDirectory(Stage stage) {
         rootPath = Paths.get("D:\\test");
@@ -83,7 +101,9 @@ public class Controller {
         CodeArea codeArea = new CodeArea();
         String stylesheet = getClass().getResource("/styles/java-keywords.css").toExternalForm();
         IntFunction<String> format = (digits -> " %" + digits + "d ");
-
+        // TODO: use elastic size
+        codeArea.setPrefWidth(600f);
+        codeArea.setPrefHeight(700f);
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea, format, stylesheet));
         codeArea.textProperty().addListener((obs, oldText, newText) -> {
             codeArea.setStyleSpans(0, computeHighlighting(newText));
@@ -189,7 +209,7 @@ public class Controller {
         return PathTreeItem.createNode(pathItem);
     }
 
-    private static final String sampleCode = String.join("\n", new String[] {
+    private static final String sampleCode = String.join("\n", new String[]{
             "package com.example;",
             "",
             "import java.util.*;",
@@ -212,7 +232,7 @@ public class Controller {
         Matcher matcher = PATTERN.matcher(text);
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        while(matcher.find()) {
+        while (matcher.find()) {
             String styleClass =
                     matcher.group("KEYWORD") != null ? "keyword" :
                             matcher.group("PAREN") != null ? "paren" :
@@ -220,7 +240,8 @@ public class Controller {
                                             matcher.group("BRACKET") != null ? "bracket" :
                                                     matcher.group("SEMICOLON") != null ? "semicolon" :
                                                             matcher.group("STRING") != null ? "string" :
-                                                                    null; /* never happens */ assert styleClass != null;
+                                                                    null; /* never happens */
+            assert styleClass != null;
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
             spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
@@ -228,7 +249,8 @@ public class Controller {
         spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
         return spansBuilder.create();
     }
-    private static final String[] KEYWORDS = new String[] {
+
+    private static final String[] KEYWORDS = new String[]{
             "abstract", "assert", "boolean", "break", "byte",
             "case", "catch", "char", "class", "const",
             "continue", "default", "do", "double", "else",
@@ -256,4 +278,6 @@ public class Controller {
                     + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
                     + "|(?<STRING>" + STRING_PATTERN + ")"
     );
+
+
 }

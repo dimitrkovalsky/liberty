@@ -18,7 +18,7 @@
     -fx-font-weight: bold;
 }
 .string {
-    -fx-fill: blue;
+    -fx-fill: #000000;
 }
 
 .lineno {

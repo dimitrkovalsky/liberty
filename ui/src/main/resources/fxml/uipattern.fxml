@@ -66,7 +66,7 @@
         </AnchorPane>
         <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
           <content>
-            <AnchorPane fx:id="filesViewer" id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
+            <AnchorPane id="Content" fx:id="filesViewer" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
               <children>
                 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" textFill="$x2" wrapText="false" />
               </children>
@@ -75,7 +75,20 @@
         </ScrollPane>
         <AnchorPane>
           <children>
-            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Details" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="28.0" style="&#10;" text="Confidence" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                  <Label fx:id="confidence_lbl" alignment="CENTER" layoutX="158.0" layoutY="8.0" style="&#10;" text="61" textAlignment="CENTER" textFill="#838383" wrapText="false">
+                     <font>
+                        <Font size="45.0" />
+                     </font>
+                  </Label>
+                  <Label font="$x1" layoutX="7.0" layoutY="171.0" prefHeight="27.0" prefWidth="90.0" style="&#10;" text="Command" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                  <Label fx:id="lastCommand_lbl" layoutX="7.0" layoutY="209.0" prefHeight="39.0" prefWidth="225.0" style="&#10;" text="Create project" textFill="#838383">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <ListView fx:id="history_lv" layoutY="320.0" prefHeight="233.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <Label font="$x1" layoutX="7.0" layoutY="291.0" prefHeight="27.0" prefWidth="90.0" style="&#10;" text="History" textAlignment="CENTER" textFill="$x2" wrapText="false" AnchorPane.bottomAnchor="233.0" />
           </children>
         </AnchorPane>
       </items>

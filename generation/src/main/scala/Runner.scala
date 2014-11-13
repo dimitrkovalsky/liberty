@@ -8,7 +8,6 @@ import com.liberty.types.primitives.{IntegerType, LongType, StringType}
 object Runner {
 
   def main(args: Array[String]) {
-
   }
 
   class Data(data: String) {}
@@ -16,23 +15,23 @@ object Runner {
   def getModel: JavaClass = {
     val basePackage = ProjectConfig.basePackage
     val builder = new ClassBuilder
-    builder.setName("Subject")
-    builder.addField(JavaField("id", IntegerType, PrivateModifier))
-    builder.addField(JavaField("name", StringType, PrivateModifier))
-    builder.addField(JavaField("lecturer", StringType, PrivateModifier))
-    builder.addField(JavaField("departmentId", StringType, PrivateModifier))
+    builder.setName("Student")
+    builder.addField(JavaField("id", LongType, PrivateModifier))
+    builder.addField(JavaField("firstName", StringType, PrivateModifier))
+    builder.addField(JavaField("lastName", StringType, PrivateModifier))
+    builder.addField(JavaField("department", IntegerType, PrivateModifier))
     builder.addPackage(basePackage.nested("models", "Subject"))
     //    println(   builder.getJavaClass)
     builder.getJavaClass
   }
 
   def generate() {
-    val basePackage = LocationPackage("standard")
+    val basePackage = LocationPackage("com.test")
     val builder = new ClassBuilder
     builder.setName("UserRole")
     builder.addField(JavaField("id", LongType, PrivateModifier))
     builder.addField(JavaField("role", StringType, PrivateModifier))
-    builder.addPackage(JavaPackage("standard.models", "UserRole"))
+    builder.addPackage(JavaPackage("com.test.models", "UserRole"))
     val student = builder.getJavaClass
 
     val adapter = new PostgresAdapter(student, basePackage)
