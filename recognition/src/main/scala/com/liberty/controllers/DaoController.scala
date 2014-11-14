@@ -15,6 +15,10 @@ import scala.util.{Failure, Success, Try}
 class DaoController extends Changeable with GeneratorController with GeneratorSubscriber {
   private var generator = createGenerator
 
+  def createDao(): Option[String] = {
+    None
+  }
+
   def changeDatabase(db: DatabaseType): Either[String, String] = {
     if (generator.dbConfig.databaseType != db) {
       val generated = generator.getGenerated

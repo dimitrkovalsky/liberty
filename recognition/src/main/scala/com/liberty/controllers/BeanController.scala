@@ -9,23 +9,9 @@ import com.liberty.model._
  */
 class BeanController extends GeneratorController with GeneratorSubscriber {
   private val generator = new BeanGenerator(ProjectConfig.basePackage.nested("beans"))
-  private var activeModel: Option[String] = None
 
-  /**
-   * Indicates that active model is present in controller and bean can be created use this model
-   * @return
-   */
-  def canCreateBean: Boolean = activeModel.isDefined
-
-  def createBean():Option[String] = {
-    activeModel match {
-      case Some(modelName) =>
-        Register.getModel(modelName) match {
-          case Some(clazz) => createBean(clazz)
-          case _ => None
-        }
-      case _ => None
-    }
+  def createBean(): Option[String] = {
+    performCreation(createBean)
   }
 
   def testNotification(): Unit = {
