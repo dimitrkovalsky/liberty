@@ -1,4 +1,4 @@
-package com.liberty.sample;
+package com.liberty;
 
 import com.liberty.controllers.Controller;
 import javafx.application.Application;

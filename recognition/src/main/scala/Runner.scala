@@ -14,14 +14,14 @@ import com.liberty.types.primitives.{LongType, StringType, IntegerType}
  */
 object Runner {
   def main(args: Array[String]) {
-    //  TransmissionManager.startDataTransmission()
-    val model = getModel
-    Register.addComponentModel(ComponentModel(model.name))
-    val rest = new RestController
-    val b = new BeanController
-    val d = new DaoController
-    new AdditionalClassController
-    rest.createRest(model)
+      TransmissionManager.startDataTransmission()
+//    val model = getModel
+//    Register.addComponentModel(ComponentModel(model.name))
+//    val rest = new RestController
+//    val b = new BeanController
+//    val d = new DaoController
+//    new AdditionalClassController
+//    rest.createRest(model)
   }
 
 

@@ -1,7 +1,7 @@
 package com.liberty.treeview;
 
 import com.liberty.controllers.Controller;
-import com.liberty.sample.Main;
+import com.liberty.Main;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
