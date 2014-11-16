@@ -101,8 +101,8 @@ object DictionaryLoader {
           val g1 = Grammar(grammarId, e2.command + " " + e1.command)
           val g2 = Grammar(grammarId, e1.command + " " + e2.command)
           result = result ::: List(g1, g2)
-          grammarId += 1
           complexGrammars = complexGrammars ::: List(ComplexGrammar(grammarId, Map(1 -> e2, 2 -> e1)))
+          grammarId += 1
         }
         complexGrammars
       }
