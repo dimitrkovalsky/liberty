@@ -1,5 +1,9 @@
 package com.liberty.controllers;
 
+import com.liberty.common.UiNotifier;
+import com.liberty.common.UserNotificationAction;
+import com.liberty.entities.RecognitionResult;
+import com.liberty.handlers.IUIHandler;
 import com.liberty.treeview.*;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -42,23 +46,20 @@ import java.util.regex.Pattern;
  * Date: 09.11.2014
  * Time: 12:49
  */
-public class Controller implements Initializable {
+public class Controller implements Initializable, IUIHandler {
+
+    private UiNotifier notificator = new UiNotifier(this);
+
     private Path rootPath;
     private ExecutorService service = Executors.newFixedThreadPool(3);
     private StringProperty messageProp = new SimpleStringProperty();
-    @FXML
-    private TreeView<PathItem> locationTreeView;
-    @FXML
-    private AnchorPane filesViewer;
 
-    @FXML
-    private Label confidence_lbl;
-
-    @FXML
-    private Label lastCommand_lbl;
-
-    @FXML
-    private ListView history_lv;
+    @FXML private TreeView<PathItem> locationTreeView;
+    @FXML private AnchorPane filesViewer;
+//    @FXML private StackPane tunerViewer;
+    @FXML private Label confidence_lbl;
+    @FXML private Label lastCommand_lbl;
+    @FXML private ListView history_lv;
 
     // the initialize method is automatically invoked by the FXMLLoader - it's magic
 //    public void initialize() {
@@ -74,7 +75,7 @@ public class Controller implements Initializable {
     }
 
     public void scanProjectDirectory(Stage stage) {
-        rootPath = Paths.get("D:\\test");
+        rootPath = Paths.get("H:\\Workspace\\liberty");
         PathItem pathItem = new PathItem(rootPath);
 //        locationTreeView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 //            @Override
@@ -94,7 +95,9 @@ public class Controller implements Initializable {
             setDragDropEvent(stage, cell);
             return cell;
         });
-
+//        SwingNode swingNode = new SwingNode();
+//        SwingUtilities.invokeLater(() -> swingNode.setContent(new Scope()));
+//        tunerViewer.getChildren().add(swingNode);
     }
 
     public void setCodeStyleArea(String sampleCode) {
@@ -102,7 +105,7 @@ public class Controller implements Initializable {
         String stylesheet = getClass().getResource("/styles/java-keywords.css").toExternalForm();
         IntFunction<String> format = (digits -> " %" + digits + "d ");
         // TODO: use elastic size
-        codeArea.setPrefWidth(600f);
+        codeArea.setPrefWidth(625f);
         codeArea.setPrefHeight(700f);
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea, format, stylesheet));
         codeArea.textProperty().addListener((obs, oldText, newText) -> {
@@ -280,4 +283,17 @@ public class Controller implements Initializable {
     );
 
 
+    @Override
+    public void onAction(UserNotificationAction notification) {
+        System.out.println("ХУЙ");
+    }
+
+    @Override
+    public void onRecognized(RecognitionResult recognitionResult) {
+        Platform.runLater(() -> {
+            confidence_lbl.setText(String.valueOf(recognitionResult.best().getConfidence()));
+            lastCommand_lbl.setText(recognitionResult.best().getSentence());
+            history_lv.getItems().add(0, recognitionResult.best().getSentence());
+        });
+    }
 }
