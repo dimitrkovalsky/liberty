@@ -11,7 +11,7 @@ object GrammarIds {
   val CREATE_PACKAGE = 2
   // component creation
   val CREATE_CLASS = 11
-  val ADD_DATABASE = 12
+  val CREATE_DAO = 12
   val CHANGE_DATABASE = 13
   val CREATE_BEAN = 14
   val CREATE_REST = 15

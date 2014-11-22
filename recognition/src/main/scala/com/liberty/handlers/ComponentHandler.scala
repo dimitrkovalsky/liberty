@@ -10,15 +10,20 @@ import com.liberty.entities.RecognitionResult
 class ComponentHandler extends Handler {
   private val beanController = Controllers.beanController
   private val classController = Controllers.classController
+  private val daoController = Controllers.daoController
+  private val restController = Controllers.restController
 
   override def onRecognized(recognized: RecognitionResult) {
+
     recognized.best.label match {
+      case GrammarIds.CREATE_DAO => println("[ComponentHandler] CREATE_DAO"); daoController.createDao()
       case GrammarIds.CREATE_CLASS => classController.startClassCreation()
       case GrammarIds.CREATE_BEAN =>
         if (beanController.isModelActive)
           beanController.createBean()
         else
           System.err.println("[ComponentHandler] can not create bean") // TODO: show list to choose model
+      case _ => System.err.println("[ComponentHandler] can't find handler for id : " + recognized.best.label)
     }
   }
 }

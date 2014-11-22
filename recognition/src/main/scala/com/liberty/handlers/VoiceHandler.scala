@@ -13,19 +13,18 @@ import scala.collection.immutable.Stack
  * Time: 15:54
  */
 class VoiceHandler {
-  val subscribers: Stack[VoiceNotifier] = Stack.empty[VoiceNotifier]
-  subscribers.push(new FunctionHandler)
+
   val projectHandler = new ProjectHandler
   val componentHandler = new ComponentHandler
   val classHandler = new ClassHandler
 
   def handleRecognitionResult(recognized: RecognitionResult) {
     try {
-      println("Recognized : " + recognized.best.sentence)
+      println("Recognized : " + recognized.best)
       recognized.grammar match {
         case GrammarGroups.PROJECT_CREATION | GrammarGroups.PROJECT_NAMES => projectHandler.onRecognized(recognized)
         case GrammarGroups.COMPONENT_CREATION => componentHandler.onRecognized(recognized)
-        case GrammarGroups.CLASS_NAMES | GrammarGroups.CLASS_EDITING | GrammarGroups.CLASS_FIELD_CREATION => classHandler.onRecognized(recognized)
+        case GrammarGroups.CLASS_NAMES | GrammarGroups.CLASS_EDITING => classHandler.onRecognized(recognized)
         case _ => println("[VoiceHandler] match fail")
       }
     } catch {

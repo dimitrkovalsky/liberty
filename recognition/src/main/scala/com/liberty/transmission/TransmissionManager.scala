@@ -90,8 +90,8 @@ object TransmissionManager {
     sendData(DataPacket(RequestType.SYNTHESIZE, phrase))
   }
 
-  def activateGrammar(grammarId: Int) {
-    sendData(DataPacket(RequestType.CHANGE_ACTIVE_GRAMMAR, grammarId.toString))
+  def activateGrammar(grammarGroup: Int) {
+    sendData(DataPacket(RequestType.CHANGE_ACTIVE_GRAMMAR, grammarGroup.toString))
   }
 
   def sendData(data: DataPacket) {

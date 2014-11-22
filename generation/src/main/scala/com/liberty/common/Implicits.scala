@@ -41,6 +41,16 @@ object Implicits {
       }
     }
 
+    def firstToUpperCase: String = {
+      if (s == null) null
+      else if (s.length == 0) ""
+      else {
+        val chars = s.toCharArray
+        chars(0) = chars(0).toUpper
+        new String(chars)
+      }
+    }
+
     def quotes: String = "\"" + s + "\""
 
     /**

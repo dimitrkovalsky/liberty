@@ -16,8 +16,29 @@ class DaoController extends Changeable with GeneratorController with GeneratorSu
   private var generator = createGenerator
 
   def createDao(): Option[String] = {
-    None
+    println("[DaoController] createDao activeModel : " + activeModel )
+    activeModel match {
+      case Some(modelName) =>
+        Register.getModel(modelName) match {
+          case Some(clazz) =>
+            val result = createDao(clazz)
+            result.foreach(r => notify(Topics.USER_NOTIFICATION,
+              UserNotificationAction(NotificationType.GENERATION_COMPLETED, Right(r))))
+            result match {
+              case Success(msg) => Some(msg)
+              case Failure(e) =>
+                 System.err.print("[DaoController] can not create dao ", e)
+                None
+            }
+          case _ =>
+            System.err.println("[DaoController] model is not active")
+            None
+        }
+      case _ =>System.err.println("[DaoController] model is not active")
+        None
+    }
   }
+
 
   def changeDatabase(db: DatabaseType): Either[String, String] = {
     if (generator.dbConfig.databaseType != db) {
@@ -116,5 +137,7 @@ class DaoController extends Changeable with GeneratorController with GeneratorSu
         case Success(msg) => Right(msg)
         case Failure(t) => Left(t.getMessage)
       }
+    case ActivateModel(modelName) => activeModel = Some(modelName)
+      Right("Ok")
   }
 }

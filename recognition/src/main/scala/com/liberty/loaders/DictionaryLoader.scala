@@ -29,14 +29,14 @@ object DictionaryLoader {
     val projectNames = loadNames("project", NAME_OF_PROJECT)
     val classNames = loadNames("class", NAME_OF_CLASS)
     val fieldCreation = loadFieldCreationGrammar()
-    val classEdit = loadGrammarFile("class_edit")
+    val classEdit = loadGrammarFile("class_edit") ++ fieldCreation
     val dictionary = new Dictionary(Map(
       GrammarGroups.PROJECT_CREATION -> projectCreation,
       GrammarGroups.COMPONENT_CREATION -> componentCreation,
       GrammarGroups.PROJECT_NAMES -> projectNames,
       GrammarGroups.CLASS_NAMES -> classNames,
-      GrammarGroups.CLASS_EDITING -> classEdit,
-      GrammarGroups.CLASS_FIELD_CREATION -> fieldCreation))
+      GrammarGroups.CLASS_EDITING -> classEdit
+    ))
 
     val loaded = dictionary.grammars.values.flatten.size
     println(s"[DictionaryLoader] loaded $loaded grammars")

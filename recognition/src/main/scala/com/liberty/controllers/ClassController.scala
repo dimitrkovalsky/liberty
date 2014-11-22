@@ -6,6 +6,7 @@ import com.liberty.entities.ComplexGrammar
 import com.liberty.helpers.SynthesizeHelper
 import com.liberty.model.{PrivateModifier, JavaField}
 import com.liberty.common.Implicits._
+import com.liberty.transmission.TransmissionManager
 
 /**
  * Created by Maxxis on 11/8/2014.
@@ -47,18 +48,21 @@ class ClassController extends Subscriber {
     classBuilder = Some(new ClassBuilder)
   }
 
-  def createClass(name: String): Boolean = {
+  def createClass(className: String): Boolean = {
     classBuilder.foreach { b =>
+      val name = className.firstToUpperCase
       b.setName(name)
+      b.addPackage(ProjectConfig.basePackage.nested("models").nestedClass(name))
       notifyClassChanged()
     }
-    GrammarController.changeGrammarGroup(GrammarGroups.CLASS_FIELD_CREATION)
+    GrammarController.changeGrammarGroup(GrammarGroups.CLASS_EDITING)
     true
   }
 
   def notifyClassChanged(): Unit = {
     classBuilder.foreach { b =>
       val clazz = b.getJavaClass
+      println("Changed class : " + clazz)
       Register.changeModel(clazz)
       notify(Topics.USER_NOTIFICATION, ClassEditAction(clazz))
       notify(Topics.MODEL_ACTIVATION, ActivateModel(clazz.name))
@@ -66,7 +70,9 @@ class ClassController extends Subscriber {
   }
 
   def completeCreation(): Unit = {
+    classBuilder.foreach(b => ActionBus.publish(Topics.MODEL_ACTIVATION, ActivateModel(b.getJavaClass.name)))
     notifyClassChanged()
+    TransmissionManager.activateGrammar(GrammarGroups.COMPONENT_CREATION)
   }
 
   override protected def onActionReceived: Received = {

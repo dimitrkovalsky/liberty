@@ -148,6 +148,7 @@ package object emulation {
     }
 
 
+
     protected[emulation] def emulateRecognized(grammarId: Int, command: String) {
       grammars.get(activeGrammar) match {
         case None => println("[Emulator] there are no grammars in grammar group : " + activeGrammar)

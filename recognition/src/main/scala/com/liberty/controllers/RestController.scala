@@ -10,6 +10,10 @@ import com.liberty.model.JavaClass
 class RestController extends GeneratorController with GeneratorSubscriber {
   private val generator = new RestGenerator(ProjectConfig.basePackage.nested("rest"))
 
+  def createRest(): Option[String] = {
+    performCreation(createRest)
+  }
+
   def createRest(model: JavaClass): Option[String] = {
     val copy = model.deepCopy
     models += model.name -> copy
@@ -43,5 +47,7 @@ class RestController extends GeneratorController with GeneratorSubscriber {
   override protected def onActionReceived: Received = {
     case CreateRestAction(model) =>
       createRest(model).map(Right(_)).getOrElse(Left("Rest creation failed"))
+    case ActivateModel(modelName) => activeModel = Some(modelName)
+      Right("Ok")
   }
 }
