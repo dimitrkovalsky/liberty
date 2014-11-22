@@ -6,7 +6,7 @@ object ProjectConfig {
 
   //project configs
   var projectName = "simple"
-  var path = "D:\\test"
+  var path = "C:\\Workspace"
 //  var path = "C:\\Workspace"
   def projectPath = s"$path\\$projectName"
   var targetPath = s"$projectPath\\target"

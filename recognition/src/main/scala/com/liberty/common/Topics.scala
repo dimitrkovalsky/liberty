@@ -11,4 +11,5 @@ object Topics {
   // uses to indicate appropriate controller for active model(open model class) in UI
   val USER_NOTIFICATION = "user_notification"
   val MODEL_ACTIVATION = "model_activation"
+  val RECOGNITION_NOTIFICATION = "recognition_notification"
 }

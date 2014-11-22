@@ -1,5 +1,6 @@
 package com.liberty.common
 
+import com.liberty.entities.RecognitionResult
 import com.liberty.model.JavaClass
 
 /**
@@ -24,6 +25,8 @@ case class CreateExceptionClassAction(exception: String, baseException: String =
 case class UserNotificationAction(notificationType: Int, result: Either[String, String]) extends Action
 
 case class ClassEditAction(clazz: JavaClass) extends Action
+
+case class RecognizedAction(recognitionResult: RecognitionResult) extends Action
 
 /**
  * Model should be added to Register.addModel before action sending

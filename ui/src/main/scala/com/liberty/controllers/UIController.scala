@@ -21,7 +21,7 @@ class UIController extends jfxf.Initializable {
 
   @FXML private var dataLabel: Label = _
 
-  private val notificator = new UiNotifier(onAction)
+//  private val notificator = new UiNotifier(onAction)
 
   override def initialize(url: URL, resourceBundle: ResourceBundle): Unit = {
     dataLabel.setText("simple text")
