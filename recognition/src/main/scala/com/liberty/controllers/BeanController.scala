@@ -2,6 +2,7 @@ package com.liberty.controllers
 
 import com.liberty.common._
 import com.liberty.generators.BeanGenerator
+import com.liberty.helpers.SynthesizeHelper
 import com.liberty.model._
 
 /**
@@ -11,7 +12,9 @@ class BeanController extends GeneratorController with GeneratorSubscriber {
   private val generator = new BeanGenerator(ProjectConfig.basePackage.nested("beans"))
 
   def createBean(): Option[String] = {
-    performCreation(createBean)
+    val res = performCreation(createBean)
+    SynthesizeHelper.synthesize("Bean created")
+    res
   }
 
   def testNotification(): Unit = {

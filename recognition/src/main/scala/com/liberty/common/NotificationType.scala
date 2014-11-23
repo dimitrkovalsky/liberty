@@ -9,6 +9,7 @@ object NotificationType {
   val GENERATION_COMPLETED = 1
   val FILES_SAVED = 2
   val CLASS_CHANGED = 3
+  val PROCESS_STARTED = 4
 }
 
 

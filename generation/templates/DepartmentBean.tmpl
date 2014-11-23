@@ -1,6 +1,6 @@
 package standard.beans;
 
-import standard.commons.DaoFactory;
+import standard.common.DaoFactory;
 import standard.dao.IDepartmentDao;
 import standard.errors.ApplicationException;
 import standard.models.Department;
@@ -31,7 +31,6 @@ public class DepartmentBean implements IDepartmentBean {
         IDepartmentDao dao = DaoFactory.getDepartmentDao();
         Department department = new Department();
         department.setId(id);
-        dao.delete(department);
     }
 
     public List<Department> getAllDepartmentsByInstitute(Long id) throws ApplicationException {

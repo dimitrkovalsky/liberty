@@ -1,5 +1,10 @@
 11: add class, new class, create class, create new class, create model, create new model
-12: add database, connect database, add database support, create dao
-13: change database, change current database
-14: add bean, create bean, create java bean, add java bean, create managed bean
-15: create rest, create rest service, create restfull service, create restfull web service, add rest, add rest service
+12: add database, connect database, add database support
+//13: change database, change current database
+14: create bean, create java bean, add java bean
+15: new rest, new rest service, new restfull service, new restfull web service
+//16: build, build project, build maven project, package, maven package
+//17: deploy, deploy project, run, run project
+18: build and deploy, build and run, package and deploy, package and run
+19: run browser, open browser, show in browser
+20: open mongo, run mongo db, run mongo, run mongo database, start mongo, start mongo database, start mongodb

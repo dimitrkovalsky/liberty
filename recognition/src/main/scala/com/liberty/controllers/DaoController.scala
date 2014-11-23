@@ -3,7 +3,7 @@ package com.liberty.controllers
 import com.liberty.common.DatabaseType.DatabaseType
 import com.liberty.common._
 import com.liberty.generators.{DaoGenerator, DaoPacket}
-import com.liberty.helpers.FileHelper
+import com.liberty.helpers.{SynthesizeHelper, FileHelper}
 import com.liberty.model.JavaClass
 import com.liberty.traits.Changeable
 
@@ -25,7 +25,9 @@ class DaoController extends Changeable with GeneratorController with GeneratorSu
             result.foreach(r => notify(Topics.USER_NOTIFICATION,
               UserNotificationAction(NotificationType.GENERATION_COMPLETED, Right(r))))
             result match {
-              case Success(msg) => Some(msg)
+              case Success(msg) =>
+                SynthesizeHelper.synthesize(msg)
+                Some(msg)
               case Failure(e) =>
                  System.err.print("[DaoController] can not create dao ", e)
                 None
@@ -37,6 +39,7 @@ class DaoController extends Changeable with GeneratorController with GeneratorSu
       case _ =>System.err.println("[DaoController] model is not active")
         None
     }
+
   }
 
 

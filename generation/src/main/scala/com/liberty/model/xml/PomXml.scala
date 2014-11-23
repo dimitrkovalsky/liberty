@@ -17,6 +17,7 @@ class PomXml {
       <modelVersion>4.0.0</modelVersion>
       <groupId>{ProjectConfig.basePackageString}</groupId>
       <artifactId>{ProjectConfig.projectName}</artifactId>
+      <version>1.0-SNAPSHOT</version>
       <packaging>war</packaging>
       <repositories>
         <repository>

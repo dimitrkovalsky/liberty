@@ -2,6 +2,7 @@ package com.liberty.controllers
 
 import com.liberty.common._
 import com.liberty.generators.RestGenerator
+import com.liberty.helpers.SynthesizeHelper
 import com.liberty.model.JavaClass
 
 /**
@@ -32,6 +33,7 @@ class RestController extends GeneratorController with GeneratorSubscriber {
             createBeanSend(copy)
         }
         checkAdditionalFiles()
+        SynthesizeHelper.synthesize("Rest service created")
         Some("Rest service created")
     }
   }

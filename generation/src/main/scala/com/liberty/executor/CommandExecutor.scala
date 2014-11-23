@@ -11,13 +11,14 @@ object CommandExecutor {
 
   val WORKING_DIRECTORY: String = "C:\\"
 
-  def execute(command: String) {
-    startProcess(createBuilder(command, WORKING_DIRECTORY))
+  def execute(command: String, redirectOutput: Boolean = true) {
+    startProcess(createBuilder(command, WORKING_DIRECTORY), redirectOutput)
   }
+
 
   def execute(command: String, workingDirectory: String) {
     println("Execute command: " + command)
-    startProcess(createBuilder(command, workingDirectory))
+    startProcess(createBuilder(command, workingDirectory), true)
   }
 
   private def createBuilder(command: String, workingDirectory: String): ProcessBuilder = {
@@ -28,20 +29,21 @@ object CommandExecutor {
     builder
   }
 
-  private def startProcess(builder: ProcessBuilder) {
+  private def startProcess(builder: ProcessBuilder, redirectOutput: Boolean) {
     var p: Process = null
     try {
       p = builder.start()
     } catch {
       case e: Exception => e.printStackTrace()
     }
+    if (redirectOutput) {
+      val r: BufferedReader = new BufferedReader(new InputStreamReader(p.getInputStream))
+      var line: String = ""
 
-    val r: BufferedReader = new BufferedReader(new InputStreamReader(p.getInputStream))
-    var line: String = ""
-
-    while (line != null) {
-      line = r.readLine()
-      println(line)
+      while (line != null) {
+        line = r.readLine()
+        println(line)
+      }
     }
   }
 }
