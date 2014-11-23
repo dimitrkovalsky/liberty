@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.geometry.*?>
@@ -75,16 +76,16 @@
         </ScrollPane>
         <AnchorPane>
           <children>
-            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="28.0" style="&#10;" text="Confidence" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                  <Label fx:id="confidence_lbl" alignment="CENTER" layoutX="158.0" layoutY="8.0" style="&#10;" text="61" textAlignment="CENTER" textFill="#838383" wrapText="false">
+            <Label alignment="CENTER" font="$x1" layoutX="4.0" layoutY="218.0" style="&#10;" text="Confidence" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                  <Label fx:id="confidence_lbl" alignment="CENTER" layoutX="101.0" layoutY="209.0" prefHeight="22.0" prefWidth="49.0" style="&#10;" text="48" textAlignment="CENTER" textFill="#838383" wrapText="false">
                      <font>
-                        <Font size="45.0" />
+                        <Font size="31.0" />
                      </font>
                   </Label>
-                  <Label font="$x1" layoutX="7.0" layoutY="171.0" prefHeight="27.0" prefWidth="90.0" style="&#10;" text="Command" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                  <Label fx:id="lastCommand_lbl" layoutX="7.0" layoutY="209.0" prefHeight="39.0" prefWidth="225.0" style="&#10;" text="Create project" textFill="#838383">
+                  <Label font="$x1" layoutX="4.0" layoutY="258.0" prefHeight="27.0" prefWidth="90.0" style="&#10;" text="Command" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                  <Label fx:id="lastCommand_lbl" layoutX="98.0" layoutY="254.0" prefHeight="27.0" prefWidth="105.0" style="&#10;" text="Create" textFill="#838383">
                      <font>
-                        <Font size="27.0" />
+                        <Font size="25.0" />
                      </font>
                   </Label>
                   <ListView fx:id="history_lv" layoutY="320.0" prefHeight="233.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
@@ -95,7 +96,7 @@
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
-        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Microphone on" textFill="darkgreen" HBox.hgrow="ALWAYS">
           <font>
             <Font size="11.0" fx:id="x3" />
           </font>
@@ -104,7 +105,7 @@
           </textFill>
         </Label>
         <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-        <Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
+        <Label fx:id="generationResult" font="$x3" maxWidth="-1.0" text="" textFill="indigo" HBox.hgrow="NEVER" />
       </children>
       <padding>
         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />

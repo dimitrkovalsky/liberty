@@ -2,7 +2,7 @@ package com.liberty.controllers
 
 import java.io.File
 
-import com.liberty.common.{GrammarGroups, ProjectConfig}
+import com.liberty.common._
 import com.liberty.executor.MavenExecutor
 import com.liberty.helpers.{StringHelper, SynthesizeHelper}
 import com.liberty.transmission.TransmissionManager
@@ -40,8 +40,11 @@ class MavenProjectController extends Controller {
       SynthesizeHelper.synthesize("Project created")
       //TODO: Think about place of grammar group activation
       GrammarController.changeGrammarGroup(GrammarGroups.COMPONENT_CREATION)
-    } else
+      ActionBus.publish(Topics.USER_NOTIFICATION, UserNotificationAction(NotificationType.PROJECT_CREATED, Right("Project created")))
+    } else {
       SynthesizeHelper.synthesize("Project creation failed")
+      ActionBus.publish(Topics.USER_NOTIFICATION, UserNotificationAction(NotificationType.PROJECT_CREATION_FAILED, Right("Project not created")))
+    }
   }
 
   def testAppsPackages(): Unit = {

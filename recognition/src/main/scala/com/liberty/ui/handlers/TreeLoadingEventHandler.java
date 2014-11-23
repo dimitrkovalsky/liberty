@@ -20,6 +20,6 @@ public class TreeLoadingEventHandler implements EventHandler<ActionEvent> {
     }
 
     @Override public void handle(ActionEvent t) {
-        controller.scanProjectDirectory(stage);
+        controller.scanProjectDirectory();
     }
 }

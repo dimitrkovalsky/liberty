@@ -1,5 +1,6 @@
 package com.liberty.ui.controllers;
 
+import com.liberty.common.ProjectConfig;
 import com.liberty.common.UiNotifier;
 import com.liberty.common.UserNotificationAction;
 import com.liberty.controllers.EmulateController;
@@ -51,6 +52,7 @@ public class JavaController implements Initializable, IUIHandler {
 
     private UiNotifier notificator = new UiNotifier(this);
 
+    private Stage stage;
     private Path rootPath;
     private ExecutorService service = Executors.newFixedThreadPool(3);
     private StringProperty messageProp = new SimpleStringProperty();
@@ -60,6 +62,7 @@ public class JavaController implements Initializable, IUIHandler {
 //    @FXML private StackPane tunerViewer;
     @FXML private Label confidence_lbl;
     @FXML private Label lastCommand_lbl;
+    @FXML private Label generationResult;
     @FXML private ListView history_lv;
 
     // the initialize method is automatically invoked by the FXMLLoader - it's magic
@@ -76,8 +79,8 @@ public class JavaController implements Initializable, IUIHandler {
         service.execute(()->new EmulateController().emulate());
     }
 
-    public void scanProjectDirectory(Stage stage) {
-        rootPath = Paths.get("H:\\Workspace\\liberty");
+    public void scanProjectDirectory() {
+        rootPath = Paths.get(ProjectConfig.projectPath());
         PathItem pathItem = new PathItem(rootPath);
 //        locationTreeView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 //            @Override
@@ -97,9 +100,7 @@ public class JavaController implements Initializable, IUIHandler {
             setDragDropEvent(stage, cell);
             return cell;
         });
-//        SwingNode swingNode = new SwingNode();
-//        SwingUtilities.invokeLater(() -> swingNode.setContent(new Scope()));
-//        tunerViewer.getChildren().add(swingNode);
+
     }
 
     public void setCodeStyleArea(String sampleCode) {
@@ -288,7 +289,15 @@ public class JavaController implements Initializable, IUIHandler {
 
     @Override
     public void onAction(UserNotificationAction notification) {
-        System.out.println("ХУЙ");
+        String result = notification.result().right().get();
+        if (notification.notificationType() == 4) { // 4 it's NotificationType.PROJECT_CREATED
+            scanProjectDirectory();
+        }
+        if (notification.notificationType() == 5) { //5 it's NotificationType.PROJECT_CREATION_FAILED
+        }
+        Platform.runLater(() -> {
+            generationResult.setText(result);
+        });
     }
 
     @Override
@@ -298,5 +307,13 @@ public class JavaController implements Initializable, IUIHandler {
             lastCommand_lbl.setText(recognitionResult.best().getSentence());
             history_lv.getItems().add(0, recognitionResult.best().getSentence());
         });
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }
