@@ -8,6 +8,7 @@ import com.liberty.controllers.EmulateController;
 import com.liberty.entities.RecognitionResult;
 import com.liberty.model.JavaClass;
 import com.liberty.ui.handlers.IUIHandler;
+import com.liberty.ui.jtuner.Scope;
 import com.liberty.ui.treeview.*;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -22,6 +23,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -58,7 +61,15 @@ public class JavaController implements Initializable, IUIHandler {
     private Path rootPath;
     private ExecutorService service = Executors.newFixedThreadPool(3);
     private StringProperty messageProp = new SimpleStringProperty();
+    private Scope scope;
+    @FXML
+    private ImageView image;
 
+    public void updateImage(Image imageAc) {
+        Platform.runLater(() -> {
+            this.image.setImage(imageAc);
+        });
+    }
     @FXML
     private TreeView<PathItem> locationTreeView;
     @FXML
@@ -85,11 +96,15 @@ public class JavaController implements Initializable, IUIHandler {
 //        String[] history = {"Create project", "Simple", "Create rest service", "Build and Deploy"};
 //        history_lv.getItems().addAll(history);
         service.execute(() -> new EmulateController().emulate());
+        scope = new Scope(this);
+        scope.start();
+
     }
 
     public void scanProjectDirectory() {
         rootPath = Paths.get(ProjectConfig.projectPath());
         PathItem pathItem = new PathItem(rootPath);
+
 //        locationTreeView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 //            @Override
 //            public void handle(MouseEvent mouseEvent) {

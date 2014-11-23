@@ -1,7 +1,9 @@
-package jtuner;
+package com.liberty.ui.jtuner;
 
-import javafx.application.Platform;
+import com.liberty.ui.controllers.JavaController;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -22,10 +24,11 @@ public class Scope {
     private final Object lock;
     private Thread thread;
     GraphicsContext graphicsContext;
+    JavaController controller;
 
-    public Scope(GraphicsContext context) {
+    public Scope(JavaController controller) {
         this(getDefaultTargetDataLine());
-        this.graphicsContext = context;
+        this.controller = controller;
     }
 
     private Scope(TargetDataLine input) {
@@ -44,9 +47,9 @@ public class Scope {
         samplesTaken = line.getFormat().getSampleRate() / frequency * cycles;
         System.out.println("Sample taken  : " + samplesTaken);
         lock = new Object();
-        buf = new BufferedImage(700, 256, BufferedImage.TYPE_INT_RGB);
+        buf = new BufferedImage(1024, 256, BufferedImage.TYPE_INT_RGB);
         Graphics g = buf.getGraphics();
-        g.clearRect(0, 0, 700, 256);
+        g.clearRect(0, 0, 1024, 256);
         g.dispose();
         active = false;
         thread = new ScopeReader();
@@ -132,12 +135,12 @@ public class Scope {
 
         public void run() {
             synchronized (lock) {
-                int samples = (int) Math.round(samplesTaken);
+                int samples = (int) Math.round(samplesTaken*1.5);
                 byte[] sample = new byte[samples];
                 AffineTransform scale = AffineTransform.getScaleInstance(700D / samplesTaken, 1);
                 AffineTransform translate = AffineTransform.getTranslateInstance(0, 127);
                 scale.concatenate(translate);
-                BufferedImage buf = new BufferedImage(700, 256, BufferedImage.TYPE_INT_RGB);
+                BufferedImage buf = new BufferedImage(1024, 256, BufferedImage.TYPE_INT_RGB);
                 Graphics2D g = (Graphics2D) buf.getGraphics();
                 g.transform(scale);
                 line.start();
@@ -146,27 +149,34 @@ public class Scope {
                     line.read(sample, 0, samples);
                     //  Graphics2D c = (Graphics2D) getGraphics();
                     if (true) {
-                        g.setColor(Color.BLACK);
+                        g.setColor(new Color(226,226,226));
                         g.clearRect(0, -127, samples, 256);
-                        g.setColor(Color.GREEN);
+                        g.fillRect(0, -127, samples, 256);
+                        g.setColor(new Color(45,206,218));
                         int next, last = sample[0];
                         double[] x = new double[samples];
                         double[] y = new double[samples];
                         for (int i = 1; i < samples; i++) {
-                            next = sample[i];
-                            //g.drawLine(i, last, i, next);
-                            //last = next;
-                            x[i] = i;
-                            y[i] = i;
-                            System.out.println("[" + last + ", " + next + "]");
+                            next = sample[i] * 3;
+                            g.drawLine(i, last, i, next);
+                            last = next;
+
+                            // System.out.println("[" + last + ", " + next + "]");
                         }
-                        Platform.runLater(() -> {
-                            System.out.println("Draw");
-                            graphicsContext.strokePolyline(x, y, samples);
-                        });
-                        //    c.drawImage(buf, 0, 0, null);
+
+                        WritableImage wr = null;
+                        if (buf != null) {
+                            wr = new WritableImage(buf.getWidth(), buf.getHeight());
+                            PixelWriter pw = wr.getPixelWriter();
+                            for (int x1 = 0; x1 < buf.getWidth(); x1++) {
+                                for (int y1 = 0; y1 < buf.getHeight(); y1++) {
+                                    pw.setArgb(x1, y1, buf.getRGB(x1, y1));
+                                }
+                            }
+                        }
+                        controller.updateImage(wr);
+
                     }
-//                    System.out.println(buf);
                 }
                 line.stop();
                 line.flush();

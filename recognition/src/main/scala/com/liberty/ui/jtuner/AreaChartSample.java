@@ -1,4 +1,4 @@
-package jtuner;
+package com.liberty.ui.jtuner;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;

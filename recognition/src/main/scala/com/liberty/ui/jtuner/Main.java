@@ -17,13 +17,10 @@
  *  along with JTuner. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jtuner;
-import com.sun.media.jfxmedia.effects.AudioSpectrum;
-import com.sun.media.jfxmedia.events.AudioSpectrumEvent;
+package com.liberty.ui.jtuner;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -47,11 +44,11 @@ public class Main extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
     //    drawShapes(gc);
        // gc.setLineCap(new );
-        Scope  scope = new Scope(gc);
-        root.getChildren().add(canvas);
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
-        scope.start();
+//        Scope  scope = new Scope(gc);
+//        root.getChildren().add(canvas);
+//        primaryStage.setScene(new Scene(root));
+//        primaryStage.show();
+//        scope.start();
 
      //   new AudioSpectrumEvent(AudioSpectrum,0,1)
     }

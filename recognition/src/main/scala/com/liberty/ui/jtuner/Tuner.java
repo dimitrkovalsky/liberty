@@ -17,7 +17,7 @@
  *  along with JTuner. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jtuner;
+package com.liberty.ui.jtuner;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
