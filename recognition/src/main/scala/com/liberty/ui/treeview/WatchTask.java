@@ -1,12 +1,10 @@
-package com.liberty.treeview;
+package com.liberty.ui.treeview;
 
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import static java.nio.file.StandardWatchEventKinds.*;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import javafx.concurrent.Task;
+
+import java.nio.file.*;
+
+import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
  * This refers to this site http://docs.oracle.com/javase/tutorial/essential/io/notification.html

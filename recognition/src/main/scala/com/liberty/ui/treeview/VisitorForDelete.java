@@ -1,4 +1,4 @@
-package com.liberty.treeview;
+package com.liberty.ui.treeview;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;

@@ -1,6 +1,6 @@
 package com.liberty.handlers
 
-import com.liberty.common.GrammarGroups
+import com.liberty.common.{RecognizedAction, Topics, ActionBus, GrammarGroups}
 import com.liberty.entities.RecognitionResult
 import com.liberty.generic.VoiceNotifier
 
@@ -21,6 +21,7 @@ class VoiceHandler {
   def handleRecognitionResult(recognized: RecognitionResult) {
     try {
       println("Recognized : " + recognized.best)
+      ActionBus.publish(Topics.RECOGNITION_NOTIFICATION, RecognizedAction(recognized))
       recognized.grammar match {
         case GrammarGroups.PROJECT_CREATION | GrammarGroups.PROJECT_NAMES => projectHandler.onRecognized(recognized)
         case GrammarGroups.COMPONENT_CREATION => componentHandler.onRecognized(recognized)

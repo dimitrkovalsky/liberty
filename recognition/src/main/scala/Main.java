@@ -1,6 +1,4 @@
-package com.liberty;
-
-import com.liberty.controllers.Controller;
+import com.liberty.ui.controllers.JavaController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,7 +25,7 @@ public class Main extends Application {
 
         // continuously refresh the TreeItems.
         // demonstrates using controller methods to manipulate the controlled UI.
-        Controller controller = loader.<Controller>getController();
+        JavaController controller = loader.<JavaController>getController();
         controller.scanProjectDirectory(primaryStage);
 //        controller.setCodeStyleArea("");
 //        Timeline timeline = new Timeline(

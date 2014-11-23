@@ -1,7 +1,5 @@
-package com.liberty.treeview;
+package com.liberty.ui.treeview;
 
-import com.liberty.controllers.Controller;
-import com.liberty.Main;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -103,7 +101,7 @@ public class PathTreeCell extends TreeCell<PathItem>{
         });
         MenuItem openMenu = new MenuItem("Open");
         openMenu.setOnAction((ActionEvent event) -> {
-            Main.getLoader().<Controller>getController().setCodeStyleArea(readFile(getItem().getPath().toFile()));
+            //Main.getLoader().<JavaController>getController().setCodeStyleArea(readFile(getItem().getPath().toFile()));
         });
         dirMenu.getItems().addAll(expandMenu, expandAllMenu, deleteMenu, addMenu);
         fileMenu.getItems().addAll(openMenu, deleteMenu);

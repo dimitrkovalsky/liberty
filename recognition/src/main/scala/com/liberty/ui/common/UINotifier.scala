@@ -1,6 +1,6 @@
 package com.liberty.common
 
-import com.liberty.handlers.IUIHandler
+import com.liberty.ui.handlers.IUIHandler
 
 /**
  * Created by Maxxis on 11/8/2014.

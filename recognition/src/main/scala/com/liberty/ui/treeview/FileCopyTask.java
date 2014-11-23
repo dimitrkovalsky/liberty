@@ -1,9 +1,10 @@
-package com.liberty.treeview;
+package com.liberty.ui.treeview;
+
+import javafx.concurrent.Task;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import javafx.concurrent.Task;
 
 /**
  * File copy Task

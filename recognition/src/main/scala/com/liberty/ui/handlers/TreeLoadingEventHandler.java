@@ -1,6 +1,6 @@
-package com.liberty.handlers;
+package com.liberty.ui.handlers;
 
-import com.liberty.controllers.Controller;
+import com.liberty.ui.controllers.JavaController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
@@ -11,10 +11,10 @@ import javafx.stage.Stage;
  * Time: 13:38
  */
 public class TreeLoadingEventHandler implements EventHandler<ActionEvent> {
-    private Controller controller;
+    private JavaController controller;
     private Stage stage;
 
-    public TreeLoadingEventHandler(Controller controller, Stage stage) {
+    public TreeLoadingEventHandler(JavaController controller, Stage stage) {
         this.controller = controller;
         this.stage = stage;
     }

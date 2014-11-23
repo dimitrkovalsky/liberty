@@ -1,4 +1,4 @@
-package com.liberty.treeview;
+package com.liberty.ui.treeview;
 
 import java.nio.file.Path;
 

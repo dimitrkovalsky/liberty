@@ -7,7 +7,7 @@ import javafx.util.Duration
 import javafx.{fxml => jfxf}
 import javafx.{scene => jfxs}
 import com.liberty.controllers.Controller
-import com.liberty.handlers.TreeLoadingEventHandler
+import com.liberty.ui.handlers.TreeLoadingEventHandler
 
 import scalafx.Includes._
 import scalafx.application.JFXApp

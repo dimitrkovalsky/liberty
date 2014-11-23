@@ -1,4 +1,4 @@
-package com.liberty.treeview;
+package com.liberty.ui.treeview;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

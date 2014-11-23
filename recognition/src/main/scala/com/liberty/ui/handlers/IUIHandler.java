@@ -1,4 +1,4 @@
-package com.liberty.handlers;
+package com.liberty.ui.handlers;
 
 import com.liberty.common.UserNotificationAction;
 import com.liberty.entities.RecognitionResult;

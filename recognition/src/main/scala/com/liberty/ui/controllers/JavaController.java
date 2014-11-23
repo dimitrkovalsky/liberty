@@ -1,10 +1,11 @@
-package com.liberty.controllers;
+package com.liberty.ui.controllers;
 
 import com.liberty.common.UiNotifier;
 import com.liberty.common.UserNotificationAction;
+import com.liberty.controllers.EmulateController;
 import com.liberty.entities.RecognitionResult;
-import com.liberty.handlers.IUIHandler;
-import com.liberty.treeview.*;
+import com.liberty.ui.handlers.IUIHandler;
+import com.liberty.ui.treeview.*;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -46,7 +47,7 @@ import java.util.regex.Pattern;
  * Date: 09.11.2014
  * Time: 12:49
  */
-public class Controller implements Initializable, IUIHandler {
+public class JavaController implements Initializable, IUIHandler {
 
     private UiNotifier notificator = new UiNotifier(this);
 
@@ -68,10 +69,11 @@ public class Controller implements Initializable, IUIHandler {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        confidence_lbl.setText("53");
-        lastCommand_lbl.setText("Build and Deploy");
-        String[] history = {"Create project", "Simple", "Create rest service", "Build and Deploy"};
-        history_lv.getItems().addAll(history);
+//        confidence_lbl.setText("53");
+//        lastCommand_lbl.setText("Build and Deploy");
+//        String[] history = {"Create project", "Simple", "Create rest service", "Build and Deploy"};
+//        history_lv.getItems().addAll(history);
+        service.execute(()->new EmulateController().emulate());
     }
 
     public void scanProjectDirectory(Stage stage) {
@@ -114,6 +116,7 @@ public class Controller implements Initializable, IUIHandler {
         codeArea.replaceText(0, 0, sampleCode);
         filesViewer.getChildren().add(codeArea);
         filesViewer.getStylesheets().add(stylesheet);
+
     }
 
     private void setDragDropEvent(Stage stage, final PathTreeCell cell) {
