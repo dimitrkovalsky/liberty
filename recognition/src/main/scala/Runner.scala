@@ -12,25 +12,31 @@ import com.liberty.types.primitives.{FloatType, IntegerType, LongType, StringTyp
  */
 object Runner {
   def main(args: Array[String]) {
-    emulate() // will be executed after transmission start
-    TransmissionManager.startDataTransmission(emulate = true)
+    //emulate() // will be executed after transmission start
+    TransmissionManager.startDataTransmission(emulate = false)
   }
 
   def emulate(): Unit = {
     VoiceEmulator.emulate {
-      GrammarIds.CREATE_PROJECT *> 0 //0 - timeout, the same as *>()
-      GrammarIds.NAME_OF_PROJECT :> "simple" // set name
-//      GrammarGroups.COMPONENT_CREATION <* 0 // Change active grammar to COMPONENT_CREATION
-//      GrammarIds.CREATE_CLASS *> 0
-//      GrammarIds.NAME_OF_CLASS :> "device"
-//      // emulate
-//      GrammarGroups.CLASS_EDITING :>> "id" x LongType
-//      GrammarGroups.CLASS_EDITING :>> "description" x StringType
-//      GrammarGroups.CLASS_EDITING :>> "price" x FloatType
-//
-//      GrammarIds.COMPLETE_CLASS_EDITING *> 0
-//
-//      GrammarIds.CREATE_DAO *> 0
+    //  GrammarIds.CREATE_PROJECT *> 0 //0 - timeout, the same as *>()
+    //  GrammarIds.NAME_OF_PROJECT :> "simple" // set name
+      GrammarGroups.COMPONENT_CREATION <* 0 // Change active grammar to COMPONENT_CREATION
+      GrammarIds.CREATE_CLASS *> 0
+      GrammarIds.NAME_OF_CLASS :> "device"
+      // emulate
+      GrammarGroups.CLASS_EDITING :>> "id" x LongType
+      GrammarGroups.CLASS_EDITING :>> "description" x StringType
+      GrammarGroups.CLASS_EDITING :>> "price" x FloatType
+
+      GrammarIds.COMPLETE_CLASS_EDITING *> 0
+
+      GrammarIds.CREATE_DAO *> 0
+      GrammarIds.CREATE_BEAN *> 0
+      GrammarIds.CREATE_REST *> 0
+      GrammarIds.RUN_MONGO *> 0
+      GrammarIds.BUILD_AND_DEPLOY *> 0
+      GrammarIds.OPEN_BROWSER *> 0
+
     }
   }
 

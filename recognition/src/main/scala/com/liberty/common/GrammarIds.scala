@@ -15,6 +15,11 @@ object GrammarIds {
   val CHANGE_DATABASE = 13
   val CREATE_BEAN = 14
   val CREATE_REST = 15
+  val BUILD = 16
+  val DEPLOY = 17
+  val BUILD_AND_DEPLOY = 18
+  val OPEN_BROWSER = 19
+  val RUN_MONGO = 20
 
   val EDIT_CLASS = 20
   val ADD_FIELD = 21

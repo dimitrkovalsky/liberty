@@ -124,12 +124,13 @@ class MongoAdapter(var javaClass: JavaClass, bPackage: LocationPackage) extends 
       builder.addOperation(ChainedOperations(None, FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("remove", List(removeParam))))
     }.throwWrapped(daoException)
     Some(builder.getFunction)
+    None
   }
 
   override def createFindAll(): Option[JavaFunction] = {
     val builder = FunctionBuilder(PublicModifier, "findAll")
     builder.tryable {
-      val chain = ChainedOperations(None, FunctionInvokeOperation("getCollection"), FunctionInvokeOperation("find",
+      val chain = ChainedOperations(None, FunctionInvokeOperation("getDatastore"), FunctionInvokeOperation("find",
         List(javaClass.asClassParam)), FunctionInvokeOperation("asList"))
       builder.addOperation(ReturnOperation(chain))
     }.throwWrapped(daoException)

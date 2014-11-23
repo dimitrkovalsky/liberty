@@ -70,10 +70,13 @@ case class ClassMapper(baseModel: JavaClass) {
   def changeModel(template: JavaInterface, model: JavaClass, newInterfaceName: String, newPackage: JavaPackage,
                   baseTemplatePackage: String): JavaInterface = {
     val interfaceBuilder = InterfaceBuilder(newInterfaceName)
-    val interfaceSignatures = template.signatures.map(changeSignatureWithFilter(_, model)).flatten
+    val interfaceSignatures = template.signatures.map(changeSignatureWithFilter(_, model, baseTemplatePackage, ProjectConfig.basePackageString)).flatten
     interfaceSignatures foreach interfaceBuilder.addFunctionSignature
     template.annotations.foreach(interfaceBuilder.addAnnotation)
-    template.customImports.map(changeCustomImport(_, model.name)).flatten.foreach(interfaceBuilder.addCustomImport)
+        template.customImports.map(changeCustomImport(_, model.name)).flatten.foreach {
+          i => val imp = CustomImport(i.importString.replace(baseTemplatePackage, ProjectConfig.basePackage.packagePath))
+            interfaceBuilder.addCustomImport(imp)
+        }
     interfaceBuilder.addPackage(newPackage)
     interfaceBuilder.getInterface
   }
@@ -181,14 +184,49 @@ case class ClassMapper(baseModel: JavaClass) {
     FunctionSignature(name, output, signature.modifier, input, signature.functionThrows)
   }
 
+  def changeSignature(signature: FunctionSignature, model: JavaClass, basePackage: String, newPackage: String) = {
+    // TODO: process id in annotations
+    val output = if (signature.output.toString.shouldChangeNotIgnoreCase) changeDataType(signature.output, model.dataType) else signature.output
+    // println("[basePackage] : " + basePackage + " new pack : " + newPackage + " avail : " + output.javaPackage.packagePath)
+    output.javaPackage = new JavaPackage(output.javaPackage.packagePath.replace(basePackage, newPackage), output.javaPackage.packageClass)
+    //println("[OUTPUT] : " + output.javaPackage)
+    val name = if (signature.name.shouldChange) changeName(signature.name, model) else signature.name
+    val input = signature.input.map(in => {
+      // if it is idField
+      if (baseModel.getIdField.exists(f => f.name.equals(in.paramName.name) && f.dataType.equals(in.paramType)) && model.getIdField.isDefined) {
+        val idField = model.getIdField.get
+        val param = FunctionParameter(in.paramName.name, idField.dataType)
+        in.annotations.foreach(param.addAnnotation)
+        param
+      } else {
+        val newName = if (in.paramName.name.shouldChange) changeName(in.paramName.name, model) else in.paramName.name
+        val newType = if (in.paramType.toString.shouldChangeNotIgnoreCase) changeDataType(in.paramType, model.dataType) else in.paramType
+        val param = FunctionParameter(newName, newType)
+        in.annotations.foreach(param.addAnnotation)
+        param
+      }
+    })
+    input.foreach{
+      p => p.paramType.javaPackage =   new JavaPackage(p.paramType.javaPackage.packagePath.replace(basePackage, newPackage), p.paramType.javaPackage.packageClass)
+    }
+    //input.javaPackage = new JavaPackage(input.javaPackage.packagePath.replace(basePackage, newPackage), input.javaPackage.packageClass)
+    // TODO: process throws
+    val throws = signature.functionThrows.map {
+      t => t.javaPackage = new JavaPackage(t.javaPackage.packagePath.replace(basePackage, newPackage), t.javaPackage.packageClass)
+        t
+    }
+    FunctionSignature(name, output, signature.modifier, input, throws)
+  }
+
   /**
    * Validate that signature should be present in new interface
    * @param signature potential signature
    * @param model model that should be used for generated class
    */
-  def changeSignatureWithFilter(signature: FunctionSignature, model: JavaClass): Option[FunctionSignature] = {
+  def changeSignatureWithFilter(signature: FunctionSignature, model: JavaClass, baseTemplatePackage: String,
+                                newPackage: String): Option[FunctionSignature] = {
     if (shouldExist(signature, model))
-      Some(changeSignature(signature, model))
+      Some(changeSignature(signature, model, baseTemplatePackage, newPackage))
     else
       None
   }

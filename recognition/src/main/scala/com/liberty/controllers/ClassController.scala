@@ -56,6 +56,7 @@ class ClassController extends Subscriber {
       notifyClassChanged()
     }
     GrammarController.changeGrammarGroup(GrammarGroups.CLASS_EDITING)
+    SynthesizeHelper.synthesize(s"Add fields for $className class")
     true
   }
 
@@ -70,9 +71,12 @@ class ClassController extends Subscriber {
   }
 
   def completeCreation(): Unit = {
-    classBuilder.foreach(b => ActionBus.publish(Topics.MODEL_ACTIVATION, ActivateModel(b.getJavaClass.name)))
+    classBuilder.foreach { b => ActionBus.publish(Topics.MODEL_ACTIVATION, ActivateModel(b.getJavaClass.name))
+      SynthesizeHelper.synthesize(b.getJavaClass.name + " class created")
+    }
     notifyClassChanged()
     TransmissionManager.activateGrammar(GrammarGroups.COMPONENT_CREATION)
+
   }
 
   override protected def onActionReceived: Received = {

@@ -56,4 +56,45 @@ class MavenProjectController extends Controller {
     addPackage("rest")
     addPackage("security")
   }
+
+  def build(): Unit = {
+    val mvn = new MavenExecutor
+    mvn.clean()
+    mvn.build()
+    SynthesizeHelper.synthesize("Project " + ProjectConfig.projectName + " built")
+  }
+
+  def deploy(): Unit = {
+    new Thread(new Runnable {
+      override def run(): Unit = {
+        CommandExecutor.execute("copy *.war " + ProjectConfig.serverDeploymentPath, ProjectConfig.targetPath)
+        CommandExecutor.execute(ProjectConfig.serverStartPath)
+        SynthesizeHelper.synthesize("Project " + ProjectConfig.projectName + " deployed")
+      }
+    }).start()
+
+  }
+
+  def buildAndDeploy(): Unit = {
+    build()
+    deploy()
+  }
+
+  def openBrowser(): Unit = {
+    new Thread(new Runnable {
+      override def run(): Unit = {
+        CommandExecutor.execute("start " + ProjectConfig.browser + " " + ProjectConfig.startPage)
+      }
+    })
+  }
+
+  def runMongo(): Unit = {
+    new Thread(new Runnable {
+      override def run(): Unit = {
+        CommandExecutor.execute(ProjectConfig.mongoPath, redirectOutput = false)
+        ActionBus.publish(Topics.USER_NOTIFICATION, UserNotificationAction(NotificationType.PROCESS_STARTED, Right("Mongo started")))
+        SynthesizeHelper.synthesize("Mongo server started")
+      }
+    })
+  }
 }
