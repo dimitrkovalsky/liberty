@@ -85,7 +85,7 @@ class MavenProjectController extends Controller {
       override def run(): Unit = {
         CommandExecutor.execute("start " + ProjectConfig.browser + " " + ProjectConfig.startPage)
       }
-    })
+    }).start()
   }
 
   def runMongo(): Unit = {
@@ -95,6 +95,6 @@ class MavenProjectController extends Controller {
         ActionBus.publish(Topics.USER_NOTIFICATION, UserNotificationAction(NotificationType.PROCESS_STARTED, Right("Mongo started")))
         SynthesizeHelper.synthesize("Mongo server started")
       }
-    })
+    }).start()
   }
 }

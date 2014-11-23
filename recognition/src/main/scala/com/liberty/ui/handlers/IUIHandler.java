@@ -2,6 +2,7 @@ package com.liberty.ui.handlers;
 
 import com.liberty.common.UserNotificationAction;
 import com.liberty.entities.RecognitionResult;
+import com.liberty.model.JavaClass;
 
 /**
  * User: Maxxis
@@ -10,5 +11,8 @@ import com.liberty.entities.RecognitionResult;
  */
 public interface IUIHandler {
     public void onAction(UserNotificationAction notification);
+
     public void onRecognized(RecognitionResult recognitionResult);
+
+    public void onClassChanged(JavaClass clazz);
 }

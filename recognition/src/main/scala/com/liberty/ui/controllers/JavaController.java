@@ -1,10 +1,12 @@
 package com.liberty.ui.controllers;
 
+import com.liberty.Main;
 import com.liberty.common.ProjectConfig;
 import com.liberty.common.UiNotifier;
 import com.liberty.common.UserNotificationAction;
 import com.liberty.controllers.EmulateController;
 import com.liberty.entities.RecognitionResult;
+import com.liberty.model.JavaClass;
 import com.liberty.ui.handlers.IUIHandler;
 import com.liberty.ui.treeview.*;
 import javafx.application.Platform;
@@ -57,13 +59,19 @@ public class JavaController implements Initializable, IUIHandler {
     private ExecutorService service = Executors.newFixedThreadPool(3);
     private StringProperty messageProp = new SimpleStringProperty();
 
-    @FXML private TreeView<PathItem> locationTreeView;
-    @FXML private AnchorPane filesViewer;
-//    @FXML private StackPane tunerViewer;
-    @FXML private Label confidence_lbl;
-    @FXML private Label lastCommand_lbl;
-    @FXML private Label generationResult;
-    @FXML private ListView history_lv;
+    @FXML
+    private TreeView<PathItem> locationTreeView;
+    @FXML
+    private AnchorPane filesViewer;
+    //    @FXML private StackPane tunerViewer;
+    @FXML
+    private Label confidence_lbl;
+    @FXML
+    private Label lastCommand_lbl;
+    @FXML
+    private Label generationResult;
+    @FXML
+    private ListView history_lv;
 
     // the initialize method is automatically invoked by the FXMLLoader - it's magic
 //    public void initialize() {
@@ -76,7 +84,7 @@ public class JavaController implements Initializable, IUIHandler {
 //        lastCommand_lbl.setText("Build and Deploy");
 //        String[] history = {"Create project", "Simple", "Create rest service", "Build and Deploy"};
 //        history_lv.getItems().addAll(history);
-        service.execute(()->new EmulateController().emulate());
+        service.execute(() -> new EmulateController().emulate());
     }
 
     public void scanProjectDirectory() {
@@ -307,6 +315,18 @@ public class JavaController implements Initializable, IUIHandler {
             lastCommand_lbl.setText(recognitionResult.best().getSentence());
             history_lv.getItems().add(0, recognitionResult.best().getSentence());
         });
+    }
+
+    @Override
+    public void onClassChanged(JavaClass clazz) {
+//        System.out.println("[JavaController] notification received");
+//        String path = ProjectConfig.projectPath() + "src\\main\\java\\" + clazz.javaPackage().getPackagePath() +
+//                clazz.name() + ".java";
+        Platform.runLater(() -> {
+            Main.getLoader().<JavaController>getController().setCodeStyleArea(clazz.toString());
+            scanProjectDirectory();
+        });
+
     }
 
     public void setStage(Stage stage) {

@@ -30,7 +30,7 @@ class BeanController extends GeneratorController with GeneratorSubscriber {
         val interface = packet.beanInterface
         writer write interface
         writer write bean
-
+        notifyClassChanged(bean)
         if (!Register.beansXmlCreated) {
           val beansXml = generator.createBeansXml
           writer.writeToMetaInf(beansXml)

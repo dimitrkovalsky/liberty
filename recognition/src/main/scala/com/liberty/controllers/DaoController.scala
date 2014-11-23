@@ -97,6 +97,7 @@ class DaoController extends Changeable with GeneratorController with GeneratorSu
       dao match {
         case Failure(t) => return Failure(t)
         case Success(d) => writer.write(d)
+          notifyClassChanged(d)
       }
     }
 

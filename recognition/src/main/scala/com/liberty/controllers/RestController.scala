@@ -22,6 +22,7 @@ class RestController extends GeneratorController with GeneratorSubscriber {
     rest.flatMap {
       rs =>
         writer write rs
+        notifyClassChanged(rs)
         if (!Register.wsCreated) {
           writer write generator.createWsClass
           Register.wsCreated = true

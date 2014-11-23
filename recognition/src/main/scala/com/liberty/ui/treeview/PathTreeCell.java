@@ -109,7 +109,7 @@ public class PathTreeCell extends TreeCell<PathItem>{
         fileMenu.getItems().addAll(openMenu, deleteMenu);
     }
 
-    private String readFile(File file) {
+    public static String readFile(File file) {
 
         StringBuffer fileData = new StringBuffer();
         BufferedReader reader = null;

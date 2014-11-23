@@ -21,6 +21,12 @@ trait GeneratorController extends Controller {
    */
   protected val models = scala.collection.mutable.Map[String, JavaClass]()
 
+  def notifyClassChanged(clazz: JavaClass): Unit = {
+    println("Changed class : " + clazz)
+    Register.changeModel(clazz)
+    notify(Topics.USER_NOTIFICATION, ClassEditAction(clazz))
+  }
+
   /**
    * Indicates that active model is present in controller and component can be created using this model
    * @return

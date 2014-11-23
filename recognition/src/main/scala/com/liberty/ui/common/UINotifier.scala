@@ -7,10 +7,12 @@ import com.liberty.ui.handlers.IUIHandler
  */
 class UiNotifier(processAction: IUIHandler) extends Subscriber {
 
-override protected def onActionReceived: Received = {
+  override protected def onActionReceived: Received = {
     case un: UserNotificationAction => processAction.onAction(un)
       Right("OK")
     case RecognizedAction(r) => processAction.onRecognized(r)
+      Right("OK")
+    case ClassEditAction(clazz) => processAction.onClassChanged(clazz)
       Right("OK")
   }
 

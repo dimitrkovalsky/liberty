@@ -6,13 +6,16 @@ import com.liberty.entities.ComplexGrammar
 import com.liberty.helpers.SynthesizeHelper
 import com.liberty.model.{PrivateModifier, JavaField}
 import com.liberty.common.Implicits._
+import com.liberty.traits.Writer
 import com.liberty.transmission.TransmissionManager
+import com.liberty.writers.FileClassWriter
 
 /**
  * Created by Maxxis on 11/8/2014.
  */
 class ClassController extends Subscriber {
   var classBuilder: Option[ClassBuilder] = None
+  protected val writer: Writer = new FileClassWriter(ProjectConfig.projectPath)
 
   private def createFieldInner(cg: ComplexGrammar): Boolean = {
     classBuilder.map { b =>
@@ -71,8 +74,12 @@ class ClassController extends Subscriber {
   }
 
   def completeCreation(): Unit = {
-    classBuilder.foreach { b => ActionBus.publish(Topics.MODEL_ACTIVATION, ActivateModel(b.getJavaClass.name))
-      SynthesizeHelper.synthesize(b.getJavaClass.name + " class created")
+    classBuilder.foreach { b =>
+      val clazz = b.getJavaClass
+      ActionBus.publish(Topics.MODEL_ACTIVATION, ActivateModel(clazz.name))
+      SynthesizeHelper.synthesize(clazz.name + " class created")
+      println("[CONTROLLER WRITE ] : " + clazz)
+      writer.write(clazz)
     }
     notifyClassChanged()
     TransmissionManager.activateGrammar(GrammarGroups.COMPONENT_CREATION)
