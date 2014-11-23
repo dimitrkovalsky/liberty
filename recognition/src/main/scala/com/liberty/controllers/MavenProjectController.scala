@@ -3,7 +3,7 @@ package com.liberty.controllers
 import java.io.File
 
 import com.liberty.common._
-import com.liberty.executor.MavenExecutor
+import com.liberty.executor.{CommandExecutor, MavenExecutor}
 import com.liberty.helpers.{StringHelper, SynthesizeHelper}
 import com.liberty.transmission.TransmissionManager
 

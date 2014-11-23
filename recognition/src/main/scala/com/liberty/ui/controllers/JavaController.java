@@ -290,10 +290,10 @@ public class JavaController implements Initializable, IUIHandler {
     @Override
     public void onAction(UserNotificationAction notification) {
         String result = notification.result().right().get();
-        if (notification.notificationType() == 4) { // 4 it's NotificationType.PROJECT_CREATED
+        if (notification.notificationType() == 5) { // 4 it's NotificationType.PROJECT_CREATED
             scanProjectDirectory();
         }
-        if (notification.notificationType() == 5) { //5 it's NotificationType.PROJECT_CREATION_FAILED
+        if (notification.notificationType() == 6) { //5 it's NotificationType.PROJECT_CREATION_FAILED
         }
         Platform.runLater(() -> {
             generationResult.setText(result);
